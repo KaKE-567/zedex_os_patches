@@ -1,0 +1,95 @@
+From 5c2757d817cdc5a653688f9915419857924b0dc6 Mon Sep 17 00:00:00 2001
+From: kake <kake@build.local>
+Date: Mon, 24 Aug 2026 12:43:50 +0000
+Subject: [PATCH] Trebuchet: App Icon Size Slider (70% - 140%)
+
+Change-Id: I1db11906e9ffe7412d4c0c9a678fc8b4251a2d09
+---
+ res/values/lineage_strings.xml                     |  4 ++++
+ res/xml/launcher_preferences.xml                   | 14 +++++++++++++-
+ .../android/launcher3/InvariantDeviceProfile.java  |  8 +++++---
+ 3 files changed, 22 insertions(+), 4 deletions(-)
+
+diff --git a/res/values/lineage_strings.xml b/res/values/lineage_strings.xml
+index 40200b4..4fcdf55 100644
+--- a/res/values/lineage_strings.xml
++++ b/res/values/lineage_strings.xml
+@@ -60,4 +60,8 @@
+     <string name="icon_pack_default_label">Default</string>
+     <string name="icon_pack_add">Install more</string>
+     <string name="icon_pack_no_market">There\'s no available app store</string>
++
++    <!-- Icon size -->
++    <string name="icon_size_title">Icon size</string>
++    <string name="icon_size_summary">Adjust the size of app icons</string>
+ </resources>
+diff --git a/res/xml/launcher_preferences.xml b/res/xml/launcher_preferences.xml
+index 87ffb46..905612f 100644
+--- a/res/xml/launcher_preferences.xml
++++ b/res/xml/launcher_preferences.xml
+@@ -15,7 +15,8 @@
+ -->
+ 
+ <androidx.preference.PreferenceScreen
+-    xmlns:android="http://schemas.android.com/apk/res/android">
++    xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:app="http://schemas.android.com/apk/res-auto">
+ 
+     <PreferenceCategory
+         android:key="category_desktop"
+@@ -47,6 +48,17 @@
+         android:key="category_apps"
+         android:title="@string/settings_category_apps">
+ 
++        <androidx.preference.SeekBarPreference
++            android:key="pref_icon_size"
++            android:title="@string/icon_size_title"
++            android:summary="@string/icon_size_summary"
++            android:defaultValue="100"
++            android:max="140"
++            app:min="70"
++            android:persistent="true"
++            app:showSeekBarValue="true"
++            app:updatesContinuously="false" />
++
+         <Preference
+             android:key="pref_trust_apps"
+             android:title="@string/trust_apps_manager_name" />
+diff --git a/src/com/android/launcher3/InvariantDeviceProfile.java b/src/com/android/launcher3/InvariantDeviceProfile.java
+index f67d868..62367f2 100644
+--- a/src/com/android/launcher3/InvariantDeviceProfile.java
++++ b/src/com/android/launcher3/InvariantDeviceProfile.java
+@@ -81,6 +81,7 @@ public class InvariantDeviceProfile implements OnSharedPreferenceChangeListener
+     public static final String KEY_SHOW_LABELS_LANDSCAPE = "pref_show_labels_landscape";
+     public static final String KEY_ICON_PATH_REF = "pref_icon_shape_path";
+     public static final String KEY_WORKSPACE_EDIT = "pref_workspace_edit";
++    public static final String KEY_ICON_SIZE = "pref_icon_size";
+ 
+     // Constants that affects the interpolation curve between statically defined device profile
+     // buckets.
+@@ -192,7 +193,7 @@ public class InvariantDeviceProfile implements OnSharedPreferenceChangeListener
+     public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+         if (KEY_SHOW_DESKTOP_LABELS.equals(key) || KEY_SHOW_DRAWER_LABELS.equals(key)) {
+             apply(mContext, CHANGE_FLAG_ICON_PARAMS);
+-        } else if (KEY_SHOW_LABELS_LANDSCAPE.equals(key)) {
++        } else if (KEY_SHOW_LABELS_LANDSCAPE.equals(key) || KEY_ICON_SIZE.equals(key)) {
+             onConfigChanged(mContext);
+         }
+     }
+@@ -315,10 +316,11 @@ public class InvariantDeviceProfile implements OnSharedPreferenceChangeListener
+ 
+         mExtraAttrs = closestProfile.extraAttrs;
+ 
+-        iconSize = displayOption.iconSize;
++        float iconScale = Utilities.getPrefs(context).getInt(KEY_ICON_SIZE, 100) / 100.0f;
++        iconSize = displayOption.iconSize * iconScale;
+         iconShapePath = getIconShapePath(context);
+         iconPack = new IconPackStore(context).getCurrent();
+-        landscapeIconSize = displayOption.landscapeIconSize;
++        landscapeIconSize = displayOption.landscapeIconSize * iconScale;
+         iconBitmapSize = ResourceUtils.pxFromDp(iconSize, metrics);
+         iconTextSize = displayOption.iconTextSize;
+         fillResIconDpi = getLauncherIconDensity(iconBitmapSize);
+-- 
+2.43.0
+
