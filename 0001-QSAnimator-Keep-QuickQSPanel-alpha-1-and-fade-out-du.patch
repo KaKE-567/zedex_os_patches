@@ -1,0 +1,62 @@
+From 592ba6622dea09bf7fb243417369ffff8f19f251 Mon Sep 17 00:00:00 2001
+From: kake <kake@build.local>
+Date: Mon, 24 Aug 2026 19:17:13 +0000
+Subject: [PATCH] QSAnimator: Keep QuickQSPanel alpha=1 and fade out during
+ expansion for A13 Half QS
+
+Change-Id: I5881eede0d5c8dbf4ec0c5572ced7a3c2821b28e
+---
+ .../SystemUI/src/com/android/systemui/qs/QSAnimator.java | 9 ++-------
+ .../src/com/android/systemui/qs/QuickQSPanel.java        | 2 +-
+ 2 files changed, 3 insertions(+), 8 deletions(-)
+
+diff --git a/packages/SystemUI/src/com/android/systemui/qs/QSAnimator.java b/packages/SystemUI/src/com/android/systemui/qs/QSAnimator.java
+index 728f0c01..085c5f4d 100644
+--- a/packages/SystemUI/src/com/android/systemui/qs/QSAnimator.java
++++ b/packages/SystemUI/src/com/android/systemui/qs/QSAnimator.java
+@@ -208,6 +208,7 @@ public class QSAnimator implements Callback, PageListener, Listener, OnLayoutCha
+         int heightDiff = height - mQs.getHeader().getBottom()
+                 + mQs.getHeader().getPaddingBottom();
+         firstPageBuilder.addFloat(tileLayout, "translationY", heightDiff, 0);
++        firstPageBuilder.addFloat(mQuickQsPanel, "alpha", 1, 0);
+ 
+         for (QSTile tile : tiles) {
+             QSTileView tileView = mQsPanel.getTileView(tile);
+@@ -396,17 +397,11 @@ public class QSAnimator implements Callback, PageListener, Listener, OnLayoutCha
+     @Override
+     public void onAnimationStarted() {
+         updateQQSVisibility();
+-        if (mOnFirstPage) {
+-            final int N = mQuickQsViews.size();
+-            for (int i = 0; i < N; i++) {
+-                mQuickQsViews.get(i).setVisibility(View.INVISIBLE);
+-            }
+-        }
+     }
+ 
+     private void clearAnimationState() {
+         final int N = mAllViews.size();
+-        mQuickQsPanel.setAlpha(0);
++        mQuickQsPanel.setAlpha(1);
+         for (int i = 0; i < N; i++) {
+             View v = mAllViews.get(i);
+             v.setAlpha(1);
+diff --git a/packages/SystemUI/src/com/android/systemui/qs/QuickQSPanel.java b/packages/SystemUI/src/com/android/systemui/qs/QuickQSPanel.java
+index 665eab53..3b476824 100644
+--- a/packages/SystemUI/src/com/android/systemui/qs/QuickQSPanel.java
++++ b/packages/SystemUI/src/com/android/systemui/qs/QuickQSPanel.java
+@@ -212,10 +212,10 @@ public class QuickQSPanel extends QSPanel {
+ 
+         @Override
+         public boolean updateResources() {
+-            // Use the full pill tile height from parent resources
+             super.updateResources();
+             mColumns = NUM_COLUMNS;
+             mMaxAllowedRows = NUM_ROWS;
++            mCellMarginTop = 0;
+             return false;
+         }
+ 
+-- 
+2.43.0
+
