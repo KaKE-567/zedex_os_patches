@@ -1,0 +1,47 @@
+From 861cfc82f9ff7316c1782cabb8ad5817d0d1d7b0 Mon Sep 17 00:00:00 2001
+From: kake <kake@build.local>
+Date: Mon, 24 Aug 2026 18:55:45 +0000
+Subject: [PATCH] QSTileBaseView: Use 24dp rounded rectangle pill for all tiles
+
+Change-Id: I8b683aa0eddd7897caae0a3e8e8b6650688b77db
+---
+ .../systemui/qs/tileimpl/QSTileBaseView.java     | 16 ++++------------
+ 1 file changed, 4 insertions(+), 12 deletions(-)
+
+diff --git a/packages/SystemUI/src/com/android/systemui/qs/tileimpl/QSTileBaseView.java b/packages/SystemUI/src/com/android/systemui/qs/tileimpl/QSTileBaseView.java
+index 0d3cd922..27a346d0 100644
+--- a/packages/SystemUI/src/com/android/systemui/qs/tileimpl/QSTileBaseView.java
++++ b/packages/SystemUI/src/com/android/systemui/qs/tileimpl/QSTileBaseView.java
+@@ -121,12 +121,8 @@ public class QSTileBaseView extends com.android.systemui.plugins.qs.QSTileView {
+     protected Drawable newTileBackground() {
+         mPillBackground = new GradientDrawable();
+         float radius = getContext().getResources().getDisplayMetrics().density * 24f;
+-        if (mCollapsedView) {
+-            mPillBackground.setShape(GradientDrawable.OVAL);
+-        } else {
+-            mPillBackground.setShape(GradientDrawable.RECTANGLE);
+-            mPillBackground.setCornerRadius(radius);
+-        }
++        mPillBackground.setShape(GradientDrawable.RECTANGLE);
++        mPillBackground.setCornerRadius(radius);
+         mPillBackground.setColor(0xFF282C37);
+ 
+         int[] attrs = new int[]{android.R.attr.colorControlHighlight};
+@@ -135,12 +131,8 @@ public class QSTileBaseView extends com.android.systemui.plugins.qs.QSTileView {
+         ta.recycle();
+ 
+         GradientDrawable mask = new GradientDrawable();
+-        if (mCollapsedView) {
+-            mask.setShape(GradientDrawable.OVAL);
+-        } else {
+-            mask.setShape(GradientDrawable.RECTANGLE);
+-            mask.setCornerRadius(radius);
+-        }
++        mask.setShape(GradientDrawable.RECTANGLE);
++        mask.setCornerRadius(radius);
+         mask.setColor(Color.WHITE);
+ 
+         return new RippleDrawable(ColorStateList.valueOf(rippleColor), mPillBackground, mask);
+-- 
+2.43.0
+
