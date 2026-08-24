@@ -1,0 +1,65 @@
+From ee22739111b35d5a483744bff2b1309bfcb5a7fd Mon Sep 17 00:00:00 2001
+From: kake <kake@build.local>
+Date: Mon, 24 Aug 2026 14:42:33 +0000
+Subject: [PATCH] LineageParts: Rename network traffic monitor to 'Show
+ internet traffic'
+
+Change-Id: I66aa7c483da1cfe2ccf8103589ce9c13690a1f6b
+---
+ res/values/strings.xml | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/res/values/strings.xml b/res/values/strings.xml
+index f99f127..05a23bc 100644
+--- a/res/values/strings.xml
++++ b/res/values/strings.xml
+@@ -17,7 +17,7 @@
+ -->
+ <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+ 
+-    <string name="lineageparts_title">LineageOS Settings</string>
++    <string name="lineageparts_title">Zedex OS Settings</string>
+ 
+     <!-- Generic stuff used everywhere -->
+     <string name="loading">Loading\u2026</string>
+@@ -46,7 +46,7 @@
+ 
+     <!-- Privacy Settings Header item -->
+     <string name="privacy_settings_title">Privacy</string>
+-    <string name="privacy_settings_category" translatable="false">LineageOS</string>
++    <string name="privacy_settings_category" translatable="false">Zedex OS</string>
+ 
+     <!-- Notification channels -->
+     <string name="channel_light_settings_id" translatable="false">light_settings</string>
+@@ -247,6 +247,8 @@
+ 
+     <!-- Power menu -->
+     <string name="power_menu_title">Power menu</string>
++    <string name="power_menu_advanced_restart_title">Advanced restart</string>
++    <string name="power_menu_advanced_restart_summary">Include options for rebooting into recovery or bootloader</string>
+     <string name="power_menu_screenshot_title">Screenshot</string>
+     <string name="power_menu_screenshot_summary">Long-press for partial screenshot</string>
+     <string name="power_menu_airplane_title">Airplane mode</string>
+@@ -480,8 +482,8 @@
+     <string name="status_bar_toggle_brightness_summary">Adjust brightness by sliding across the status bar</string>
+ 
+     <!-- Status bar - Network Traffic -->
+-    <string name="network_traffic_settings_title">Network traffic monitor</string>
+-    <string name="network_traffic_settings_summary">Show current network traffic levels in the status bar</string>
++    <string name="network_traffic_settings_title">Show internet traffic</string>
++    <string name="network_traffic_settings_summary">Display real-time internet speed in the status bar</string>
+     <string name="network_traffic_mode_title">Display mode</string>
+     <string name="network_traffic_mode_disable">Disabled</string>
+     <string name="network_traffic_mode_up">Upload only</string>
+@@ -647,7 +649,7 @@
+     <string name="touchscreen_gesture_action_ambient_display">Show ambient display</string>
+ 
+     <!-- Egg: Title for the easter egg activity -->
+-    <string name="egg_title" translatable="false">LineageOS Easter Egg</string>
++    <string name="egg_title" translatable="false">Zedex OS Easter Egg</string>
+ 
+     <!-- Trust interface -->
+     <string name="trust_title" translatable="false">@*lineageos.platform:string/trust_feature_name</string>
+-- 
+2.43.0
+
