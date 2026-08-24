@@ -17,3 +17,12 @@ This repository contains the complete custom patches and manifest for building *
 5. **Home Settings App Icon Size Slider:** Dynamic 70% to 140% icon scaling.
 6. **Full-Screen Sukuna Boot Animation:** Native 1080x2400 resolution.
 7. **Clean Signed Release:** Built with `release-keys`.
+
+### 📦 Quick Patch Application
+To apply all Zedex OS modifications onto any standard LineageOS 17.1 tree:
+```bash
+git -C frameworks/base apply /path/to/frameworks_base_complete.patch
+git -C packages/apps/Settings apply /path/to/packages_apps_Settings.patch
+git -C packages/apps/Trebuchet apply /path/to/packages_apps_Trebuchet.patch
+git -C build/make apply /path/to/build_make.patch
+```
