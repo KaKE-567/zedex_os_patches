@@ -1,6 +1,0 @@
-From: KaKE-567 <kake@build.local>
-Subject: [PATCH] KernelSU: Fix FBE encrypted allowlist reset on reboot without DFE
-
-Prevent KernelSU throne_tracker and prune_allowlist from wiping all granted superuser
-apps when packages.list is unreadable or empty during early boot on encrypted devices.
----
