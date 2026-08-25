@@ -1,0 +1,245 @@
+From 827b8ba7a40c6b224b0f93331c076fb4ab945b6e Mon Sep 17 00:00:00 2001
+From: kake <kake@build.local>
+Date: Tue, 25 Aug 2026 05:47:25 +0000
+Subject: [PATCH] QSAnimator: Eliminate offscreen tile translations and
+ modernize alpha fading for Material You tiles
+
+Change-Id: I0bf087cf194ffa8b798a07a08fc0ba7aa8405b87
+---
+ .../com/android/systemui/qs/QSAnimator.java   | 179 ++++--------------
+ 1 file changed, 35 insertions(+), 144 deletions(-)
+
+diff --git a/packages/SystemUI/src/com/android/systemui/qs/QSAnimator.java b/packages/SystemUI/src/com/android/systemui/qs/QSAnimator.java
+index 085c5f4d..1c39bbaf 100644
+--- a/packages/SystemUI/src/com/android/systemui/qs/QSAnimator.java
++++ b/packages/SystemUI/src/com/android/systemui/qs/QSAnimator.java
+@@ -186,16 +186,9 @@ public class QSAnimator implements Callback, PageListener, Listener, OnLayoutCha
+ 
+     private void updateAnimators() {
+         TouchAnimator.Builder firstPageBuilder = new Builder();
+-        TouchAnimator.Builder translationXBuilder = new Builder();
+-        TouchAnimator.Builder translationYBuilder = new Builder();
+ 
+         if (mQsPanel.getHost() == null) return;
+         Collection<QSTile> tiles = mQsPanel.getHost().getTiles();
+-        int count = 0;
+-        int[] loc1 = new int[2];
+-        int[] loc2 = new int[2];
+-        int lastXDiff = 0;
+-        int lastX = 0;
+ 
+         clearAnimationState();
+         mAllViews.clear();
+@@ -204,155 +197,58 @@ public class QSAnimator implements Callback, PageListener, Listener, OnLayoutCha
+         QSTileLayout tileLayout = mQsPanel.getTileLayout();
+         mAllViews.add((View) tileLayout);
+         int height = mQs.getView() != null ? mQs.getView().getMeasuredHeight() : 0;
+-        int width = mQs.getView() != null ? mQs.getView().getMeasuredWidth() : 0;
+         int heightDiff = height - mQs.getHeader().getBottom()
+                 + mQs.getHeader().getPaddingBottom();
+         firstPageBuilder.addFloat(tileLayout, "translationY", heightDiff, 0);
+         firstPageBuilder.addFloat(mQuickQsPanel, "alpha", 1, 0);
++        firstPageBuilder.addFloat(tileLayout, "alpha", 0, 1);
+ 
+         for (QSTile tile : tiles) {
+             QSTileView tileView = mQsPanel.getTileView(tile);
+-            if (tileView == null) {
+-                Log.e(TAG, "tileView is null " + tile.getTileSpec());
+-                continue;
++            if (tileView != null) {
++                mAllViews.add(tileView);
+             }
+-            final View tileIcon = tileView.getIcon().getIconView();
+-            View view = mQs.getView();
+-
+-            // This case: less tiles to animate in small displays.
+-            if (count < mQuickQsPanel.getTileLayout().getNumVisibleTiles() && mAllowFancy) {
+-                // Quick tiles.
+-                QSTileView quickTileView = mQuickQsPanel.getTileView(tile);
+-                if (quickTileView == null) continue;
+-
+-                lastX = loc1[0];
+-                getRelativePosition(loc1, quickTileView.getIcon().getIconView(), view);
+-                getRelativePosition(loc2, tileIcon, view);
+-                final int xDiff = loc2[0] - loc1[0];
+-                final int yDiff = loc2[1] - loc1[1];
+-                lastXDiff = loc1[0] - lastX;
+-
+-                if (count < tileLayout.getNumVisibleTiles()) {
+-                    // Move the quick tile right from its location to the new one.
+-                    translationXBuilder.addFloat(quickTileView, "translationX", 0, xDiff);
+-                    translationYBuilder.addFloat(quickTileView, "translationY", 0, yDiff);
+-
+-                    // Counteract the parent translation on the tile. So we have a static base to
+-                    // animate the label position off from.
+-                    //firstPageBuilder.addFloat(tileView, "translationY", mQsPanel.getHeight(), 0);
+-
+-                    // Move the real tile from the quick tile position to its final
+-                    // location.
+-                    translationXBuilder.addFloat(tileView, "translationX", -xDiff, 0);
+-                    translationYBuilder.addFloat(tileView, "translationY", -yDiff, 0);
+-
+-                } else { // These tiles disappear when expanding
+-                    firstPageBuilder.addFloat(quickTileView, "alpha", 1, 0);
+-                    translationYBuilder.addFloat(quickTileView, "translationY", 0, yDiff);
+-
+-                    // xDiff is negative here and this makes it "more" negative
+-                    final int translationX = mQsPanel.isLayoutRtl() ? xDiff - width : xDiff + width;
+-                    translationXBuilder.addFloat(quickTileView, "translationX", 0,
+-                            translationX);
+-                }
+-
+-                mQuickQsViews.add(tileView.getIconWithBackground());
+-                mAllViews.add(tileView.getIcon());
++            QSTileView quickTileView = mQuickQsPanel.getTileView(tile);
++            if (quickTileView != null) {
+                 mAllViews.add(quickTileView);
+-            } else if (mFullRows && isIconInAnimatedRow(count)) {
+-                // TODO: Refactor some of this, it shares a lot with the above block.
+-                // Move the last tile position over by the last difference between quick tiles.
+-                // This makes the extra icons seems as if they are coming from positions in the
+-                // quick panel.
+-                loc1[0] += lastXDiff;
+-                getRelativePosition(loc2, tileIcon, view);
+-                final int xDiff = loc2[0] - loc1[0];
+-                final int yDiff = loc2[1] - loc1[1];
+-
+-                firstPageBuilder.addFloat(tileView, "translationY", heightDiff, 0);
+-                translationXBuilder.addFloat(tileView, "translationX", -xDiff, 0);
+-                translationYBuilder.addFloat(tileView, "translationY", -yDiff, 0);
+-                translationYBuilder.addFloat(tileIcon, "translationY", -yDiff, 0);
+-
+-                mAllViews.add(tileIcon);
+-            } else {
+-                firstPageBuilder.addFloat(tileView, "alpha", 0, 1);
+-                firstPageBuilder.addFloat(tileView, "translationY", -heightDiff, 0);
+             }
+-            mAllViews.add(tileView);
+-            count++;
+         }
+-        if (mAllowFancy) {
+-            // Make brightness appear static position and alpha in through second half.
+-            View brightness = mQsPanel.getBrightnessView();
+-            if (brightness != null) {
+-                firstPageBuilder.addFloat(brightness, "translationY", heightDiff, 0);
+-                mBrightnessAnimator = new TouchAnimator.Builder()
+-                        .addFloat(brightness, "alpha", mIsQuickQsBrightnessEnabled ? 1 : 0, 1)
+-                        .setStartDelay(.5f)
+-                        .build();
+-                mAllViews.add(brightness);
+-            } else {
+-                mBrightnessAnimator = null;
+-            }
+-            mFirstPageAnimator = firstPageBuilder
+-                    .setListener(this)
++
++        View brightness = mQsPanel.getBrightnessView();
++        if (brightness != null) {
++            firstPageBuilder.addFloat(brightness, "translationY", heightDiff, 0);
++            mBrightnessAnimator = new TouchAnimator.Builder()
++                    .addFloat(brightness, "alpha", mIsQuickQsBrightnessEnabled ? 1 : 0, 1)
++                    .setStartDelay(.3f)
+                     .build();
+-            // Fade in the tiles/labels as we reach the final position.
+-            mFirstPageDelayedAnimator = new TouchAnimator.Builder()
+-                    .setStartDelay(EXPANDED_TILE_DELAY)
+-                    .addFloat(tileLayout, "alpha", 0, 1)
+-                    .addFloat(mQsPanel.getDivider(), "alpha", 0, 1)
+-                    .addFloat(mQsPanel.getFooter().getView(), "alpha", 0, 1).build();
+-            mAllViews.add(mQsPanel.getDivider());
++            mAllViews.add(brightness);
++        } else {
++            mBrightnessAnimator = null;
++        }
++
++        View divider = mQsPanel.getDivider();
++        if (divider != null) {
++            firstPageBuilder.addFloat(divider, "alpha", 0, 1);
++            mAllViews.add(divider);
++        }
++        if (mQsPanel.getFooter() != null && mQsPanel.getFooter().getView() != null) {
++            firstPageBuilder.addFloat(mQsPanel.getFooter().getView(), "alpha", 0, 1);
+             mAllViews.add(mQsPanel.getFooter().getView());
+-            float px = 0;
+-            float py = 1;
+-            if (tiles.size() <= 3) {
+-                px = 1;
+-            } else if (tiles.size() <= 6) {
+-                px = .4f;
+-            }
+-            PathInterpolatorBuilder interpolatorBuilder = new PathInterpolatorBuilder(0, 0, px, py);
+-            translationXBuilder.setInterpolator(interpolatorBuilder.getXInterpolator());
+-            translationYBuilder.setInterpolator(interpolatorBuilder.getYInterpolator());
+-            mTranslationXAnimator = translationXBuilder.build();
+-            mTranslationYAnimator = translationYBuilder.build();
+         }
++
++        mFirstPageAnimator = firstPageBuilder
++                .setListener(this)
++                .build();
++        mFirstPageDelayedAnimator = null;
++        mTranslationXAnimator = null;
++        mTranslationYAnimator = null;
++
+         mNonfirstPageAnimator = new TouchAnimator.Builder()
+                 .addFloat(mQuickQsPanel, "alpha", 1, 0)
+-                .addFloat(mQsPanel.getDivider(), "alpha", 0, 1)
++                .addFloat(tileLayout, "alpha", 0, 1)
+                 .setListener(mNonFirstPageListener)
+-                .setEndDelay(.5f)
+                 .build();
+-        mNonfirstPageDelayedAnimator = new TouchAnimator.Builder()
+-                .setStartDelay(.14f)
+-                .addFloat(tileLayout, "alpha", 0, 1).build();
+-    }
+-
+-    private boolean isIconInAnimatedRow(int count) {
+-        if (mPagedLayout == null) {
+-            return false;
+-        }
+-        final int columnCount = mPagedLayout.getColumnCount();
+-        return count < ((mNumQuickTiles + columnCount - 1) / columnCount) * columnCount;
+-    }
+-
+-    private void getRelativePosition(int[] loc1, View view, View parent) {
+-        loc1[0] = 0 + view.getWidth() / 2;
+-        loc1[1] = 0;
+-        getRelativePositionInt(loc1, view, parent);
+-    }
+-
+-    private void getRelativePositionInt(int[] loc1, View view, View parent) {
+-        if(view == parent || view == null) return;
+-        // Ignore tile pages as they can have some offset we don't want to take into account in
+-        // RTL.
+-        if (!(view instanceof PagedTileLayout.TilePage)) {
+-            loc1[0] += view.getLeft();
+-            loc1[1] += view.getTop();
+-        }
+-        getRelativePositionInt(loc1, (View) view.getParent(), parent);
++        mNonfirstPageDelayedAnimator = null;
+     }
+ 
+     public void setPosition(float position) {
+@@ -365,18 +261,13 @@ public class QSAnimator implements Callback, PageListener, Listener, OnLayoutCha
+             }
+         }
+         mLastPosition = position;
+-        if (mOnFirstPage && mAllowFancy) {
+-            mQuickQsPanel.setAlpha(1);
++        if (mOnFirstPage) {
+             mFirstPageAnimator.setPosition(position);
+-            mFirstPageDelayedAnimator.setPosition(position);
+-            mTranslationXAnimator.setPosition(position);
+-            mTranslationYAnimator.setPosition(position);
+             if (mBrightnessAnimator != null) {
+                 mBrightnessAnimator.setPosition(position);
+             }
+         } else {
+             mNonfirstPageAnimator.setPosition(position);
+-            mNonfirstPageDelayedAnimator.setPosition(position);
+         }
+     }
+ 
+-- 
+2.43.0
+
