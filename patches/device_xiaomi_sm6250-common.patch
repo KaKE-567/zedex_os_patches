@@ -1,5 +1,5 @@
 diff --git a/rootdir/bin/init.qcom.post_boot.sh b/rootdir/bin/init.qcom.post_boot.sh
-index 5e8bdce..66fafc9 100644
+index 5e8bdce..83da65e 100644
 --- a/rootdir/bin/init.qcom.post_boot.sh
 +++ b/rootdir/bin/init.qcom.post_boot.sh
 @@ -115,52 +115,50 @@ function configure_memory_parameters() {
@@ -84,6 +84,59 @@ index 5e8bdce..66fafc9 100644
      echo 400 > /sys/module/cpu_boost/parameters/powerkey_input_boost_ms
  
      # Set Memory parameters
+@@ -254,8 +252,51 @@ function configure_memory_parameters() {
+     # Turn on sleep modes
+     echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled
+ 
++    # === Zedex Extreme Gaming Engine Tweaks ===
++    # 1. Adreno 618 GPU Turbo Tuning
++    echo 0 > /sys/class/kgsl/kgsl-3d0/throttling 2>/dev/null || true
++    echo 1 > /sys/class/kgsl/kgsl-3d0/bus_split 2>/dev/null || true
++    echo 80 > /sys/class/kgsl/kgsl-3d0/idle_timer 2>/dev/null || true
++    echo 0 > /sys/class/kgsl/kgsl-3d0/min_pwrlevel 2>/dev/null || true
++
++    # 2. UFS 2.1 Storage & I/O 2048KB Read-Ahead (Zero Texture Streaming Drops)
++    for queue in /sys/block/sd*/queue/read_ahead_kb /sys/block/mmcblk*/queue/read_ahead_kb
++    do
++        echo 2048 > $queue 2>/dev/null || true
++    done
++    for iostats in /sys/block/sd*/queue/iostats /sys/block/mmcblk*/queue/iostats
++    do
++        echo 0 > $iostats 2>/dev/null || true
++    done
++
++    # 3. Virtual Memory & In-Memory Game Cache Tuning
++    echo 50 > /proc/sys/vm/vfs_cache_pressure
++    echo 10 > /proc/sys/vm/dirty_ratio
++    echo 5 > /proc/sys/vm/dirty_background_ratio
++    echo 500 > /proc/sys/vm/dirty_expire_centisecs
++    echo 500 > /proc/sys/vm/dirty_writeback_centisecs
++    echo 0 > /proc/sys/kernel/sched_schedstats
++
++    # 4. Touch & CPU Input Boost (Pinpoint Sniping Response)
++    echo "0:1804800 6:2323200" > /sys/module/cpu_boost/parameters/input_boost_freq 2>/dev/null || true
++    echo 60 > /sys/module/cpu_boost/parameters/input_boost_ms 2>/dev/null || true
++    echo 1 > /sys/module/cpu_boost/parameters/dynamic_stune_boost 2>/dev/null || true
++
++    # 5. Low-Ping TCP Protocol Optimization
++    echo 3 > /proc/sys/net/ipv4/tcp_fastopen 2>/dev/null || true
++    echo 16384 > /proc/sys/net/ipv4/tcp_notsent_lowat 2>/dev/null || true
++    echo 1 > /proc/sys/net/ipv4/tcp_tw_reuse 2>/dev/null || true
++    echo 1 > /proc/sys/net/ipv4/tcp_sack 2>/dev/null || true
++    echo 1 > /proc/sys/net/ipv4/tcp_window_scaling 2>/dev/null || true
++
++    # 6. Sysfs Permissions for Settings & SystemUI Direct Profile Controls
++    chmod 0666 /sys/devices/system/cpu/cpu*/cpufreq/scaling_max_freq 2>/dev/null || true
++    chmod 0666 /sys/devices/system/cpu/cpu*/cpufreq/scaling_min_freq 2>/dev/null || true
++    chmod 0666 /dev/stune/top-app/schedtune.boost 2>/dev/null || true
++    chmod 0666 /sys/class/thermal/thermal_message/sconfig 2>/dev/null || true
++
+ # Post-setup services
+-        setprop vendor.post_boot.parsed 1
++    setprop vendor.post_boot.parsed 1
+ 
+ # Let kernel know our image version/variant/crm_version
+     image_version="10:"
 diff --git a/rootdir/etc/init.qcom.rc b/rootdir/etc/init.qcom.rc
 index 874b5e7..f813c2e 100644
 --- a/rootdir/etc/init.qcom.rc
@@ -174,3 +227,20 @@ index 874b5e7..f813c2e 100644
 +    write /dev/stune/top-app/schedtune.boost 5
 +    write /sys/module/cpu_boost/parameters/input_boost_ms 40
 +
+diff --git a/system.prop b/system.prop
+index 3a91df8..4309de7 100644
+--- a/system.prop
++++ b/system.prop
+@@ -84,9 +84,11 @@ debug.egl.hw=1
+ debug.sf.hw=1
+ persist.sys.composition.type=gpu
+ debug.composition.type=gpu
+-windowsmgr.max_events_per_sec=300
++ro.input.resampling=1
++windowsmgr.max_events_per_sec=360
+ view.scroll_friction=0.008
+ view.touch_slop=2
++touch.pressure.scale=0.001
+ ro.config.hw_quickpoweron=true
+ ro.opengles.version=196610
+ ro.surface_flinger.force_hwc_copy_for_virtual_displays=true
