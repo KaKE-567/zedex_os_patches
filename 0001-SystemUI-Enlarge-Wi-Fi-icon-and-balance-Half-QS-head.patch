@@ -1,0 +1,574 @@
+From 4b83691343bf41935261ef33f150ca975abba8dc Mon Sep 17 00:00:00 2001
+From: kake <kake@build.local>
+Date: Tue, 25 Aug 2026 08:08:43 +0000
+Subject: [PATCH] SystemUI: Enlarge Wi-Fi icon and balance Half QS header
+ padding
+
+Change-Id: I9c221e5d348d1694885586e7e6b666baeaa1ffeb
+---
+ core/res/res/drawable/ic_wifi_signal_0.xml    | 36 ++++++++-------
+ core/res/res/drawable/ic_wifi_signal_1.xml    | 36 ++++++++-------
+ core/res/res/drawable/ic_wifi_signal_2.xml    | 36 ++++++++-------
+ core/res/res/drawable/ic_wifi_signal_3.xml    | 36 ++++++++-------
+ core/res/res/drawable/ic_wifi_signal_4.xml    | 36 ++++++++-------
+ core/res/res/values/dimens.xml                |  4 +-
+ .../SystemUI/res/drawable/ic_qs_wifi_0.xml    | 36 ++++++++-------
+ .../SystemUI/res/drawable/ic_qs_wifi_1.xml    | 36 ++++++++-------
+ .../SystemUI/res/drawable/ic_qs_wifi_2.xml    | 36 ++++++++-------
+ .../SystemUI/res/drawable/ic_qs_wifi_3.xml    | 36 ++++++++-------
+ .../SystemUI/res/drawable/ic_qs_wifi_4.xml    | 36 ++++++++-------
+ .../res/drawable/ic_qs_wifi_disconnected.xml  | 45 ++++++++-----------
+ .../quick_status_bar_expanded_header.xml      |  1 +
+ packages/SystemUI/res/values/dimens.xml       |  2 +-
+ 14 files changed, 232 insertions(+), 180 deletions(-)
+
+diff --git a/core/res/res/drawable/ic_wifi_signal_0.xml b/core/res/res/drawable/ic_wifi_signal_0.xml
+index 36a1169a..503598b8 100644
+--- a/core/res/res/drawable/ic_wifi_signal_0.xml
++++ b/core/res/res/drawable/ic_wifi_signal_0.xml
+@@ -3,19 +3,25 @@
+     android:height="24dp"
+     android:viewportWidth="24"
+     android:viewportHeight="24">
+-    <!-- Top Arc -->
+-    <path
+-        android:fillColor="@android:color/white"
+-        android:fillAlpha="0.3"
+-        android:pathData="M 2.4,9.2 C 7.7,3.9 16.3,3.9 21.6,9.2 C 22.1,9.7 22.1,10.5 21.6,11.0 C 21.1,11.5 20.3,11.5 19.8,11.0 C 15.5,6.7 8.5,6.7 4.2,11.0 C 3.7,11.5 2.9,11.5 2.4,11.0 C 1.9,10.5 1.9,9.7 2.4,9.2 Z" />
+-    <!-- Middle Arc -->
+-    <path
+-        android:fillColor="@android:color/white"
+-        android:fillAlpha="0.3"
+-        android:pathData="M 5.8,12.6 C 9.2,9.2 14.8,9.2 18.2,12.6 C 18.7,13.1 18.7,13.9 18.2,14.4 C 17.7,14.9 16.9,14.9 16.4,14.4 C 13.9,11.9 10.1,11.9 7.6,14.4 C 7.1,14.9 6.3,14.9 5.8,14.4 C 5.3,13.9 5.3,13.1 5.8,12.6 Z" />
+-    <!-- Bottom Wedge -->
+-    <path
+-        android:fillColor="@android:color/white"
+-        android:fillAlpha="0.3"
+-        android:pathData="M 9.5,16.0 C 10.9,14.6 13.1,14.6 14.5,16.0 C 14.8,16.3 14.9,16.7 14.7,17.1 L 12.6,20.2 C 12.3,20.6 11.7,20.6 11.4,20.2 L 9.3,17.1 C 9.1,16.7 9.2,16.3 9.5,16.0 Z" />
++    <group
++        android:scaleX="1.25"
++        android:scaleY="1.25"
++        android:pivotX="12"
++        android:pivotY="20">
++        <!-- Top Arc -->
++        <path
++            android:fillColor="@android:color/white"
++            android:fillAlpha="0.3"
++            android:pathData="M 2.4,9.2 C 7.7,3.9 16.3,3.9 21.6,9.2 C 22.1,9.7 22.1,10.5 21.6,11.0 C 21.1,11.5 20.3,11.5 19.8,11.0 C 15.5,6.7 8.5,6.7 4.2,11.0 C 3.7,11.5 2.9,11.5 2.4,11.0 C 1.9,10.5 1.9,9.7 2.4,9.2 Z" />
++        <!-- Middle Arc -->
++        <path
++            android:fillColor="@android:color/white"
++            android:fillAlpha="0.3"
++            android:pathData="M 5.8,12.6 C 9.2,9.2 14.8,9.2 18.2,12.6 C 18.7,13.1 18.7,13.9 18.2,14.4 C 17.7,14.9 16.9,14.9 16.4,14.4 C 13.9,11.9 10.1,11.9 7.6,14.4 C 7.1,14.9 6.3,14.9 5.8,14.4 C 5.3,13.9 5.3,13.1 5.8,12.6 Z" />
++        <!-- Bottom Wedge -->
++        <path
++            android:fillColor="@android:color/white"
++            android:fillAlpha="0.3"
++            android:pathData="M 9.5,16.0 C 10.9,14.6 13.1,14.6 14.5,16.0 C 14.8,16.3 14.9,16.7 14.7,17.1 L 12.6,20.2 C 12.3,20.6 11.7,20.6 11.4,20.2 L 9.3,17.1 C 9.1,16.7 9.2,16.3 9.5,16.0 Z" />
++    </group>
+ </vector>
+diff --git a/core/res/res/drawable/ic_wifi_signal_1.xml b/core/res/res/drawable/ic_wifi_signal_1.xml
+index 15054df6..72bf8d21 100644
+--- a/core/res/res/drawable/ic_wifi_signal_1.xml
++++ b/core/res/res/drawable/ic_wifi_signal_1.xml
+@@ -3,19 +3,25 @@
+     android:height="24dp"
+     android:viewportWidth="24"
+     android:viewportHeight="24">
+-    <!-- Top Arc -->
+-    <path
+-        android:fillColor="@android:color/white"
+-        android:fillAlpha="0.3"
+-        android:pathData="M 2.4,9.2 C 7.7,3.9 16.3,3.9 21.6,9.2 C 22.1,9.7 22.1,10.5 21.6,11.0 C 21.1,11.5 20.3,11.5 19.8,11.0 C 15.5,6.7 8.5,6.7 4.2,11.0 C 3.7,11.5 2.9,11.5 2.4,11.0 C 1.9,10.5 1.9,9.7 2.4,9.2 Z" />
+-    <!-- Middle Arc -->
+-    <path
+-        android:fillColor="@android:color/white"
+-        android:fillAlpha="0.3"
+-        android:pathData="M 5.8,12.6 C 9.2,9.2 14.8,9.2 18.2,12.6 C 18.7,13.1 18.7,13.9 18.2,14.4 C 17.7,14.9 16.9,14.9 16.4,14.4 C 13.9,11.9 10.1,11.9 7.6,14.4 C 7.1,14.9 6.3,14.9 5.8,14.4 C 5.3,13.9 5.3,13.1 5.8,12.6 Z" />
+-    <!-- Bottom Wedge -->
+-    <path
+-        android:fillColor="@android:color/white"
+-        android:fillAlpha="1.0"
+-        android:pathData="M 9.5,16.0 C 10.9,14.6 13.1,14.6 14.5,16.0 C 14.8,16.3 14.9,16.7 14.7,17.1 L 12.6,20.2 C 12.3,20.6 11.7,20.6 11.4,20.2 L 9.3,17.1 C 9.1,16.7 9.2,16.3 9.5,16.0 Z" />
++    <group
++        android:scaleX="1.25"
++        android:scaleY="1.25"
++        android:pivotX="12"
++        android:pivotY="20">
++        <!-- Top Arc -->
++        <path
++            android:fillColor="@android:color/white"
++            android:fillAlpha="0.3"
++            android:pathData="M 2.4,9.2 C 7.7,3.9 16.3,3.9 21.6,9.2 C 22.1,9.7 22.1,10.5 21.6,11.0 C 21.1,11.5 20.3,11.5 19.8,11.0 C 15.5,6.7 8.5,6.7 4.2,11.0 C 3.7,11.5 2.9,11.5 2.4,11.0 C 1.9,10.5 1.9,9.7 2.4,9.2 Z" />
++        <!-- Middle Arc -->
++        <path
++            android:fillColor="@android:color/white"
++            android:fillAlpha="0.3"
++            android:pathData="M 5.8,12.6 C 9.2,9.2 14.8,9.2 18.2,12.6 C 18.7,13.1 18.7,13.9 18.2,14.4 C 17.7,14.9 16.9,14.9 16.4,14.4 C 13.9,11.9 10.1,11.9 7.6,14.4 C 7.1,14.9 6.3,14.9 5.8,14.4 C 5.3,13.9 5.3,13.1 5.8,12.6 Z" />
++        <!-- Bottom Wedge -->
++        <path
++            android:fillColor="@android:color/white"
++            android:fillAlpha="1.0"
++            android:pathData="M 9.5,16.0 C 10.9,14.6 13.1,14.6 14.5,16.0 C 14.8,16.3 14.9,16.7 14.7,17.1 L 12.6,20.2 C 12.3,20.6 11.7,20.6 11.4,20.2 L 9.3,17.1 C 9.1,16.7 9.2,16.3 9.5,16.0 Z" />
++    </group>
+ </vector>
+diff --git a/core/res/res/drawable/ic_wifi_signal_2.xml b/core/res/res/drawable/ic_wifi_signal_2.xml
+index 15054df6..72bf8d21 100644
+--- a/core/res/res/drawable/ic_wifi_signal_2.xml
++++ b/core/res/res/drawable/ic_wifi_signal_2.xml
+@@ -3,19 +3,25 @@
+     android:height="24dp"
+     android:viewportWidth="24"
+     android:viewportHeight="24">
+-    <!-- Top Arc -->
+-    <path
+-        android:fillColor="@android:color/white"
+-        android:fillAlpha="0.3"
+-        android:pathData="M 2.4,9.2 C 7.7,3.9 16.3,3.9 21.6,9.2 C 22.1,9.7 22.1,10.5 21.6,11.0 C 21.1,11.5 20.3,11.5 19.8,11.0 C 15.5,6.7 8.5,6.7 4.2,11.0 C 3.7,11.5 2.9,11.5 2.4,11.0 C 1.9,10.5 1.9,9.7 2.4,9.2 Z" />
+-    <!-- Middle Arc -->
+-    <path
+-        android:fillColor="@android:color/white"
+-        android:fillAlpha="0.3"
+-        android:pathData="M 5.8,12.6 C 9.2,9.2 14.8,9.2 18.2,12.6 C 18.7,13.1 18.7,13.9 18.2,14.4 C 17.7,14.9 16.9,14.9 16.4,14.4 C 13.9,11.9 10.1,11.9 7.6,14.4 C 7.1,14.9 6.3,14.9 5.8,14.4 C 5.3,13.9 5.3,13.1 5.8,12.6 Z" />
+-    <!-- Bottom Wedge -->
+-    <path
+-        android:fillColor="@android:color/white"
+-        android:fillAlpha="1.0"
+-        android:pathData="M 9.5,16.0 C 10.9,14.6 13.1,14.6 14.5,16.0 C 14.8,16.3 14.9,16.7 14.7,17.1 L 12.6,20.2 C 12.3,20.6 11.7,20.6 11.4,20.2 L 9.3,17.1 C 9.1,16.7 9.2,16.3 9.5,16.0 Z" />
++    <group
++        android:scaleX="1.25"
++        android:scaleY="1.25"
++        android:pivotX="12"
++        android:pivotY="20">
++        <!-- Top Arc -->
++        <path
++            android:fillColor="@android:color/white"
++            android:fillAlpha="0.3"
++            android:pathData="M 2.4,9.2 C 7.7,3.9 16.3,3.9 21.6,9.2 C 22.1,9.7 22.1,10.5 21.6,11.0 C 21.1,11.5 20.3,11.5 19.8,11.0 C 15.5,6.7 8.5,6.7 4.2,11.0 C 3.7,11.5 2.9,11.5 2.4,11.0 C 1.9,10.5 1.9,9.7 2.4,9.2 Z" />
++        <!-- Middle Arc -->
++        <path
++            android:fillColor="@android:color/white"
++            android:fillAlpha="0.3"
++            android:pathData="M 5.8,12.6 C 9.2,9.2 14.8,9.2 18.2,12.6 C 18.7,13.1 18.7,13.9 18.2,14.4 C 17.7,14.9 16.9,14.9 16.4,14.4 C 13.9,11.9 10.1,11.9 7.6,14.4 C 7.1,14.9 6.3,14.9 5.8,14.4 C 5.3,13.9 5.3,13.1 5.8,12.6 Z" />
++        <!-- Bottom Wedge -->
++        <path
++            android:fillColor="@android:color/white"
++            android:fillAlpha="1.0"
++            android:pathData="M 9.5,16.0 C 10.9,14.6 13.1,14.6 14.5,16.0 C 14.8,16.3 14.9,16.7 14.7,17.1 L 12.6,20.2 C 12.3,20.6 11.7,20.6 11.4,20.2 L 9.3,17.1 C 9.1,16.7 9.2,16.3 9.5,16.0 Z" />
++    </group>
+ </vector>
+diff --git a/core/res/res/drawable/ic_wifi_signal_3.xml b/core/res/res/drawable/ic_wifi_signal_3.xml
+index 7884df0f..d1e86808 100644
+--- a/core/res/res/drawable/ic_wifi_signal_3.xml
++++ b/core/res/res/drawable/ic_wifi_signal_3.xml
+@@ -3,19 +3,25 @@
+     android:height="24dp"
+     android:viewportWidth="24"
+     android:viewportHeight="24">
+-    <!-- Top Arc -->
+-    <path
+-        android:fillColor="@android:color/white"
+-        android:fillAlpha="0.3"
+-        android:pathData="M 2.4,9.2 C 7.7,3.9 16.3,3.9 21.6,9.2 C 22.1,9.7 22.1,10.5 21.6,11.0 C 21.1,11.5 20.3,11.5 19.8,11.0 C 15.5,6.7 8.5,6.7 4.2,11.0 C 3.7,11.5 2.9,11.5 2.4,11.0 C 1.9,10.5 1.9,9.7 2.4,9.2 Z" />
+-    <!-- Middle Arc -->
+-    <path
+-        android:fillColor="@android:color/white"
+-        android:fillAlpha="1.0"
+-        android:pathData="M 5.8,12.6 C 9.2,9.2 14.8,9.2 18.2,12.6 C 18.7,13.1 18.7,13.9 18.2,14.4 C 17.7,14.9 16.9,14.9 16.4,14.4 C 13.9,11.9 10.1,11.9 7.6,14.4 C 7.1,14.9 6.3,14.9 5.8,14.4 C 5.3,13.9 5.3,13.1 5.8,12.6 Z" />
+-    <!-- Bottom Wedge -->
+-    <path
+-        android:fillColor="@android:color/white"
+-        android:fillAlpha="1.0"
+-        android:pathData="M 9.5,16.0 C 10.9,14.6 13.1,14.6 14.5,16.0 C 14.8,16.3 14.9,16.7 14.7,17.1 L 12.6,20.2 C 12.3,20.6 11.7,20.6 11.4,20.2 L 9.3,17.1 C 9.1,16.7 9.2,16.3 9.5,16.0 Z" />
++    <group
++        android:scaleX="1.25"
++        android:scaleY="1.25"
++        android:pivotX="12"
++        android:pivotY="20">
++        <!-- Top Arc -->
++        <path
++            android:fillColor="@android:color/white"
++            android:fillAlpha="0.3"
++            android:pathData="M 2.4,9.2 C 7.7,3.9 16.3,3.9 21.6,9.2 C 22.1,9.7 22.1,10.5 21.6,11.0 C 21.1,11.5 20.3,11.5 19.8,11.0 C 15.5,6.7 8.5,6.7 4.2,11.0 C 3.7,11.5 2.9,11.5 2.4,11.0 C 1.9,10.5 1.9,9.7 2.4,9.2 Z" />
++        <!-- Middle Arc -->
++        <path
++            android:fillColor="@android:color/white"
++            android:fillAlpha="1.0"
++            android:pathData="M 5.8,12.6 C 9.2,9.2 14.8,9.2 18.2,12.6 C 18.7,13.1 18.7,13.9 18.2,14.4 C 17.7,14.9 16.9,14.9 16.4,14.4 C 13.9,11.9 10.1,11.9 7.6,14.4 C 7.1,14.9 6.3,14.9 5.8,14.4 C 5.3,13.9 5.3,13.1 5.8,12.6 Z" />
++        <!-- Bottom Wedge -->
++        <path
++            android:fillColor="@android:color/white"
++            android:fillAlpha="1.0"
++            android:pathData="M 9.5,16.0 C 10.9,14.6 13.1,14.6 14.5,16.0 C 14.8,16.3 14.9,16.7 14.7,17.1 L 12.6,20.2 C 12.3,20.6 11.7,20.6 11.4,20.2 L 9.3,17.1 C 9.1,16.7 9.2,16.3 9.5,16.0 Z" />
++    </group>
+ </vector>
+diff --git a/core/res/res/drawable/ic_wifi_signal_4.xml b/core/res/res/drawable/ic_wifi_signal_4.xml
+index 07b366d0..e2f15cb3 100644
+--- a/core/res/res/drawable/ic_wifi_signal_4.xml
++++ b/core/res/res/drawable/ic_wifi_signal_4.xml
+@@ -3,19 +3,25 @@
+     android:height="24dp"
+     android:viewportWidth="24"
+     android:viewportHeight="24">
+-    <!-- Top Arc -->
+-    <path
+-        android:fillColor="@android:color/white"
+-        android:fillAlpha="1.0"
+-        android:pathData="M 2.4,9.2 C 7.7,3.9 16.3,3.9 21.6,9.2 C 22.1,9.7 22.1,10.5 21.6,11.0 C 21.1,11.5 20.3,11.5 19.8,11.0 C 15.5,6.7 8.5,6.7 4.2,11.0 C 3.7,11.5 2.9,11.5 2.4,11.0 C 1.9,10.5 1.9,9.7 2.4,9.2 Z" />
+-    <!-- Middle Arc -->
+-    <path
+-        android:fillColor="@android:color/white"
+-        android:fillAlpha="1.0"
+-        android:pathData="M 5.8,12.6 C 9.2,9.2 14.8,9.2 18.2,12.6 C 18.7,13.1 18.7,13.9 18.2,14.4 C 17.7,14.9 16.9,14.9 16.4,14.4 C 13.9,11.9 10.1,11.9 7.6,14.4 C 7.1,14.9 6.3,14.9 5.8,14.4 C 5.3,13.9 5.3,13.1 5.8,12.6 Z" />
+-    <!-- Bottom Wedge -->
+-    <path
+-        android:fillColor="@android:color/white"
+-        android:fillAlpha="1.0"
+-        android:pathData="M 9.5,16.0 C 10.9,14.6 13.1,14.6 14.5,16.0 C 14.8,16.3 14.9,16.7 14.7,17.1 L 12.6,20.2 C 12.3,20.6 11.7,20.6 11.4,20.2 L 9.3,17.1 C 9.1,16.7 9.2,16.3 9.5,16.0 Z" />
++    <group
++        android:scaleX="1.25"
++        android:scaleY="1.25"
++        android:pivotX="12"
++        android:pivotY="20">
++        <!-- Top Arc -->
++        <path
++            android:fillColor="@android:color/white"
++            android:fillAlpha="1.0"
++            android:pathData="M 2.4,9.2 C 7.7,3.9 16.3,3.9 21.6,9.2 C 22.1,9.7 22.1,10.5 21.6,11.0 C 21.1,11.5 20.3,11.5 19.8,11.0 C 15.5,6.7 8.5,6.7 4.2,11.0 C 3.7,11.5 2.9,11.5 2.4,11.0 C 1.9,10.5 1.9,9.7 2.4,9.2 Z" />
++        <!-- Middle Arc -->
++        <path
++            android:fillColor="@android:color/white"
++            android:fillAlpha="1.0"
++            android:pathData="M 5.8,12.6 C 9.2,9.2 14.8,9.2 18.2,12.6 C 18.7,13.1 18.7,13.9 18.2,14.4 C 17.7,14.9 16.9,14.9 16.4,14.4 C 13.9,11.9 10.1,11.9 7.6,14.4 C 7.1,14.9 6.3,14.9 5.8,14.4 C 5.3,13.9 5.3,13.1 5.8,12.6 Z" />
++        <!-- Bottom Wedge -->
++        <path
++            android:fillColor="@android:color/white"
++            android:fillAlpha="1.0"
++            android:pathData="M 9.5,16.0 C 10.9,14.6 13.1,14.6 14.5,16.0 C 14.8,16.3 14.9,16.7 14.7,17.1 L 12.6,20.2 C 12.3,20.6 11.7,20.6 11.4,20.2 L 9.3,17.1 C 9.1,16.7 9.2,16.3 9.5,16.0 Z" />
++    </group>
+ </vector>
+diff --git a/core/res/res/values/dimens.xml b/core/res/res/values/dimens.xml
+index 7ea43500..cab8e9e9 100644
+--- a/core/res/res/values/dimens.xml
++++ b/core/res/res/values/dimens.xml
+@@ -39,8 +39,8 @@
+     <dimen name="status_bar_height_landscape">@dimen/status_bar_height_portrait</dimen>
+     <!-- Height of area above QQS where battery/time go -->
+     <dimen name="quick_qs_offset_height">48dp</dimen>
+-    <!-- Total height of QQS (quick_qs_offset_height + 176) -->
+-    <dimen name="quick_qs_total_height">224dp</dimen>
++    <!-- Total height of QQS (quick_qs_offset_height + 152) -->
++    <dimen name="quick_qs_total_height">200dp</dimen>
+     <!-- Height of the bottom navigation / system bar. -->
+     <dimen name="navigation_bar_height">48dp</dimen>
+     <!-- Height of the bottom navigation bar in portrait; often the same as @dimen/navigation_bar_height -->
+diff --git a/packages/SystemUI/res/drawable/ic_qs_wifi_0.xml b/packages/SystemUI/res/drawable/ic_qs_wifi_0.xml
+index 36a1169a..503598b8 100644
+--- a/packages/SystemUI/res/drawable/ic_qs_wifi_0.xml
++++ b/packages/SystemUI/res/drawable/ic_qs_wifi_0.xml
+@@ -3,19 +3,25 @@
+     android:height="24dp"
+     android:viewportWidth="24"
+     android:viewportHeight="24">
+-    <!-- Top Arc -->
+-    <path
+-        android:fillColor="@android:color/white"
+-        android:fillAlpha="0.3"
+-        android:pathData="M 2.4,9.2 C 7.7,3.9 16.3,3.9 21.6,9.2 C 22.1,9.7 22.1,10.5 21.6,11.0 C 21.1,11.5 20.3,11.5 19.8,11.0 C 15.5,6.7 8.5,6.7 4.2,11.0 C 3.7,11.5 2.9,11.5 2.4,11.0 C 1.9,10.5 1.9,9.7 2.4,9.2 Z" />
+-    <!-- Middle Arc -->
+-    <path
+-        android:fillColor="@android:color/white"
+-        android:fillAlpha="0.3"
+-        android:pathData="M 5.8,12.6 C 9.2,9.2 14.8,9.2 18.2,12.6 C 18.7,13.1 18.7,13.9 18.2,14.4 C 17.7,14.9 16.9,14.9 16.4,14.4 C 13.9,11.9 10.1,11.9 7.6,14.4 C 7.1,14.9 6.3,14.9 5.8,14.4 C 5.3,13.9 5.3,13.1 5.8,12.6 Z" />
+-    <!-- Bottom Wedge -->
+-    <path
+-        android:fillColor="@android:color/white"
+-        android:fillAlpha="0.3"
+-        android:pathData="M 9.5,16.0 C 10.9,14.6 13.1,14.6 14.5,16.0 C 14.8,16.3 14.9,16.7 14.7,17.1 L 12.6,20.2 C 12.3,20.6 11.7,20.6 11.4,20.2 L 9.3,17.1 C 9.1,16.7 9.2,16.3 9.5,16.0 Z" />
++    <group
++        android:scaleX="1.25"
++        android:scaleY="1.25"
++        android:pivotX="12"
++        android:pivotY="20">
++        <!-- Top Arc -->
++        <path
++            android:fillColor="@android:color/white"
++            android:fillAlpha="0.3"
++            android:pathData="M 2.4,9.2 C 7.7,3.9 16.3,3.9 21.6,9.2 C 22.1,9.7 22.1,10.5 21.6,11.0 C 21.1,11.5 20.3,11.5 19.8,11.0 C 15.5,6.7 8.5,6.7 4.2,11.0 C 3.7,11.5 2.9,11.5 2.4,11.0 C 1.9,10.5 1.9,9.7 2.4,9.2 Z" />
++        <!-- Middle Arc -->
++        <path
++            android:fillColor="@android:color/white"
++            android:fillAlpha="0.3"
++            android:pathData="M 5.8,12.6 C 9.2,9.2 14.8,9.2 18.2,12.6 C 18.7,13.1 18.7,13.9 18.2,14.4 C 17.7,14.9 16.9,14.9 16.4,14.4 C 13.9,11.9 10.1,11.9 7.6,14.4 C 7.1,14.9 6.3,14.9 5.8,14.4 C 5.3,13.9 5.3,13.1 5.8,12.6 Z" />
++        <!-- Bottom Wedge -->
++        <path
++            android:fillColor="@android:color/white"
++            android:fillAlpha="0.3"
++            android:pathData="M 9.5,16.0 C 10.9,14.6 13.1,14.6 14.5,16.0 C 14.8,16.3 14.9,16.7 14.7,17.1 L 12.6,20.2 C 12.3,20.6 11.7,20.6 11.4,20.2 L 9.3,17.1 C 9.1,16.7 9.2,16.3 9.5,16.0 Z" />
++    </group>
+ </vector>
+diff --git a/packages/SystemUI/res/drawable/ic_qs_wifi_1.xml b/packages/SystemUI/res/drawable/ic_qs_wifi_1.xml
+index 15054df6..72bf8d21 100644
+--- a/packages/SystemUI/res/drawable/ic_qs_wifi_1.xml
++++ b/packages/SystemUI/res/drawable/ic_qs_wifi_1.xml
+@@ -3,19 +3,25 @@
+     android:height="24dp"
+     android:viewportWidth="24"
+     android:viewportHeight="24">
+-    <!-- Top Arc -->
+-    <path
+-        android:fillColor="@android:color/white"
+-        android:fillAlpha="0.3"
+-        android:pathData="M 2.4,9.2 C 7.7,3.9 16.3,3.9 21.6,9.2 C 22.1,9.7 22.1,10.5 21.6,11.0 C 21.1,11.5 20.3,11.5 19.8,11.0 C 15.5,6.7 8.5,6.7 4.2,11.0 C 3.7,11.5 2.9,11.5 2.4,11.0 C 1.9,10.5 1.9,9.7 2.4,9.2 Z" />
+-    <!-- Middle Arc -->
+-    <path
+-        android:fillColor="@android:color/white"
+-        android:fillAlpha="0.3"
+-        android:pathData="M 5.8,12.6 C 9.2,9.2 14.8,9.2 18.2,12.6 C 18.7,13.1 18.7,13.9 18.2,14.4 C 17.7,14.9 16.9,14.9 16.4,14.4 C 13.9,11.9 10.1,11.9 7.6,14.4 C 7.1,14.9 6.3,14.9 5.8,14.4 C 5.3,13.9 5.3,13.1 5.8,12.6 Z" />
+-    <!-- Bottom Wedge -->
+-    <path
+-        android:fillColor="@android:color/white"
+-        android:fillAlpha="1.0"
+-        android:pathData="M 9.5,16.0 C 10.9,14.6 13.1,14.6 14.5,16.0 C 14.8,16.3 14.9,16.7 14.7,17.1 L 12.6,20.2 C 12.3,20.6 11.7,20.6 11.4,20.2 L 9.3,17.1 C 9.1,16.7 9.2,16.3 9.5,16.0 Z" />
++    <group
++        android:scaleX="1.25"
++        android:scaleY="1.25"
++        android:pivotX="12"
++        android:pivotY="20">
++        <!-- Top Arc -->
++        <path
++            android:fillColor="@android:color/white"
++            android:fillAlpha="0.3"
++            android:pathData="M 2.4,9.2 C 7.7,3.9 16.3,3.9 21.6,9.2 C 22.1,9.7 22.1,10.5 21.6,11.0 C 21.1,11.5 20.3,11.5 19.8,11.0 C 15.5,6.7 8.5,6.7 4.2,11.0 C 3.7,11.5 2.9,11.5 2.4,11.0 C 1.9,10.5 1.9,9.7 2.4,9.2 Z" />
++        <!-- Middle Arc -->
++        <path
++            android:fillColor="@android:color/white"
++            android:fillAlpha="0.3"
++            android:pathData="M 5.8,12.6 C 9.2,9.2 14.8,9.2 18.2,12.6 C 18.7,13.1 18.7,13.9 18.2,14.4 C 17.7,14.9 16.9,14.9 16.4,14.4 C 13.9,11.9 10.1,11.9 7.6,14.4 C 7.1,14.9 6.3,14.9 5.8,14.4 C 5.3,13.9 5.3,13.1 5.8,12.6 Z" />
++        <!-- Bottom Wedge -->
++        <path
++            android:fillColor="@android:color/white"
++            android:fillAlpha="1.0"
++            android:pathData="M 9.5,16.0 C 10.9,14.6 13.1,14.6 14.5,16.0 C 14.8,16.3 14.9,16.7 14.7,17.1 L 12.6,20.2 C 12.3,20.6 11.7,20.6 11.4,20.2 L 9.3,17.1 C 9.1,16.7 9.2,16.3 9.5,16.0 Z" />
++    </group>
+ </vector>
+diff --git a/packages/SystemUI/res/drawable/ic_qs_wifi_2.xml b/packages/SystemUI/res/drawable/ic_qs_wifi_2.xml
+index 15054df6..72bf8d21 100644
+--- a/packages/SystemUI/res/drawable/ic_qs_wifi_2.xml
++++ b/packages/SystemUI/res/drawable/ic_qs_wifi_2.xml
+@@ -3,19 +3,25 @@
+     android:height="24dp"
+     android:viewportWidth="24"
+     android:viewportHeight="24">
+-    <!-- Top Arc -->
+-    <path
+-        android:fillColor="@android:color/white"
+-        android:fillAlpha="0.3"
+-        android:pathData="M 2.4,9.2 C 7.7,3.9 16.3,3.9 21.6,9.2 C 22.1,9.7 22.1,10.5 21.6,11.0 C 21.1,11.5 20.3,11.5 19.8,11.0 C 15.5,6.7 8.5,6.7 4.2,11.0 C 3.7,11.5 2.9,11.5 2.4,11.0 C 1.9,10.5 1.9,9.7 2.4,9.2 Z" />
+-    <!-- Middle Arc -->
+-    <path
+-        android:fillColor="@android:color/white"
+-        android:fillAlpha="0.3"
+-        android:pathData="M 5.8,12.6 C 9.2,9.2 14.8,9.2 18.2,12.6 C 18.7,13.1 18.7,13.9 18.2,14.4 C 17.7,14.9 16.9,14.9 16.4,14.4 C 13.9,11.9 10.1,11.9 7.6,14.4 C 7.1,14.9 6.3,14.9 5.8,14.4 C 5.3,13.9 5.3,13.1 5.8,12.6 Z" />
+-    <!-- Bottom Wedge -->
+-    <path
+-        android:fillColor="@android:color/white"
+-        android:fillAlpha="1.0"
+-        android:pathData="M 9.5,16.0 C 10.9,14.6 13.1,14.6 14.5,16.0 C 14.8,16.3 14.9,16.7 14.7,17.1 L 12.6,20.2 C 12.3,20.6 11.7,20.6 11.4,20.2 L 9.3,17.1 C 9.1,16.7 9.2,16.3 9.5,16.0 Z" />
++    <group
++        android:scaleX="1.25"
++        android:scaleY="1.25"
++        android:pivotX="12"
++        android:pivotY="20">
++        <!-- Top Arc -->
++        <path
++            android:fillColor="@android:color/white"
++            android:fillAlpha="0.3"
++            android:pathData="M 2.4,9.2 C 7.7,3.9 16.3,3.9 21.6,9.2 C 22.1,9.7 22.1,10.5 21.6,11.0 C 21.1,11.5 20.3,11.5 19.8,11.0 C 15.5,6.7 8.5,6.7 4.2,11.0 C 3.7,11.5 2.9,11.5 2.4,11.0 C 1.9,10.5 1.9,9.7 2.4,9.2 Z" />
++        <!-- Middle Arc -->
++        <path
++            android:fillColor="@android:color/white"
++            android:fillAlpha="0.3"
++            android:pathData="M 5.8,12.6 C 9.2,9.2 14.8,9.2 18.2,12.6 C 18.7,13.1 18.7,13.9 18.2,14.4 C 17.7,14.9 16.9,14.9 16.4,14.4 C 13.9,11.9 10.1,11.9 7.6,14.4 C 7.1,14.9 6.3,14.9 5.8,14.4 C 5.3,13.9 5.3,13.1 5.8,12.6 Z" />
++        <!-- Bottom Wedge -->
++        <path
++            android:fillColor="@android:color/white"
++            android:fillAlpha="1.0"
++            android:pathData="M 9.5,16.0 C 10.9,14.6 13.1,14.6 14.5,16.0 C 14.8,16.3 14.9,16.7 14.7,17.1 L 12.6,20.2 C 12.3,20.6 11.7,20.6 11.4,20.2 L 9.3,17.1 C 9.1,16.7 9.2,16.3 9.5,16.0 Z" />
++    </group>
+ </vector>
+diff --git a/packages/SystemUI/res/drawable/ic_qs_wifi_3.xml b/packages/SystemUI/res/drawable/ic_qs_wifi_3.xml
+index 7884df0f..d1e86808 100644
+--- a/packages/SystemUI/res/drawable/ic_qs_wifi_3.xml
++++ b/packages/SystemUI/res/drawable/ic_qs_wifi_3.xml
+@@ -3,19 +3,25 @@
+     android:height="24dp"
+     android:viewportWidth="24"
+     android:viewportHeight="24">
+-    <!-- Top Arc -->
+-    <path
+-        android:fillColor="@android:color/white"
+-        android:fillAlpha="0.3"
+-        android:pathData="M 2.4,9.2 C 7.7,3.9 16.3,3.9 21.6,9.2 C 22.1,9.7 22.1,10.5 21.6,11.0 C 21.1,11.5 20.3,11.5 19.8,11.0 C 15.5,6.7 8.5,6.7 4.2,11.0 C 3.7,11.5 2.9,11.5 2.4,11.0 C 1.9,10.5 1.9,9.7 2.4,9.2 Z" />
+-    <!-- Middle Arc -->
+-    <path
+-        android:fillColor="@android:color/white"
+-        android:fillAlpha="1.0"
+-        android:pathData="M 5.8,12.6 C 9.2,9.2 14.8,9.2 18.2,12.6 C 18.7,13.1 18.7,13.9 18.2,14.4 C 17.7,14.9 16.9,14.9 16.4,14.4 C 13.9,11.9 10.1,11.9 7.6,14.4 C 7.1,14.9 6.3,14.9 5.8,14.4 C 5.3,13.9 5.3,13.1 5.8,12.6 Z" />
+-    <!-- Bottom Wedge -->
+-    <path
+-        android:fillColor="@android:color/white"
+-        android:fillAlpha="1.0"
+-        android:pathData="M 9.5,16.0 C 10.9,14.6 13.1,14.6 14.5,16.0 C 14.8,16.3 14.9,16.7 14.7,17.1 L 12.6,20.2 C 12.3,20.6 11.7,20.6 11.4,20.2 L 9.3,17.1 C 9.1,16.7 9.2,16.3 9.5,16.0 Z" />
++    <group
++        android:scaleX="1.25"
++        android:scaleY="1.25"
++        android:pivotX="12"
++        android:pivotY="20">
++        <!-- Top Arc -->
++        <path
++            android:fillColor="@android:color/white"
++            android:fillAlpha="0.3"
++            android:pathData="M 2.4,9.2 C 7.7,3.9 16.3,3.9 21.6,9.2 C 22.1,9.7 22.1,10.5 21.6,11.0 C 21.1,11.5 20.3,11.5 19.8,11.0 C 15.5,6.7 8.5,6.7 4.2,11.0 C 3.7,11.5 2.9,11.5 2.4,11.0 C 1.9,10.5 1.9,9.7 2.4,9.2 Z" />
++        <!-- Middle Arc -->
++        <path
++            android:fillColor="@android:color/white"
++            android:fillAlpha="1.0"
++            android:pathData="M 5.8,12.6 C 9.2,9.2 14.8,9.2 18.2,12.6 C 18.7,13.1 18.7,13.9 18.2,14.4 C 17.7,14.9 16.9,14.9 16.4,14.4 C 13.9,11.9 10.1,11.9 7.6,14.4 C 7.1,14.9 6.3,14.9 5.8,14.4 C 5.3,13.9 5.3,13.1 5.8,12.6 Z" />
++        <!-- Bottom Wedge -->
++        <path
++            android:fillColor="@android:color/white"
++            android:fillAlpha="1.0"
++            android:pathData="M 9.5,16.0 C 10.9,14.6 13.1,14.6 14.5,16.0 C 14.8,16.3 14.9,16.7 14.7,17.1 L 12.6,20.2 C 12.3,20.6 11.7,20.6 11.4,20.2 L 9.3,17.1 C 9.1,16.7 9.2,16.3 9.5,16.0 Z" />
++    </group>
+ </vector>
+diff --git a/packages/SystemUI/res/drawable/ic_qs_wifi_4.xml b/packages/SystemUI/res/drawable/ic_qs_wifi_4.xml
+index 07b366d0..e2f15cb3 100644
+--- a/packages/SystemUI/res/drawable/ic_qs_wifi_4.xml
++++ b/packages/SystemUI/res/drawable/ic_qs_wifi_4.xml
+@@ -3,19 +3,25 @@
+     android:height="24dp"
+     android:viewportWidth="24"
+     android:viewportHeight="24">
+-    <!-- Top Arc -->
+-    <path
+-        android:fillColor="@android:color/white"
+-        android:fillAlpha="1.0"
+-        android:pathData="M 2.4,9.2 C 7.7,3.9 16.3,3.9 21.6,9.2 C 22.1,9.7 22.1,10.5 21.6,11.0 C 21.1,11.5 20.3,11.5 19.8,11.0 C 15.5,6.7 8.5,6.7 4.2,11.0 C 3.7,11.5 2.9,11.5 2.4,11.0 C 1.9,10.5 1.9,9.7 2.4,9.2 Z" />
+-    <!-- Middle Arc -->
+-    <path
+-        android:fillColor="@android:color/white"
+-        android:fillAlpha="1.0"
+-        android:pathData="M 5.8,12.6 C 9.2,9.2 14.8,9.2 18.2,12.6 C 18.7,13.1 18.7,13.9 18.2,14.4 C 17.7,14.9 16.9,14.9 16.4,14.4 C 13.9,11.9 10.1,11.9 7.6,14.4 C 7.1,14.9 6.3,14.9 5.8,14.4 C 5.3,13.9 5.3,13.1 5.8,12.6 Z" />
+-    <!-- Bottom Wedge -->
+-    <path
+-        android:fillColor="@android:color/white"
+-        android:fillAlpha="1.0"
+-        android:pathData="M 9.5,16.0 C 10.9,14.6 13.1,14.6 14.5,16.0 C 14.8,16.3 14.9,16.7 14.7,17.1 L 12.6,20.2 C 12.3,20.6 11.7,20.6 11.4,20.2 L 9.3,17.1 C 9.1,16.7 9.2,16.3 9.5,16.0 Z" />
++    <group
++        android:scaleX="1.25"
++        android:scaleY="1.25"
++        android:pivotX="12"
++        android:pivotY="20">
++        <!-- Top Arc -->
++        <path
++            android:fillColor="@android:color/white"
++            android:fillAlpha="1.0"
++            android:pathData="M 2.4,9.2 C 7.7,3.9 16.3,3.9 21.6,9.2 C 22.1,9.7 22.1,10.5 21.6,11.0 C 21.1,11.5 20.3,11.5 19.8,11.0 C 15.5,6.7 8.5,6.7 4.2,11.0 C 3.7,11.5 2.9,11.5 2.4,11.0 C 1.9,10.5 1.9,9.7 2.4,9.2 Z" />
++        <!-- Middle Arc -->
++        <path
++            android:fillColor="@android:color/white"
++            android:fillAlpha="1.0"
++            android:pathData="M 5.8,12.6 C 9.2,9.2 14.8,9.2 18.2,12.6 C 18.7,13.1 18.7,13.9 18.2,14.4 C 17.7,14.9 16.9,14.9 16.4,14.4 C 13.9,11.9 10.1,11.9 7.6,14.4 C 7.1,14.9 6.3,14.9 5.8,14.4 C 5.3,13.9 5.3,13.1 5.8,12.6 Z" />
++        <!-- Bottom Wedge -->
++        <path
++            android:fillColor="@android:color/white"
++            android:fillAlpha="1.0"
++            android:pathData="M 9.5,16.0 C 10.9,14.6 13.1,14.6 14.5,16.0 C 14.8,16.3 14.9,16.7 14.7,17.1 L 12.6,20.2 C 12.3,20.6 11.7,20.6 11.4,20.2 L 9.3,17.1 C 9.1,16.7 9.2,16.3 9.5,16.0 Z" />
++    </group>
+ </vector>
+diff --git a/packages/SystemUI/res/drawable/ic_qs_wifi_disconnected.xml b/packages/SystemUI/res/drawable/ic_qs_wifi_disconnected.xml
+index 3c45761c..5dc35797 100644
+--- a/packages/SystemUI/res/drawable/ic_qs_wifi_disconnected.xml
++++ b/packages/SystemUI/res/drawable/ic_qs_wifi_disconnected.xml
+@@ -1,33 +1,24 @@
+-<!--
+-    Copyright (C) 2017 The Android Open Source Project
+-
+-    Licensed under the Apache License, Version 2.0 (the "License");
+-    you may not use this file except in compliance with the License.
+-    You may obtain a copy of the License at
+-
+-         http://www.apache.org/licenses/LICENSE-2.0
+-
+-    Unless required by applicable law or agreed to in writing, software
+-    distributed under the License is distributed on an "AS IS" BASIS,
+-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-    See the License for the specific language governing permissions and
+-    limitations under the License.
+--->
+ <vector xmlns:android="http://schemas.android.com/apk/res/android"
+     android:width="24dp"
+     android:height="24dp"
+     android:viewportWidth="24"
+     android:viewportHeight="24">
+-    <path
+-        android:fillColor="@android:color/white"
+-        android:fillAlpha="0.3"
+-        android:strokeAlpha="0.3"
+-        android:strokeWidth="1"
+-        android:pathData="M12,2C7.25,2,2.97,4.08,0,7.39L12,22l3.18-3.87c-0.46-0.57-0.79-1.24-0.98-1.96L12,18.85L2.7,7.53 C5.27,5.27,8.58,4,12,4s6.73,1.27,9.3,3.53l-1.43,1.74c0.76,0.04,1.47,0.24,2.12,0.57L24,7.39C21.03,4.08,16.75,2,12,2z" />
+-    <path
+-        android:fillColor="@android:color/white"
+-        android:pathData="M 18.63 20.25 H 20.38 V 22 H 18.63 V 20.25 Z" />
+-    <path
+-        android:fillColor="@android:color/white"
+-        android:pathData="M19.5,11.25c-1.93,0-3.5,1.57-3.5,3.5h1.75c0-0.96,0.79-1.75,1.75-1.75s1.75,0.79,1.75,1.75c0,1.76-2.62,1.54-2.62,4.38 h1.75c0-1.97,2.62-2.19,2.62-4.38C23,12.82,21.43,11.25,19.5,11.25z" />
++    <group
++        android:scaleX="1.15"
++        android:scaleY="1.15"
++        android:pivotX="12"
++        android:pivotY="20">
++        <path
++            android:fillColor="@android:color/white"
++            android:fillAlpha="0.3"
++            android:strokeAlpha="0.3"
++            android:strokeWidth="1"
++            android:pathData="M12,2C7.25,2,2.97,4.08,0,7.39L12,22l3.18-3.87c-0.46-0.57-0.79-1.24-0.98-1.96L12,18.85L2.7,7.53 C5.27,5.27,8.58,4,12,4s6.73,1.27,9.3,3.53l-1.43,1.74c0.76,0.04,1.47,0.24,2.12,0.57L24,7.39C21.03,4.08,16.75,2,12,2z" />
++        <path
++            android:fillColor="@android:color/white"
++            android:pathData="M 18.63 20.25 H 20.38 V 22 H 18.63 V 20.25 Z" />
++        <path
++            android:fillColor="@android:color/white"
++            android:pathData="M19.5,11.25c-1.93,0-3.5,1.57-3.5,3.5h1.75c0-0.96,0.79-1.75,1.75-1.75s1.75,0.79,1.75,1.75c0,1.76-2.62,1.54-2.62,4.38 h1.75c0-1.97,2.62-2.19,2.62-4.38C23,12.82,21.43,11.25,19.5,11.25z" />
++    </group>
+ </vector>
+\ No newline at end of file
+diff --git a/packages/SystemUI/res/layout/quick_status_bar_expanded_header.xml b/packages/SystemUI/res/layout/quick_status_bar_expanded_header.xml
+index 7e3ff319..41d9b937 100644
+--- a/packages/SystemUI/res/layout/quick_status_bar_expanded_header.xml
++++ b/packages/SystemUI/res/layout/quick_status_bar_expanded_header.xml
+@@ -28,6 +28,7 @@
+     android:clipChildren="false"
+     android:clipToPadding="false"
+     android:paddingTop="0dp"
++    android:paddingBottom="12dp"
+     android:paddingEnd="0dp"
+     android:paddingStart="0dp"
+     android:elevation="4dp" >
+diff --git a/packages/SystemUI/res/values/dimens.xml b/packages/SystemUI/res/values/dimens.xml
+index e5238802..a04e947b 100644
+--- a/packages/SystemUI/res/values/dimens.xml
++++ b/packages/SystemUI/res/values/dimens.xml
+@@ -364,7 +364,7 @@
+     <dimen name="qs_footer_icon_padding">14dp</dimen>
+ 
+     <!-- The padding between the notifications and the quick settings container -->
+-    <dimen name="qs_notification_padding">24dp</dimen>
++    <dimen name="qs_notification_padding">12dp</dimen>
+ 
+     <!-- Height of the status bar header bar when expanded -->
+     <dimen name="status_bar_header_height_expanded">124dp</dimen>
+-- 
+2.43.0
+
