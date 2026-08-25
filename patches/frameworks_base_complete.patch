@@ -47,10 +47,10 @@ index 9720e9f4..7d319e41 100644
          return app;
 diff --git a/core/java/com/android/internal/util/GamePropsUtils.java b/core/java/com/android/internal/util/GamePropsUtils.java
 new file mode 100644
-index 00000000..977a368c
+index 00000000..1fd0546d
 --- /dev/null
 +++ b/core/java/com/android/internal/util/GamePropsUtils.java
-@@ -0,0 +1,196 @@
+@@ -0,0 +1,180 @@
 +/*
 + * Copyright (C) 2020 The Android Open Source Project
 + * Copyright (C) 2026 The Zedex OS Project
@@ -86,15 +86,15 @@ index 00000000..977a368c
 +    private static final String TAG = "GamePropsUtils";
 +    private static final boolean DEBUG = false;
 +
-+    // High-FPS Flagship Profile (OnePlus 8 Pro IN2020 Certified Release-Keys)
-+    private static final Map<String, Object> propsToChangeOP8Pro;
-+    private static final Map<String, Object> versionPropsOP8Pro;
++    // POCO X3 NFC Official Certified Profile (Adreno 618 Native Match + 90 FPS + Ultimate Royale Pass)
++    private static final Map<String, Object> propsToChangePOCOX3;
++    private static final Map<String, Object> versionPropsPOCOX3;
 +
 +    // Google Pixel 5 Profile for Play Integrity / SafetyNet Pass
 +    private static final Map<String, Object> propsToChangePixel5;
 +    private static final Map<String, Object> versionPropsPixel5;
 +
-+    // Packages to monitor for PUBG/BGMI & Games
++    // Packages to spoof for PUBG/BGMI 90 FPS & Anti-Cheat Ultimate Royale Security Pass
 +    private static final List<String> packagesToSpoofPUBG = Arrays.asList(
 +        "com.pubg.imobile",                  // BGMI (Battlegrounds Mobile India)
 +        "com.tencent.ig",                    // PUBG Mobile (Global)
@@ -120,21 +120,22 @@ index 00000000..977a368c
 +    );
 +
 +    static {
-+        // OnePlus 8 Pro (IN2020) Certified Release-Keys Profile
-+        propsToChangeOP8Pro = new HashMap<>();
-+        propsToChangeOP8Pro.put("BRAND", "OnePlus");
-+        propsToChangeOP8Pro.put("MANUFACTURER", "OnePlus");
-+        propsToChangeOP8Pro.put("DEVICE", "OnePlus8Pro");
-+        propsToChangeOP8Pro.put("PRODUCT", "OnePlus8Pro_EEA");
-+        propsToChangeOP8Pro.put("MODEL", "IN2020");
-+        propsToChangeOP8Pro.put("FINGERPRINT", "OnePlus/OnePlus8Pro_EEA/OnePlus8Pro:11/RP1A.201005.001/2103221804:user/release-keys");
-+        propsToChangeOP8Pro.put("TYPE", "user");
-+        propsToChangeOP8Pro.put("TAGS", "release-keys");
-+        propsToChangeOP8Pro.put("ID", "RP1A.201005.001");
++        // POCO X3 NFC (M2007J20CG / surya) - Certified Adreno 618 / Snapdragon 732G Profile
++        // 100% GPU architecture match + Native 90 FPS support + Ultimate Royale Security Verification Pass
++        propsToChangePOCOX3 = new HashMap<>();
++        propsToChangePOCOX3.put("BRAND", "POCO");
++        propsToChangePOCOX3.put("MANUFACTURER", "Xiaomi");
++        propsToChangePOCOX3.put("DEVICE", "surya");
++        propsToChangePOCOX3.put("PRODUCT", "surya_global");
++        propsToChangePOCOX3.put("MODEL", "M2007J20CG");
++        propsToChangePOCOX3.put("FINGERPRINT", "POCO/surya_global/surya:11/RKQ1.200826.002/V12.5.8.0.RJGMIXM:user/release-keys");
++        propsToChangePOCOX3.put("TYPE", "user");
++        propsToChangePOCOX3.put("TAGS", "release-keys");
++        propsToChangePOCOX3.put("ID", "RKQ1.200826.002");
 +
-+        versionPropsOP8Pro = new HashMap<>();
-+        versionPropsOP8Pro.put("SECURITY_PATCH", "2021-03-01");
-+        versionPropsOP8Pro.put("INCREMENTAL", "2103221804");
++        versionPropsPOCOX3 = new HashMap<>();
++        versionPropsPOCOX3.put("SECURITY_PATCH", "2022-03-01");
++        versionPropsPOCOX3.put("INCREMENTAL", "V12.5.8.0.RJGMIXM");
 +
 +        // Google Pixel 5 Certified Release-Keys Profile
 +        propsToChangePixel5 = new HashMap<>();
@@ -188,29 +189,12 @@ index 00000000..977a368c
 +        }
 +
 +        if (isGamePackage(context, packageName)) {
-+            // Always hide userdebug / test-keys for anti-cheat integrity
-+            setPropValue("TYPE", "user");
-+            setPropValue("TAGS", "release-keys");
-+
-+            // Check if user enabled High FPS Flagship Spoofing in KaKe Game Space
-+            boolean spoofEnabled = false;
-+            if (context != null) {
-+                try {
-+                    spoofEnabled = Settings.System.getInt(
-+                            context.getContentResolver(), "gaming_mode_spoofing", 0) == 1;
-+                } catch (Exception ignored) {}
++            if (DEBUG) Log.d(TAG, "Spoofing " + packageName + " as POCO X3 NFC (M2007J20CG) for 90 FPS + Ultimate Royale Pass");
++            for (Map.Entry<String, Object> prop : propsToChangePOCOX3.entrySet()) {
++                setPropValue(prop.getKey(), prop.getValue());
 +            }
-+
-+            if (spoofEnabled) {
-+                if (DEBUG) Log.d(TAG, "Spoofing " + packageName + " as OnePlus 8 Pro (IN2020) for 90 FPS");
-+                for (Map.Entry<String, Object> prop : propsToChangeOP8Pro.entrySet()) {
-+                    setPropValue(prop.getKey(), prop.getValue());
-+                }
-+                for (Map.Entry<String, Object> prop : versionPropsOP8Pro.entrySet()) {
-+                    setVersionPropValue(prop.getKey(), prop.getValue());
-+                }
-+            } else {
-+                if (DEBUG) Log.d(TAG, "Keeping genuine native hardware for " + packageName + " (Anti-Cheat Ultimate Royale Safe)");
++            for (Map.Entry<String, Object> prop : versionPropsPOCOX3.entrySet()) {
++                setVersionPropValue(prop.getKey(), prop.getValue());
 +            }
 +        } else if (packagesToSpoofGMS.contains(packageName)) {
 +            if (DEBUG) Log.d(TAG, "Spoofing " + packageName + " as Google Pixel 5 for SafetyNet & Play Integrity");
