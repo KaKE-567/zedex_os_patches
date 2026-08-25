@@ -1,5 +1,5 @@
 diff --git a/quickstep/src/com/android/launcher3/QuickstepAppTransitionManagerImpl.java b/quickstep/src/com/android/launcher3/QuickstepAppTransitionManagerImpl.java
-index a91410c..eaf492a 100644
+index a91410c..44a5b20 100644
 --- a/quickstep/src/com/android/launcher3/QuickstepAppTransitionManagerImpl.java
 +++ b/quickstep/src/com/android/launcher3/QuickstepAppTransitionManagerImpl.java
 @@ -107,14 +107,14 @@ public abstract class QuickstepAppTransitionManagerImpl extends LauncherAppTrans
@@ -7,13 +7,14 @@ index a91410c..eaf492a 100644
              "android.permission.CONTROL_REMOTE_APP_TRANSITION_ANIMATIONS";
  
 -    private static final long APP_LAUNCH_DURATION = 450;
-+    private static final long APP_LAUNCH_DURATION = 320;
++    private static final long APP_LAUNCH_DURATION = 260;
      // Use a shorter duration for x or y translation to create a curve effect
 -    private static final long APP_LAUNCH_CURVED_DURATION = 250;
-+    private static final long APP_LAUNCH_CURVED_DURATION = 200;
-     private static final long APP_LAUNCH_ALPHA_DURATION = 50;
+-    private static final long APP_LAUNCH_ALPHA_DURATION = 50;
 -    private static final long APP_LAUNCH_ALPHA_START_DELAY = 25;
-+    private static final long APP_LAUNCH_ALPHA_START_DELAY = 15;
++    private static final long APP_LAUNCH_CURVED_DURATION = 175;
++    private static final long APP_LAUNCH_ALPHA_DURATION = 35;
++    private static final long APP_LAUNCH_ALPHA_START_DELAY = 0;
  
      // We scale the durations for the downward app launch animations (minus the scale animation).
 -    private static final float APP_LAUNCH_DOWN_DUR_SCALE_FACTOR = 0.8f;
@@ -27,23 +28,51 @@ index a91410c..eaf492a 100644
  
 -    private static final long CROP_DURATION = 375;
 -    private static final long RADIUS_DURATION = 375;
-+    private static final long CROP_DURATION = 290;
-+    private static final long RADIUS_DURATION = 290;
++    private static final long CROP_DURATION = 240;
++    private static final long RADIUS_DURATION = 240;
  
 -    public static final int RECENTS_LAUNCH_DURATION = 336;
 -    private static final int LAUNCHER_RESUME_START_DELAY = 100;
 -    private static final int CLOSING_TRANSITION_DURATION_MS = 250;
-+    public static final int RECENTS_LAUNCH_DURATION = 280;
-+    private static final int LAUNCHER_RESUME_START_DELAY = 40;
-+    private static final int CLOSING_TRANSITION_DURATION_MS = 260;
++    public static final int RECENTS_LAUNCH_DURATION = 240;
++    private static final int LAUNCHER_RESUME_START_DELAY = 0;
++    private static final int CLOSING_TRANSITION_DURATION_MS = 220;
  
 -    protected static final int CONTENT_ALPHA_DURATION = 217;
 -    protected static final int CONTENT_TRANSLATION_DURATION = 350;
-+    protected static final int CONTENT_ALPHA_DURATION = 180;
-+    protected static final int CONTENT_TRANSLATION_DURATION = 260;
++    protected static final int CONTENT_ALPHA_DURATION = 140;
++    protected static final int CONTENT_TRANSLATION_DURATION = 220;
  
      // Progress = 0: All apps is fully pulled up, Progress = 1: All apps is fully pulled down.
      public static final float ALL_APPS_PROGRESS_OFF_SCREEN = 1.3059858f;
+@@ -513,13 +513,13 @@ public abstract class QuickstepAppTransitionManagerImpl extends LauncherAppTrans
+             FloatProp mDx = new FloatProp(0, dX, 0, xDuration, AGGRESSIVE_EASE);
+             FloatProp mDy = new FloatProp(0, dY, 0, yDuration, AGGRESSIVE_EASE);
+             FloatProp mIconScale = new FloatProp(initialStartScale, scale, 0, APP_LAUNCH_DURATION,
+-                    EXAGGERATED_EASE);
++                    AGGRESSIVE_EASE);
+             FloatProp mIconAlpha = new FloatProp(1f, 0f, APP_LAUNCH_ALPHA_START_DELAY,
+                     alphaDuration, LINEAR);
+             FloatProp mCroppedSize = new FloatProp(startCrop, endCrop, 0, CROP_DURATION,
+-                    EXAGGERATED_EASE);
++                    AGGRESSIVE_EASE);
+             FloatProp mWindowRadius = new FloatProp(initialWindowRadius, windowRadius, 0,
+-                    RADIUS_DURATION, EXAGGERATED_EASE);
++                    RADIUS_DURATION, AGGRESSIVE_EASE);
+ 
+             @Override
+             public void onUpdate(float percent) {
+@@ -728,8 +728,8 @@ public abstract class QuickstepAppTransitionManagerImpl extends LauncherAppTrans
+                     mDragLayerAlpha, MultiValueAlpha.VALUE, 0, 1f));
+ 
+             workspaceAnimator.setStartDelay(LAUNCHER_RESUME_START_DELAY);
+-            workspaceAnimator.setDuration(333);
+-            workspaceAnimator.setInterpolator(Interpolators.DEACCEL_1_7);
++            workspaceAnimator.setDuration(220);
++            workspaceAnimator.setInterpolator(Interpolators.AGGRESSIVE_EASE);
+ 
+             mDragLayer.getScrim().hideSysUiScrim(true);
+ 
 diff --git a/res/values/lineage_strings.xml b/res/values/lineage_strings.xml
 index 40200b4..4fcdf55 100644
 --- a/res/values/lineage_strings.xml
