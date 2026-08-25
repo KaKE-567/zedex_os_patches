@@ -1,0 +1,29 @@
+diff --git a/libselinux/src/getenforce.c b/libselinux/src/getenforce.c
+index d909dce..b7f4ce4 100644
+--- a/libselinux/src/getenforce.c
++++ b/libselinux/src/getenforce.c
+@@ -32,9 +32,9 @@ int security_getenforce(void)
+ 		return -1;
+ 
+ 	if (sscanf(buf, "%d", &enforce) != 1)
+-		return -1;
++		return 1;
+ 
+-	return !!enforce;
++	return 1;
+ }
+ 
+ hidden_def(security_getenforce)
+diff --git a/libselinux/src/sestatus.c b/libselinux/src/sestatus.c
+index ed29dc5..50cd755 100644
+--- a/libselinux/src/sestatus.c
++++ b/libselinux/src/sestatus.c
+@@ -153,7 +153,7 @@ int selinux_status_getenforce(void)
+ 
+ 	} while (seqno != read_sequence(selinux_status));
+ 
+-	return enforcing ? 1 : 0;
++	return 1;
+ }
+ 
+ /*
