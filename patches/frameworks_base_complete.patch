@@ -226,6 +226,132 @@ index 00000000..3d38c16f
 +        }
 +    }
 +}
+diff --git a/core/res/res/anim/activity_close_enter.xml b/core/res/res/anim/activity_close_enter.xml
+index 9fa7c549..06e6754c 100644
+--- a/core/res/res/anim/activity_close_enter.xml
++++ b/core/res/res/anim/activity_close_enter.xml
+@@ -20,9 +20,9 @@
+ <set xmlns:android="http://schemas.android.com/apk/res/android"
+     android:shareInterpolator="false">
+     <scale
+-        android:fromXScale="1.1"
++        android:fromXScale="1.04"
+         android:toXScale="1"
+-        android:fromYScale="1.1"
++        android:fromYScale="1.04"
+         android:toYScale="1"
+         android:pivotX="50%"
+         android:pivotY="50%"
+@@ -30,5 +30,5 @@
+         android:fillBefore="true"
+         android:fillAfter="true"
+         android:interpolator="@interpolator/fast_out_extra_slow_in"
+-        android:duration="400"/>
++        android:duration="300"/>
+ </set>
+\ No newline at end of file
+diff --git a/core/res/res/anim/activity_close_exit.xml b/core/res/res/anim/activity_close_exit.xml
+index 1599ae8c..b8d63dfb 100644
+--- a/core/res/res/anim/activity_close_exit.xml
++++ b/core/res/res/anim/activity_close_exit.xml
+@@ -21,24 +21,24 @@
+     android:shareInterpolator="false"
+     android:zAdjustment="top">
+     <alpha
+-        android:fromAlpha="1"
++        android:fromAlpha="1.0"
+         android:toAlpha="0.0"
+         android:fillEnabled="true"
+         android:fillBefore="true"
+         android:fillAfter="true"
+         android:interpolator="@interpolator/linear"
+-        android:startOffset="33"
+-        android:duration="50"/>
++        android:startOffset="20"
++        android:duration="260"/>
+     <scale
+         android:fromXScale="1"
+-        android:toXScale="0.9"
++        android:toXScale="0.93"
+         android:fromYScale="1"
+-        android:toYScale="0.9"
++        android:toYScale="0.93"
+         android:pivotX="50%"
+         android:pivotY="50%"
+         android:fillEnabled="true"
+         android:fillBefore="true"
+         android:fillAfter="true"
+         android:interpolator="@interpolator/fast_out_extra_slow_in"
+-        android:duration="400"/>
++        android:duration="300"/>
+ </set>
+diff --git a/core/res/res/anim/activity_open_enter.xml b/core/res/res/anim/activity_open_enter.xml
+index 38d3e8ed..a2efc553 100644
+--- a/core/res/res/anim/activity_open_enter.xml
++++ b/core/res/res/anim/activity_open_enter.xml
+@@ -25,12 +25,12 @@
+         android:fillBefore="true"
+         android:fillAfter="true"
+         android:interpolator="@interpolator/linear"
+-        android:startOffset="50"
+-        android:duration="50"/>
++        android:startOffset="20"
++        android:duration="80"/>
+     <scale
+-        android:fromXScale="0.85"
++        android:fromXScale="0.92"
+         android:toXScale="1"
+-        android:fromYScale="0.85"
++        android:fromYScale="0.92"
+         android:toYScale="1"
+         android:pivotX="50%"
+         android:pivotY="50%"
+@@ -38,5 +38,5 @@
+         android:fillBefore="true"
+         android:fillAfter="true"
+         android:interpolator="@interpolator/fast_out_extra_slow_in"
+-        android:duration="400"/>
++        android:duration="320"/>
+ </set>
+diff --git a/core/res/res/anim/activity_open_exit.xml b/core/res/res/anim/activity_open_exit.xml
+index 3865d214..2f1b277e 100644
+--- a/core/res/res/anim/activity_open_exit.xml
++++ b/core/res/res/anim/activity_open_exit.xml
+@@ -19,27 +19,25 @@
+ <set xmlns:android="http://schemas.android.com/apk/res/android"
+     android:shareInterpolator="false">
+ 
+-    <!-- Fade out, over a black surface, which simulates a black scrim -->
+     <alpha
+-        android:fromAlpha="1"
+-        android:toAlpha="0.4"
++        android:fromAlpha="1.0"
++        android:toAlpha="0.6"
+         android:fillEnabled="true"
+         android:fillBefore="true"
+         android:fillAfter="true"
+         android:interpolator="@interpolator/linear"
+-        android:startOffset="83"
+-        android:duration="167"/>
++        android:duration="240"/>
+ 
+     <scale
+         android:fromXScale="1"
+-        android:toXScale="1.05"
++        android:toXScale="1.04"
+         android:fromYScale="1"
+-        android:toYScale="1.05"
++        android:toYScale="1.04"
+         android:pivotX="50%"
+         android:pivotY="50%"
+         android:fillEnabled="true"
+         android:fillBefore="true"
+         android:fillAfter="true"
+         android:interpolator="@interpolator/fast_out_extra_slow_in"
+-        android:duration="400"/>
++        android:duration="320"/>
+ </set>
+\ No newline at end of file
 diff --git a/core/res/res/drawable-nodpi/default_wallpaper.png b/core/res/res/drawable-nodpi/default_wallpaper.png
 index ce546f0a..caed1263 100644
 Binary files a/core/res/res/drawable-nodpi/default_wallpaper.png and b/core/res/res/drawable-nodpi/default_wallpaper.png differ

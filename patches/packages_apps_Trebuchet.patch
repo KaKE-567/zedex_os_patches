@@ -1,3 +1,49 @@
+diff --git a/quickstep/src/com/android/launcher3/QuickstepAppTransitionManagerImpl.java b/quickstep/src/com/android/launcher3/QuickstepAppTransitionManagerImpl.java
+index a91410c..eaf492a 100644
+--- a/quickstep/src/com/android/launcher3/QuickstepAppTransitionManagerImpl.java
++++ b/quickstep/src/com/android/launcher3/QuickstepAppTransitionManagerImpl.java
+@@ -107,14 +107,14 @@ public abstract class QuickstepAppTransitionManagerImpl extends LauncherAppTrans
+     private static final String CONTROL_REMOTE_APP_TRANSITION_PERMISSION =
+             "android.permission.CONTROL_REMOTE_APP_TRANSITION_ANIMATIONS";
+ 
+-    private static final long APP_LAUNCH_DURATION = 450;
++    private static final long APP_LAUNCH_DURATION = 320;
+     // Use a shorter duration for x or y translation to create a curve effect
+-    private static final long APP_LAUNCH_CURVED_DURATION = 250;
++    private static final long APP_LAUNCH_CURVED_DURATION = 200;
+     private static final long APP_LAUNCH_ALPHA_DURATION = 50;
+-    private static final long APP_LAUNCH_ALPHA_START_DELAY = 25;
++    private static final long APP_LAUNCH_ALPHA_START_DELAY = 15;
+ 
+     // We scale the durations for the downward app launch animations (minus the scale animation).
+-    private static final float APP_LAUNCH_DOWN_DUR_SCALE_FACTOR = 0.8f;
++    private static final float APP_LAUNCH_DOWN_DUR_SCALE_FACTOR = 0.85f;
+     private static final long APP_LAUNCH_DOWN_DURATION =
+             (long) (APP_LAUNCH_DURATION * APP_LAUNCH_DOWN_DUR_SCALE_FACTOR);
+     private static final long APP_LAUNCH_DOWN_CURVED_DURATION =
+@@ -122,15 +122,15 @@ public abstract class QuickstepAppTransitionManagerImpl extends LauncherAppTrans
+     private static final long APP_LAUNCH_ALPHA_DOWN_DURATION =
+             (long) (APP_LAUNCH_ALPHA_DURATION * APP_LAUNCH_DOWN_DUR_SCALE_FACTOR);
+ 
+-    private static final long CROP_DURATION = 375;
+-    private static final long RADIUS_DURATION = 375;
++    private static final long CROP_DURATION = 290;
++    private static final long RADIUS_DURATION = 290;
+ 
+-    public static final int RECENTS_LAUNCH_DURATION = 336;
+-    private static final int LAUNCHER_RESUME_START_DELAY = 100;
+-    private static final int CLOSING_TRANSITION_DURATION_MS = 250;
++    public static final int RECENTS_LAUNCH_DURATION = 280;
++    private static final int LAUNCHER_RESUME_START_DELAY = 40;
++    private static final int CLOSING_TRANSITION_DURATION_MS = 260;
+ 
+-    protected static final int CONTENT_ALPHA_DURATION = 217;
+-    protected static final int CONTENT_TRANSLATION_DURATION = 350;
++    protected static final int CONTENT_ALPHA_DURATION = 180;
++    protected static final int CONTENT_TRANSLATION_DURATION = 260;
+ 
+     // Progress = 0: All apps is fully pulled up, Progress = 1: All apps is fully pulled down.
+     public static final float ALL_APPS_PROGRESS_OFF_SCREEN = 1.3059858f;
 diff --git a/res/values/lineage_strings.xml b/res/values/lineage_strings.xml
 index 40200b4..4fcdf55 100644
 --- a/res/values/lineage_strings.xml
