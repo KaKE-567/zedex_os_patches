@@ -1,3 +1,49 @@
+diff --git a/res/drawable/ic_homepage_gaming.xml b/res/drawable/ic_homepage_gaming.xml
+new file mode 100644
+index 0000000..c7b1cea
+--- /dev/null
++++ b/res/drawable/ic_homepage_gaming.xml
+@@ -0,0 +1,20 @@
++<?xml version="1.0" encoding="utf-8"?>
++<!--
++  Copyright (C) 2026 The Zedex OS Project
++  -->
++<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
++
++    <item>
++        <com.android.settingslib.widget.AdaptiveIconShapeDrawable
++            android:width="@dimen/dashboard_tile_image_size"
++            android:height="@dimen/dashboard_tile_image_size"
++            android:color="@color/homepage_display_background" />
++    </item>
++
++    <item
++        android:width="@dimen/dashboard_tile_foreground_image_size"
++        android:height="@dimen/dashboard_tile_foreground_image_size"
++        android:start="@dimen/dashboard_tile_foreground_image_inset"
++        android:top="@dimen/dashboard_tile_foreground_image_inset"
++        android:drawable="@drawable/ic_settings_gaming_white" />
++</layer-list>
+diff --git a/res/drawable/ic_settings_gaming_white.xml b/res/drawable/ic_settings_gaming_white.xml
+new file mode 100644
+index 0000000..07bb56d
+--- /dev/null
++++ b/res/drawable/ic_settings_gaming_white.xml
+@@ -0,0 +1,14 @@
++<?xml version="1.0" encoding="utf-8"?>
++<!--
++  Copyright (C) 2026 The Zedex OS Project
++  -->
++<vector xmlns:android="http://schemas.android.com/apk/res/android"
++    android:width="24dp"
++    android:height="24dp"
++    android:viewportWidth="24"
++    android:viewportHeight="24">
++
++    <path
++        android:fillColor="@android:color/white"
++        android:pathData="M21,6H3C1.9,6 1,6.9 1,8v8c0,1.1 0.9,2 2,2h18c1.1,0 2,-0.9 2,-2V8C23,6.9 22.1,6 21,6z M11,13H8v3H6v-3H3v-2h3V8h2v3h3V13z M15.5,15.5c-0.83,0 -1.5,-0.67 -1.5,-1.5s0.67,-1.5 1.5,-1.5 1.5,0.67 1.5,1.5 -0.67,1.5 -1.5,1.5z M15.5,11.5c-0.83,0 -1.5,-0.67 -1.5,-1.5s0.67,-1.5 1.5,-1.5 1.5,0.67 1.5,1.5 -0.67,1.5 -1.5,1.5z M18.5,13.5c-0.83,0 -1.5,-0.67 -1.5,-1.5s0.67,-1.5 1.5,-1.5 1.5,0.67 1.5,1.5 -0.67,1.5 -1.5,1.5z M18.5,9.5c-0.83,0 -1.5,-0.67 -1.5,-1.5s0.67,-1.5 1.5,-1.5 1.5,0.67 1.5,1.5 -0.67,1.5 -1.5,1.5z" />
++</vector>
 diff --git a/res/values/cm_strings.xml b/res/values/cm_strings.xml
 index 12ad48e..a67a396 100644
 --- a/res/values/cm_strings.xml
@@ -57,6 +103,24 @@ index 0262556..f20b2c5 100644
  
          <Preference
              android:key="system_server_heap_dump"
+diff --git a/res/xml/display_settings.xml b/res/xml/display_settings.xml
+index 1f4048e..0b71d58 100644
+--- a/res/xml/display_settings.xml
++++ b/res/xml/display_settings.xml
+@@ -32,6 +32,13 @@
+         <intent android:action="com.android.intent.action.SHOW_BRIGHTNESS_DIALOG" />
+     </com.android.settingslib.RestrictedPreference>
+ 
++    <Preference
++        android:key="display_gaming_space"
++        android:title="Zedex Gaming Space"
++        android:summary="Game mode controls &amp; performance profiles"
++        android:icon="@drawable/ic_homepage_gaming"
++        android:fragment="com.android.settings.gaming.GamingModeSettings" />
++
+     <com.android.settings.display.darkmode.DarkModePreference
+         android:key="dark_ui_mode"
+         android:title="@string/dark_ui_mode"
 diff --git a/res/xml/firmware_version.xml b/res/xml/firmware_version.xml
 index eb8a82c..2c56633 100644
 --- a/res/xml/firmware_version.xml
@@ -92,6 +156,85 @@ index eb8a82c..2c56633 100644
 +
  </PreferenceScreen>
 \ No newline at end of file
+diff --git a/res/xml/gaming_mode_settings.xml b/res/xml/gaming_mode_settings.xml
+new file mode 100644
+index 0000000..ef2dd0c
+--- /dev/null
++++ b/res/xml/gaming_mode_settings.xml
+@@ -0,0 +1,73 @@
++<?xml version="1.0" encoding="utf-8"?>
++<!--
++  Copyright (C) 2026 The Zedex OS Project
++  -->
++
++<PreferenceScreen
++    xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:settings="http://schemas.android.com/apk/res-auto"
++    android:key="gaming_mode_settings_screen"
++    android:title="Zedex Gaming Space">
++
++    <PreferenceCategory
++        android:key="gaming_mode_main_category"
++        android:title="Game Mode Controls">
++
++        <SwitchPreference
++            android:key="gaming_mode_toggle"
++            android:title="Enable Game Mode"
++            android:summary="Lock navigation bar, disable edge back gestures, and suppress notifications"
++            android:defaultValue="false"
++            settings:controller="com.android.settings.gaming.GamingModeTogglePreferenceController" />
++
++        <ListPreference
++            android:key="zedex_perf_profile"
++            android:title="@string/zedex_perf_profile_title"
++            android:summary="%s"
++            android:entries="@array/zedex_perf_profile_entries"
++            android:entryValues="@array/zedex_perf_profile_values"
++            android:defaultValue="gaming"
++            settings:controller="com.android.settings.fuelgauge.ZedexPerformanceProfilePreferenceController" />
++
++    </PreferenceCategory>
++
++    <PreferenceCategory
++        android:key="gaming_features_category"
++        android:title="Hardware &amp; Game Enhancements">
++
++        <Preference
++            android:key="game_spoofing_info"
++            android:title="90 FPS + HDR Game Spoofing"
++            android:summary="Xiaomi Redmi K30 Ultra (M2006J10C) — Active for PUBG, BGMI &amp; CODM"
++            android:selectable="false" />
++
++        <Preference
++            android:key="game_engine_info"
++            android:title="Zero-Throttle Performance Engine"
++            android:summary="2.32 GHz Kryo Boost, 0μs Governor Ramp, 95°C Thermal Headroom &amp; 8-Thread ART JIT"
++            android:selectable="false" />
++
++        <Preference
++            android:key="gaming_network_info"
++            android:title="Ultra-Low Ping Networking"
++            android:summary="TCP BBRPlus &amp; Zero Packet Drop for Online Multiplayer"
++            android:selectable="false" />
++
++    </PreferenceCategory>
++
++    <PreferenceCategory
++        android:key="gaming_maintainer_category"
++        android:title="Developer &amp; Support">
++
++        <Preference
++            android:key="zedex_maintainer_link"
++            android:title="Zedex Maintainer"
++            android:summary="@Xx_KaKe_xX (Tap to open Telegram)"
++            settings:allowDividerAbove="true">
++            <intent android:action="android.intent.action.VIEW"
++                    android:data="https://t.me/Xx_KaKe_xX" />
++        </Preference>
++
++    </PreferenceCategory>
++
++</PreferenceScreen>
 diff --git a/res/xml/gestures.xml b/res/xml/gestures.xml
 index 9b5659b..373b5b1 100644
 --- a/res/xml/gestures.xml
@@ -162,6 +305,25 @@ index 890de16..0a667d0 100644
      <Preference
          android:fragment="com.android.settings.fuelgauge.batterysaver.BatterySaverSettings"
          android:key="battery_saver_summary"
+diff --git a/res/xml/top_level_settings.xml b/res/xml/top_level_settings.xml
+index 367f426..8358d28 100644
+--- a/res/xml/top_level_settings.xml
++++ b/res/xml/top_level_settings.xml
+@@ -55,6 +55,14 @@
+         android:order="-90"
+         settings:controller="com.android.settings.fuelgauge.TopLevelBatteryPreferenceController"/>
+ 
++    <Preference
++        android:key="top_level_gaming_space"
++        android:title="Zedex Gaming Space"
++        android:summary="Game mode controls, performance profiles &amp; gesture lock"
++        android:icon="@drawable/ic_homepage_gaming"
++        android:order="-85"
++        android:fragment="com.android.settings.gaming.GamingModeSettings" />
++
+     <Preference
+         android:key="top_level_display"
+         android:title="@string/display_settings"
 diff --git a/src/com/android/settings/deviceinfo/firmwareversion/LineageApiVersionPreferenceController.java b/src/com/android/settings/deviceinfo/firmwareversion/LineageApiVersionPreferenceController.java
 index 9650d2b..334c3b7 100644
 --- a/src/com/android/settings/deviceinfo/firmwareversion/LineageApiVersionPreferenceController.java
@@ -436,6 +598,141 @@ index 0000000..04a668e
 +        } catch (IOException e) {
 +            // Node might not exist or permission denied
 +        }
++    }
++}
+diff --git a/src/com/android/settings/gaming/GamingModeSettings.java b/src/com/android/settings/gaming/GamingModeSettings.java
+new file mode 100644
+index 0000000..42694b7
+--- /dev/null
++++ b/src/com/android/settings/gaming/GamingModeSettings.java
+@@ -0,0 +1,49 @@
++/*
++ * Copyright (C) 2026 The Zedex OS Project
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package com.android.settings.gaming;
++
++import android.app.settings.SettingsEnums;
++import android.content.Context;
++import android.os.Bundle;
++
++import com.android.settings.R;
++import com.android.settings.dashboard.DashboardFragment;
++import com.android.settings.search.BaseSearchIndexProvider;
++import com.android.settingslib.search.SearchIndexable;
++
++@SearchIndexable(forTarget = SearchIndexable.ALL & ~SearchIndexable.ARC)
++public class GamingModeSettings extends DashboardFragment {
++    private static final String TAG = "GamingModeSettings";
++
++    @Override
++    public int getMetricsCategory() {
++        return SettingsEnums.UNKNOWN;
++    }
++
++    @Override
++    protected String getLogTag() {
++        return TAG;
++    }
++
++    @Override
++    protected int getPreferenceScreenResId() {
++        return R.xml.gaming_mode_settings;
++    }
++
++    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER =
++            new BaseSearchIndexProvider(R.xml.gaming_mode_settings);
++}
+diff --git a/src/com/android/settings/gaming/GamingModeTogglePreferenceController.java b/src/com/android/settings/gaming/GamingModeTogglePreferenceController.java
+new file mode 100644
+index 0000000..d39b16b
+--- /dev/null
++++ b/src/com/android/settings/gaming/GamingModeTogglePreferenceController.java
+@@ -0,0 +1,74 @@
++/*
++ * Copyright (C) 2026 The Zedex OS Project
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package com.android.settings.gaming;
++
++import android.content.Context;
++import android.provider.Settings;
++import android.widget.Toast;
++
++import androidx.preference.Preference;
++import androidx.preference.SwitchPreference;
++
++import com.android.settings.core.BasePreferenceController;
++import com.android.settings.fuelgauge.ZedexPerformanceProfilePreferenceController;
++
++public class GamingModeTogglePreferenceController extends BasePreferenceController
++        implements Preference.OnPreferenceChangeListener {
++
++    private static final String KEY_GAMING_MODE = "gaming_mode_toggle";
++
++    public GamingModeTogglePreferenceController(Context context) {
++        super(context, KEY_GAMING_MODE);
++    }
++
++    @Override
++    public int getAvailabilityStatus() {
++        return AVAILABLE;
++    }
++
++    @Override
++    public void updateState(Preference preference) {
++        super.updateState(preference);
++        if (preference instanceof SwitchPreference) {
++            boolean active = Settings.System.getInt(
++                    mContext.getContentResolver(), "gaming_mode_active", 0) == 1;
++            ((SwitchPreference) preference).setChecked(active);
++        }
++    }
++
++    @Override
++    public boolean onPreferenceChange(Preference preference, Object newValue) {
++        boolean enabled = (Boolean) newValue;
++        Settings.System.putInt(mContext.getContentResolver(), "gaming_mode_active", enabled ? 1 : 0);
++
++        if (enabled) {
++            ZedexPerformanceProfilePreferenceController.applyProfile(
++                    ZedexPerformanceProfilePreferenceController.PROFILE_GAMING);
++            Settings.System.putString(mContext.getContentResolver(),
++                    ZedexPerformanceProfilePreferenceController.KEY_PERF_PROFILE,
++                    ZedexPerformanceProfilePreferenceController.PROFILE_GAMING);
++            Toast.makeText(mContext, "🎮 Gaming Mode ON (Navigation & Notifications Locked)", Toast.LENGTH_SHORT).show();
++        } else {
++            Toast.makeText(mContext, "Gaming Mode OFF", Toast.LENGTH_SHORT).show();
++        }
++
++        if (preference instanceof SwitchPreference) {
++            ((SwitchPreference) preference).setChecked(enabled);
++        }
++        return true;
 +    }
 +}
 diff --git a/src/com/android/settings/gestures/ThreeFingerGesturePreferenceController.java b/src/com/android/settings/gestures/ThreeFingerGesturePreferenceController.java
