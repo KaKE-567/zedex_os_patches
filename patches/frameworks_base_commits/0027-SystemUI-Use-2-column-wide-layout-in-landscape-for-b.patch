@@ -1,7 +1,7 @@
 From 878daf9b5fde48217e2a293ee7cf2f3d2f26811b Mon Sep 17 00:00:00 2001
 From: kake <kake@build.local>
 Date: Tue, 25 Aug 2026 10:15:07 +0000
-Subject: [PATCH 27/30] SystemUI: Use 2-column wide layout in landscape for
+Subject: [PATCH 27/31] SystemUI: Use 2-column wide layout in landscape for
  both Half QS and Full QS
 
 Change-Id: I880425bb3f80bfe2f798c8c91dbac48b2be216f2

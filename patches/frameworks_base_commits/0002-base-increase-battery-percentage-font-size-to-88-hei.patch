@@ -1,7 +1,7 @@
 From 89efc8bb7b7d78ef7b0aa988a67c4016e23a27ab Mon Sep 17 00:00:00 2001
 From: kake <kake@build.local>
 Date: Mon, 24 Aug 2026 12:59:01 +0000
-Subject: [PATCH 02/30] base: increase battery percentage font size to 88%
+Subject: [PATCH 02/31] base: increase battery percentage font size to 88%
  height and adjust capsule corner radius
 
 Change-Id: Ib29ce2a502669381261f011c33fec09f5729cc50

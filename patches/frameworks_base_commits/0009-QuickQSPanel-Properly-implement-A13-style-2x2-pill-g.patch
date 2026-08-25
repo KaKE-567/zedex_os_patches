@@ -1,7 +1,7 @@
 From 2feb1f5187bddc6fcc99269e6a4ed7f396abaecc Mon Sep 17 00:00:00 2001
 From: kake <kake@build.local>
 Date: Mon, 24 Aug 2026 18:26:52 +0000
-Subject: [PATCH 09/30] QuickQSPanel: Properly implement A13-style 2x2 pill
+Subject: [PATCH 09/31] QuickQSPanel: Properly implement A13-style 2x2 pill
  grid using UNSPECIFIED onMeasure trick
 
 Change-Id: I5661665cab0c6c3345ca23462718ab1024f0b3e3

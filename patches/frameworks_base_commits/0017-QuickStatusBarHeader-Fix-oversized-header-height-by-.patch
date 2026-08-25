@@ -1,7 +1,7 @@
 From aa63c2e85dd38779f3177ed3ff98fc64a40455d3 Mon Sep 17 00:00:00 2001
 From: kake <kake@build.local>
 Date: Tue, 25 Aug 2026 06:14:35 +0000
-Subject: [PATCH 17/30] QuickStatusBarHeader: Fix oversized header height by
+Subject: [PATCH 17/31] QuickStatusBarHeader: Fix oversized header height by
  binding to 196dp quick_qs_total_height
 
 Change-Id: Idb6f65545469b4859d418724d785e0711e75e82e

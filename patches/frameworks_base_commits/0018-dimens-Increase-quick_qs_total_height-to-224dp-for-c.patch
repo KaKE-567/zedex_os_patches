@@ -1,7 +1,7 @@
 From 06f1c6d9faad44b713d2b97556172bcd3f8f7914 Mon Sep 17 00:00:00 2001
 From: kake <kake@build.local>
 Date: Tue, 25 Aug 2026 06:43:40 +0000
-Subject: [PATCH 18/30] dimens: Increase quick_qs_total_height to 224dp for
+Subject: [PATCH 18/31] dimens: Increase quick_qs_total_height to 224dp for
  clean notification clearance
 
 Change-Id: I014ea991638f38a52c560b525c5d9023e431f346

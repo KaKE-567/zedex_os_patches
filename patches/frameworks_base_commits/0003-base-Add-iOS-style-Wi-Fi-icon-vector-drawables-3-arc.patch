@@ -1,7 +1,7 @@
 From 92432eab37f5d02d14126fcef321e46c364d91f2 Mon Sep 17 00:00:00 2001
 From: kake <kake@build.local>
 Date: Mon, 24 Aug 2026 13:05:41 +0000
-Subject: [PATCH 03/30] base: Add iOS style Wi-Fi icon vector drawables (3-arc
+Subject: [PATCH 03/31] base: Add iOS style Wi-Fi icon vector drawables (3-arc
  + dot)
 
 Change-Id: Ifc44b17e0598d379c2bcce562a795512564f3c14
