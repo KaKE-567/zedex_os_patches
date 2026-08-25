@@ -1,7 +1,7 @@
 From 592ba6622dea09bf7fb243417369ffff8f19f251 Mon Sep 17 00:00:00 2001
 From: kake <kake@build.local>
 Date: Mon, 24 Aug 2026 19:17:13 +0000
-Subject: [PATCH 11/28] QSAnimator: Keep QuickQSPanel alpha=1 and fade out
+Subject: [PATCH 11/29] QSAnimator: Keep QuickQSPanel alpha=1 and fade out
  during expansion for A13 Half QS
 
 Change-Id: I5881eede0d5c8dbf4ec0c5572ced7a3c2821b28e

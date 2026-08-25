@@ -1,7 +1,7 @@
 From 835a022e068a746801c3500168fe54e254d7d60b Mon Sep 17 00:00:00 2001
 From: kake <kake@build.local>
 Date: Tue, 25 Aug 2026 04:51:38 +0000
-Subject: [PATCH 15/28] QuickQSPanel: Enforce mRows=2 and mColumns=2 across all
+Subject: [PATCH 15/29] QuickQSPanel: Enforce mRows=2 and mColumns=2 across all
  lifecycle stages
 
 Change-Id: Id537ffbc7f468133c980189a2b08b6253a6a78e9

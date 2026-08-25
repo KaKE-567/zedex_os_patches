@@ -1,7 +1,7 @@
 From 827b8ba7a40c6b224b0f93331c076fb4ab945b6e Mon Sep 17 00:00:00 2001
 From: kake <kake@build.local>
 Date: Tue, 25 Aug 2026 05:47:25 +0000
-Subject: [PATCH 16/28] QSAnimator: Eliminate offscreen tile translations and
+Subject: [PATCH 16/29] QSAnimator: Eliminate offscreen tile translations and
  modernize alpha fading for Material You tiles
 
 Change-Id: I0bf087cf194ffa8b798a07a08fc0ba7aa8405b87

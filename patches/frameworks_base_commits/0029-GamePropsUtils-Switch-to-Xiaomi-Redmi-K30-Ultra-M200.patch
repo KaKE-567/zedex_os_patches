@@ -1,0 +1,81 @@
+From 943e03eb53676e2f5d48790da214f1d1c363a923 Mon Sep 17 00:00:00 2001
+From: kake <kake@build.local>
+Date: Tue, 25 Aug 2026 12:02:30 +0000
+Subject: [PATCH 29/29] GamePropsUtils: Switch to Xiaomi Redmi K30 Ultra
+ (M2006J10C) for HDR Extreme and 90 FPS support
+
+Change-Id: I62a13d8737b03b6e471507c638e0f64ebc45e85b
+---
+ core/java/android/app/Application.java        |  1 +
+ .../android/internal/util/GamePropsUtils.java | 25 ++++++++++---------
+ 2 files changed, 14 insertions(+), 12 deletions(-)
+
+diff --git a/core/java/android/app/Application.java b/core/java/android/app/Application.java
+index e12942f2..7a8a5fb5 100644
+--- a/core/java/android/app/Application.java
++++ b/core/java/android/app/Application.java
+@@ -350,6 +350,7 @@ public class Application extends ContextWrapper implements ComponentCallbacks2 {
+     /* package */ final void attach(Context context) {
+         attachBaseContext(context);
+         mLoadedApk = ContextImpl.getImpl(context).mPackageInfo;
++        com.android.internal.util.GamePropsUtils.setProps(context.getPackageName());
+     }
+ 
+     @UnsupportedAppUsage
+diff --git a/core/java/com/android/internal/util/GamePropsUtils.java b/core/java/com/android/internal/util/GamePropsUtils.java
+index 77bb191b..2a0be32b 100644
+--- a/core/java/com/android/internal/util/GamePropsUtils.java
++++ b/core/java/com/android/internal/util/GamePropsUtils.java
+@@ -30,10 +30,9 @@ public class GamePropsUtils {
+     private static final String TAG = "GamePropsUtils";
+     private static final boolean DEBUG = false;
+ 
+-    private static final Map<String, Object> propsToChangeOnePlus8Pro;
++    private static final Map<String, Object> propsToChangeK30Ultra;
+ 
+-    // Packages to spoof for PUBG/BGMI 90 FPS
+-    // NOTE: Free Fire packages are deliberately excluded to prevent bans
++    // Packages to spoof for PUBG/BGMI 90 FPS and HDR graphics
+     private static final List<String> packagesToSpoofPUBG = Arrays.asList(
+         "com.pubg.imobile",         // BGMI (Battlegrounds Mobile India)
+         "com.tencent.ig",           // PUBG Mobile (Global)
+@@ -41,16 +40,18 @@ public class GamePropsUtils {
+         "com.vng.pubgmobile",       // PUBG Mobile (Vietnam)
+         "com.rekoo.pubgm",          // PUBG Mobile (Taiwan)
+         "com.tencent.tmgp.pubgmhd", // PUBG Mobile (HD / China)
+-        "com.tencent.iglite"        // PUBG Mobile Lite
++        "com.tencent.iglite",       // PUBG Mobile Lite
++        "com.activision.callofduty.shooter", // Call of Duty: Mobile
++        "com.garena.game.codm"      // CODM Garena
+     );
+ 
+     static {
+-        propsToChangeOnePlus8Pro = new HashMap<>();
+-        propsToChangeOnePlus8Pro.put("BRAND", "OnePlus");
+-        propsToChangeOnePlus8Pro.put("MANUFACTURER", "OnePlus");
+-        propsToChangeOnePlus8Pro.put("DEVICE", "OnePlus8Pro");
+-        propsToChangeOnePlus8Pro.put("PRODUCT", "OnePlus8Pro_EEA");
+-        propsToChangeOnePlus8Pro.put("MODEL", "IN2023");
++        propsToChangeK30Ultra = new HashMap<>();
++        propsToChangeK30Ultra.put("BRAND", "Xiaomi");
++        propsToChangeK30Ultra.put("MANUFACTURER", "Xiaomi");
++        propsToChangeK30Ultra.put("DEVICE", "cezanne");
++        propsToChangeK30Ultra.put("PRODUCT", "cezanne");
++        propsToChangeK30Ultra.put("MODEL", "M2006J10C");
+     }
+ 
+     public static void setProps(String packageName) {
+@@ -59,8 +60,8 @@ public class GamePropsUtils {
+         }
+ 
+         if (packagesToSpoofPUBG.contains(packageName)) {
+-            if (DEBUG) Log.d(TAG, "Spoofing " + packageName + " as OnePlus 8 Pro for 90 FPS");
+-            for (Map.Entry<String, Object> prop : propsToChangeOnePlus8Pro.entrySet()) {
++            if (DEBUG) Log.d(TAG, "Spoofing " + packageName + " as Xiaomi Redmi K30 Ultra (M2006J10C) for 90 FPS + HDR");
++            for (Map.Entry<String, Object> prop : propsToChangeK30Ultra.entrySet()) {
+                 setPropValue(prop.getKey(), prop.getValue());
+             }
+         }
+-- 
+2.43.0
+
