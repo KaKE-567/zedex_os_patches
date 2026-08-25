@@ -1,0 +1,41 @@
+From 878daf9b5fde48217e2a293ee7cf2f3d2f26811b Mon Sep 17 00:00:00 2001
+From: kake <kake@build.local>
+Date: Tue, 25 Aug 2026 10:15:07 +0000
+Subject: [PATCH 27/28] SystemUI: Use 2-column wide layout in landscape for
+ both Half QS and Full QS
+
+Change-Id: I880425bb3f80bfe2f798c8c91dbac48b2be216f2
+---
+ packages/SystemUI/res/values-land/dimens.xml                    | 2 +-
+ packages/SystemUI/src/com/android/systemui/qs/QuickQSPanel.java | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/packages/SystemUI/res/values-land/dimens.xml b/packages/SystemUI/res/values-land/dimens.xml
+index a3d1275b..08087ebc 100644
+--- a/packages/SystemUI/res/values-land/dimens.xml
++++ b/packages/SystemUI/res/values-land/dimens.xml
+@@ -30,7 +30,7 @@
+     <dimen name="battery_detail_graph_space_top">9dp</dimen>
+     <dimen name="battery_detail_graph_space_bottom">9dp</dimen>
+ 
+-    <integer name="quick_settings_num_columns">4</integer>
++    <integer name="quick_settings_num_columns">2</integer>
+     <bool name="quick_settings_wide">true</bool>
+     <dimen name="qs_detail_margin_top">0dp</dimen>
+ 
+diff --git a/packages/SystemUI/src/com/android/systemui/qs/QuickQSPanel.java b/packages/SystemUI/src/com/android/systemui/qs/QuickQSPanel.java
+index 30bc8b83..9ce4ee90 100644
+--- a/packages/SystemUI/src/com/android/systemui/qs/QuickQSPanel.java
++++ b/packages/SystemUI/src/com/android/systemui/qs/QuickQSPanel.java
+@@ -204,7 +204,7 @@ public class QuickQSPanel extends QSPanel {
+         }
+ 
+         private int getNumColumns() {
+-            return getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? 4 : 2;
++            return 2;
+         }
+ 
+         private int getNumRows() {
+-- 
+2.43.0
+

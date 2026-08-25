@@ -1,0 +1,199 @@
+From 2feb1f5187bddc6fcc99269e6a4ed7f396abaecc Mon Sep 17 00:00:00 2001
+From: kake <kake@build.local>
+Date: Mon, 24 Aug 2026 18:26:52 +0000
+Subject: [PATCH 09/28] QuickQSPanel: Properly implement A13-style 2x2 pill
+ grid using UNSPECIFIED onMeasure trick
+
+Change-Id: I5661665cab0c6c3345ca23462718ab1024f0b3e3
+---
+ .../quick_status_bar_expanded_header.xml      |   2 +-
+ .../com/android/systemui/qs/QuickQSPanel.java | 110 ++++--------------
+ .../systemui/qs/QuickStatusBarHeader.java     |   4 +-
+ 3 files changed, 27 insertions(+), 89 deletions(-)
+
+diff --git a/packages/SystemUI/res/layout/quick_status_bar_expanded_header.xml b/packages/SystemUI/res/layout/quick_status_bar_expanded_header.xml
+index 6ba7706a..b9b85811 100644
+--- a/packages/SystemUI/res/layout/quick_status_bar_expanded_header.xml
++++ b/packages/SystemUI/res/layout/quick_status_bar_expanded_header.xml
+@@ -51,7 +51,7 @@
+     <com.android.systemui.qs.QuickQSPanel
+         android:id="@+id/quick_qs_panel"
+         android:layout_width="match_parent"
+-        android:layout_height="48dp"
++        android:layout_height="wrap_content"
+         android:layout_below="@id/quick_qs_brightness_bar"
+         android:layout_marginStart="@dimen/qs_header_tile_margin_horizontal"
+         android:layout_marginEnd="@dimen/qs_header_tile_margin_horizontal"
+diff --git a/packages/SystemUI/src/com/android/systemui/qs/QuickQSPanel.java b/packages/SystemUI/src/com/android/systemui/qs/QuickQSPanel.java
+index e41e193c..665eab53 100644
+--- a/packages/SystemUI/src/com/android/systemui/qs/QuickQSPanel.java
++++ b/packages/SystemUI/src/com/android/systemui/qs/QuickQSPanel.java
+@@ -148,7 +148,7 @@ public class QuickQSPanel extends QSPanel {
+                 break;
+             }
+         }
+-        super.setTiles(quickTiles, true);
++        super.setTiles(quickTiles, false);
+     }
+ 
+     private final Tunable mNumTiles = new Tunable() {
+@@ -191,13 +191,16 @@ public class QuickQSPanel extends QSPanel {
+         private boolean mListening;
+         private Rect mClippingBounds = new Rect();
+ 
++        // Fixed 2x2 grid: 2 columns, 2 rows = 4 tiles
++        private static final int NUM_COLUMNS = 2;
++        private static final int NUM_ROWS = 2;
++
+         public HeaderTileLayout(Context context) {
+             super(context);
+             setClipChildren(false);
+             setClipToPadding(false);
+-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,
+-                    LayoutParams.MATCH_PARENT);
+-            lp.gravity = Gravity.CENTER_HORIZONTAL;
++            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
++                    LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+             setLayoutParams(lp);
+         }
+ 
+@@ -208,103 +211,40 @@ public class QuickQSPanel extends QSPanel {
+         }
+ 
+         @Override
+-        public void onFinishInflate(){
+-            updateResources();
+-        }
+-
+-        private LayoutParams generateTileLayoutParams() {
+-            LayoutParams lp = new LayoutParams(mCellWidth, mCellHeight);
+-            return lp;
++        public boolean updateResources() {
++            // Use the full pill tile height from parent resources
++            super.updateResources();
++            mColumns = NUM_COLUMNS;
++            mMaxAllowedRows = NUM_ROWS;
++            return false;
+         }
+ 
+         @Override
+-        protected void addTileView(TileRecord tile) {
+-            addView(tile.tileView, getChildCount(), generateTileLayoutParams());
++        protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
++            // Force UNSPECIFIED so parent calculates mRows = ceil(tiles / 2) = 2
++            // This is the key fix: pass UNSPECIFIED so parent sets mRows = (4+2-1)/2 = 2
++            mColumns = NUM_COLUMNS;
++            super.onMeasure(widthMeasureSpec,
++                    MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
+         }
+ 
+         @Override
+         protected void onLayout(boolean changed, int l, int t, int r, int b) {
+-            // We only care about clipping on the right side
++            // Clip right side
+             mClippingBounds.set(0, 0, r - l, 10000);
+             setClipBounds(mClippingBounds);
+ 
+-            calculateColumns();
+-
++            // Show 4 tiles (2x2), hide the rest
+             for (int i = 0; i < mRecords.size(); i++) {
+-                mRecords.get(i).tileView.setVisibility( i < mColumns ? View.VISIBLE : View.GONE);
+-            }
+-
+-            setAccessibilityOrder();
+-            layoutTileRecords(mColumns);
+-        }
+-
+-        @Override
+-        public boolean updateResources() {
+-            mCellWidth = mContext.getResources().getDimensionPixelSize(R.dimen.qs_quick_tile_size);
+-            mCellHeight = mCellWidth;
+-
+-            return false;
+-        }
+-
+-        private boolean calculateColumns() {
+-            int prevNumColumns = mColumns;
+-            int maxTiles = mRecords.size();
+-
+-            if (maxTiles == 0){ // Early return during setup
+-                mColumns = 0;
+-                return true;
+-            }
+-
+-            final int availableWidth = getMeasuredWidth() - getPaddingStart() - getPaddingEnd();
+-            final int leftoverWhitespace = availableWidth - maxTiles * mCellWidth;
+-            final int smallestHorizontalMarginNeeded;
+-            smallestHorizontalMarginNeeded = leftoverWhitespace / Math.max(1, maxTiles - 1);
+-
+-            if (smallestHorizontalMarginNeeded > 0){
+-                mCellMarginHorizontal = smallestHorizontalMarginNeeded;
+-                mColumns = maxTiles;
+-            } else{
+-                mColumns = mCellWidth == 0 ? 1 :
+-                        Math.min(maxTiles, availableWidth / mCellWidth );
+-                mCellMarginHorizontal = (availableWidth - mColumns * mCellWidth) / (mColumns - 1);
+-            }
+-            return mColumns != prevNumColumns;
+-        }
+-
+-        private void setAccessibilityOrder() {
+-            if (mRecords != null && mRecords.size() > 0) {
+-                View previousView = this;
+-                for (TileRecord record : mRecords) {
+-                    if (record.tileView.getVisibility() == GONE) continue;
+-                    previousView = record.tileView.updateAccessibilityOrder(previousView);
+-                }
+-                mRecords.get(mRecords.size() - 1).tileView.setAccessibilityTraversalBefore(
+-                        R.id.expand_indicator);
++                mRecords.get(i).tileView.setVisibility(
++                        i < (NUM_COLUMNS * NUM_ROWS) ? View.VISIBLE : View.GONE);
+             }
+-        }
+-
+-        @Override
+-        protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+-            // Measure each QS tile.
+-            for (TileRecord record : mRecords) {
+-                if (record.tileView.getVisibility() == GONE) continue;
+-                record.tileView.measure(exactly(mCellWidth), exactly(mCellHeight));
+-            }
+-
+-            int height = mCellHeight;
+-            if (height < 0) height = 0;
+-
+-            setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec), height);
++            layoutTileRecords(NUM_COLUMNS * NUM_ROWS);
+         }
+ 
+         @Override
+         public int getNumVisibleTiles() {
+-            return mColumns;
+-        }
+-
+-        @Override
+-        protected int getColumnStart(int column) {
+-            return getPaddingStart() + column *  (mCellWidth + mCellMarginHorizontal);
++            return Math.min(mRecords.size(), NUM_COLUMNS * NUM_ROWS);
+         }
+     }
+ }
+diff --git a/packages/SystemUI/src/com/android/systemui/qs/QuickStatusBarHeader.java b/packages/SystemUI/src/com/android/systemui/qs/QuickStatusBarHeader.java
+index d4a1f187..9632fce6 100644
+--- a/packages/SystemUI/src/com/android/systemui/qs/QuickStatusBarHeader.java
++++ b/packages/SystemUI/src/com/android/systemui/qs/QuickStatusBarHeader.java
+@@ -439,9 +439,7 @@ public class QuickStatusBarHeader extends RelativeLayout implements
+             lp.height = resources.getDimensionPixelSize(
+                     com.android.internal.R.dimen.quick_qs_offset_height);
+         } else {
+-            lp.height = Math.max(getMinimumHeight(),
+-                    resources.getDimensionPixelSize(
+-                            com.android.internal.R.dimen.quick_qs_total_height));
++            lp.height = FrameLayout.LayoutParams.WRAP_CONTENT;
+         }
+ 
+         setLayoutParams(lp);
+-- 
+2.43.0
+

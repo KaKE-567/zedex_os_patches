@@ -1,0 +1,209 @@
+From 0e11cac371cef315af037be4e7f925a9774464ac Mon Sep 17 00:00:00 2001
+From: kake <kake@build.local>
+Date: Tue, 25 Aug 2026 10:14:03 +0000
+Subject: [PATCH 26/28] SystemUI: Fix lockscreen wallpaper blackout, widen
+ capsule pills and support landscape 4x1 layout
+
+Change-Id: Ia165d51c0abecbeaf96856902143d638b3ae84b4
+---
+ .../quick_status_bar_expanded_header.xml      |  4 +-
+ packages/SystemUI/res/values-land/dimens.xml  |  2 +-
+ .../SystemUI/res/values-sw372dp/dimens.xml    |  2 +-
+ packages/SystemUI/res/values/dimens.xml       |  2 +-
+ .../com/android/systemui/qs/QuickQSPanel.java | 43 +++++++++++--------
+ .../statusbar/phone/ScrimController.java      | 19 +++++---
+ .../systemui/statusbar/phone/ScrimState.java  |  2 +-
+ 7 files changed, 44 insertions(+), 30 deletions(-)
+
+diff --git a/packages/SystemUI/res/layout/quick_status_bar_expanded_header.xml b/packages/SystemUI/res/layout/quick_status_bar_expanded_header.xml
+index 40bb4d62..4336ce59 100644
+--- a/packages/SystemUI/res/layout/quick_status_bar_expanded_header.xml
++++ b/packages/SystemUI/res/layout/quick_status_bar_expanded_header.xml
+@@ -55,8 +55,8 @@
+         android:layout_height="wrap_content"
+         android:layout_below="@id/quick_qs_status_icons"
+         android:layout_marginTop="6dp"
+-        android:layout_marginStart="@dimen/qs_header_tile_margin_horizontal"
+-        android:layout_marginEnd="@dimen/qs_header_tile_margin_horizontal"
++        android:layout_marginStart="0dp"
++        android:layout_marginEnd="0dp"
+         android:accessibilityTraversalAfter="@+id/date_time_group"
+         android:accessibilityTraversalBefore="@id/expand_indicator"
+         android:clipChildren="false"
+diff --git a/packages/SystemUI/res/values-land/dimens.xml b/packages/SystemUI/res/values-land/dimens.xml
+index 5a8c5dc6..a3d1275b 100644
+--- a/packages/SystemUI/res/values-land/dimens.xml
++++ b/packages/SystemUI/res/values-land/dimens.xml
+@@ -25,7 +25,7 @@
+     <dimen name="brightness_mirror_height">40dp</dimen>
+ 
+     <dimen name="qs_tile_margin_top">8dp</dimen>
+-    <dimen name="qs_tile_margin_vertical">0dp</dimen>
++    <dimen name="qs_tile_margin_vertical">10dp</dimen>
+ 
+     <dimen name="battery_detail_graph_space_top">9dp</dimen>
+     <dimen name="battery_detail_graph_space_bottom">9dp</dimen>
+diff --git a/packages/SystemUI/res/values-sw372dp/dimens.xml b/packages/SystemUI/res/values-sw372dp/dimens.xml
+index e64662ec..4fd2b9af 100644
+--- a/packages/SystemUI/res/values-sw372dp/dimens.xml
++++ b/packages/SystemUI/res/values-sw372dp/dimens.xml
+@@ -17,5 +17,5 @@
+ -->
+ <resources>
+     <dimen name="nav_content_padding">8dp</dimen>
+-    <dimen name="qs_header_tile_margin_horizontal">13dp</dimen>
++    <dimen name="qs_header_tile_margin_horizontal">0dp</dimen>
+ </resources>
+diff --git a/packages/SystemUI/res/values/dimens.xml b/packages/SystemUI/res/values/dimens.xml
+index b48cb725..bbfa6357 100644
+--- a/packages/SystemUI/res/values/dimens.xml
++++ b/packages/SystemUI/res/values/dimens.xml
+@@ -447,7 +447,7 @@
+     <dimen name="pull_span_min">25dp</dimen>
+ 
+     <dimen name="qs_tile_height">64dp</dimen>
+-    <dimen name="qs_tile_layout_margin_side">14dp</dimen>
++    <dimen name="qs_tile_layout_margin_side">0dp</dimen>
+     <dimen name="qs_tile_margin_horizontal">10dp</dimen>
+     <dimen name="qs_tile_margin_vertical">10dp</dimen>
+     <dimen name="qs_tile_margin_top_bottom">8dp</dimen>
+diff --git a/packages/SystemUI/src/com/android/systemui/qs/QuickQSPanel.java b/packages/SystemUI/src/com/android/systemui/qs/QuickQSPanel.java
+index 1bf84aaa..30bc8b83 100644
+--- a/packages/SystemUI/src/com/android/systemui/qs/QuickQSPanel.java
++++ b/packages/SystemUI/src/com/android/systemui/qs/QuickQSPanel.java
+@@ -193,22 +193,30 @@ public class QuickQSPanel extends QSPanel {
+         private boolean mListening;
+         private Rect mClippingBounds = new Rect();
+ 
+-        // Fixed 2x2 grid: 2 columns, 2 rows = 4 tiles
+-        private static final int NUM_COLUMNS = 2;
+-        private static final int NUM_ROWS = 2;
+-
+         public HeaderTileLayout(Context context) {
+             super(context);
+             setClipChildren(false);
+             setClipToPadding(false);
+-            mColumns = NUM_COLUMNS;
+-            mRows = NUM_ROWS;
+-            mMaxAllowedRows = NUM_ROWS;
++            updateGridDimensions();
+             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                     LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+             setLayoutParams(lp);
+         }
+ 
++        private int getNumColumns() {
++            return getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? 4 : 2;
++        }
++
++        private int getNumRows() {
++            return getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? 1 : 2;
++        }
++
++        private void updateGridDimensions() {
++            mColumns = getNumColumns();
++            mRows = getNumRows();
++            mMaxAllowedRows = mRows;
++        }
++
+         @Override
+         protected void onConfigurationChanged(Configuration newConfig) {
+             super.onConfigurationChanged(newConfig);
+@@ -218,41 +226,38 @@ public class QuickQSPanel extends QSPanel {
+         @Override
+         public boolean updateResources() {
+             super.updateResources();
+-            mColumns = NUM_COLUMNS;
+-            mRows = NUM_ROWS;
+-            mMaxAllowedRows = NUM_ROWS;
++            updateGridDimensions();
+             mCellMarginTop = 0;
+             return false;
+         }
+ 
+         @Override
+         protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+-            mColumns = NUM_COLUMNS;
+-            mRows = NUM_ROWS;
++            updateGridDimensions();
+             super.onMeasure(widthMeasureSpec,
+                     MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
+-            mRows = NUM_ROWS;
++            mRows = getNumRows();
+         }
+ 
+         @Override
+         protected void onLayout(boolean changed, int l, int t, int r, int b) {
+-            mColumns = NUM_COLUMNS;
+-            mRows = NUM_ROWS;
++            updateGridDimensions();
+             // Clip right side
+             mClippingBounds.set(0, 0, r - l, 10000);
+             setClipBounds(mClippingBounds);
+ 
+-            // Show 4 tiles (2x2), hide the rest
++            // Show 4 tiles (2x2 in portrait, 4x1 in landscape), hide the rest
++            final int maxTiles = mColumns * mRows;
+             for (int i = 0; i < mRecords.size(); i++) {
+                 mRecords.get(i).tileView.setVisibility(
+-                        i < (NUM_COLUMNS * NUM_ROWS) ? View.VISIBLE : View.GONE);
++                        i < maxTiles ? View.VISIBLE : View.GONE);
+             }
+-            layoutTileRecords(NUM_COLUMNS * NUM_ROWS);
++            layoutTileRecords(maxTiles);
+         }
+ 
+         @Override
+         public int getNumVisibleTiles() {
+-            return Math.min(mRecords.size(), NUM_COLUMNS * NUM_ROWS);
++            return Math.min(mRecords.size(), mColumns * mRows);
+         }
+     }
+ }
+diff --git a/packages/SystemUI/src/com/android/systemui/statusbar/phone/ScrimController.java b/packages/SystemUI/src/com/android/systemui/statusbar/phone/ScrimController.java
+index 1097dc0b..2a321400 100644
+--- a/packages/SystemUI/src/com/android/systemui/statusbar/phone/ScrimController.java
++++ b/packages/SystemUI/src/com/android/systemui/statusbar/phone/ScrimController.java
+@@ -458,12 +458,21 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, OnCo
+             mCurrentBehindTint = Color.BLACK;
+             mCurrentInFrontAlpha = 0;
+         } else if (mState == ScrimState.KEYGUARD || mState == ScrimState.PULSING) {
+-            // Darken scrim to solid black as you pull down the shade on keyguard
++            // Either darken of make the scrim transparent when you
++            // pull down the shade
+             float interpolatedFract = getInterpolatedFraction();
+-            interpolatedFract = (float) Math.pow(interpolatedFract, 0.8f);
+-            mCurrentBehindAlpha = interpolatedFract * 1.0f;
+-            mCurrentBehindTint = Color.BLACK;
+-            mCurrentInFrontAlpha = mState.getFrontAlpha();
++            float alphaBehind = mState.getBehindAlpha();
++            if (mDarkenWhileDragging) {
++                mCurrentBehindAlpha = MathUtils.lerp(GRADIENT_SCRIM_ALPHA_BUSY, alphaBehind,
++                        interpolatedFract);
++                mCurrentInFrontAlpha = mState.getFrontAlpha();
++            } else {
++                mCurrentBehindAlpha = MathUtils.lerp(0 /* start */, alphaBehind,
++                        interpolatedFract);
++                mCurrentInFrontAlpha = mState.getFrontAlpha();
++            }
++            mCurrentBehindTint = ColorUtils.blendARGB(ScrimState.BOUNCER.getBehindTint(),
++                    mState.getBehindTint(), interpolatedFract);
+         }
+         if (isNaN(mCurrentBehindAlpha) || isNaN(mCurrentInFrontAlpha)) {
+             throw new IllegalStateException("Scrim opacity is NaN for state: " + mState
+diff --git a/packages/SystemUI/src/com/android/systemui/statusbar/phone/ScrimState.java b/packages/SystemUI/src/com/android/systemui/statusbar/phone/ScrimState.java
+index 84f5128e..f6404389 100644
+--- a/packages/SystemUI/src/com/android/systemui/statusbar/phone/ScrimState.java
++++ b/packages/SystemUI/src/com/android/systemui/statusbar/phone/ScrimState.java
+@@ -55,7 +55,7 @@ public enum ScrimState {
+             }
+             mCurrentInFrontTint = Color.BLACK;
+             mCurrentBehindTint = Color.BLACK;
+-            mCurrentBehindAlpha = 0f;
++            mCurrentBehindAlpha = mScrimBehindAlphaKeyguard;
+             mCurrentInFrontAlpha = 0;
+         }
+     },
+-- 
+2.43.0
+

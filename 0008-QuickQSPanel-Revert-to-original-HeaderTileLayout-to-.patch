@@ -1,0 +1,52 @@
+From d11e3fc34ab25514614cec8637f14dc0fbb7459d Mon Sep 17 00:00:00 2001
+From: kake <kake@build.local>
+Date: Mon, 24 Aug 2026 18:23:39 +0000
+Subject: [PATCH 08/28] QuickQSPanel: Revert to original HeaderTileLayout to
+ fix blank half QS tiles
+
+Change-Id: Ib31a41b70cf22639bebfe4306fa5886102730a9d
+---
+ .../SystemUI/res/layout/quick_status_bar_expanded_header.xml  | 4 ++--
+ .../src/com/android/systemui/qs/QuickStatusBarHeader.java     | 4 +++-
+ 2 files changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/packages/SystemUI/res/layout/quick_status_bar_expanded_header.xml b/packages/SystemUI/res/layout/quick_status_bar_expanded_header.xml
+index 2d1f9cc3..6ba7706a 100644
+--- a/packages/SystemUI/res/layout/quick_status_bar_expanded_header.xml
++++ b/packages/SystemUI/res/layout/quick_status_bar_expanded_header.xml
+@@ -65,7 +65,7 @@
+     <com.android.systemui.statusbar.AlphaOptimizedImageView
+         android:id="@+id/qs_detail_header_progress"
+         android:layout_width="match_parent"
+-        android:layout_height="wrap_content"
++        android:layout_height="48dp"
+         android:layout_alignParentBottom="true"
+         android:alpha="0"
+         android:background="@color/qs_detail_progress_track"
+@@ -74,7 +74,7 @@
+     <TextView
+         android:id="@+id/header_debug_info"
+         android:layout_width="wrap_content"
+-        android:layout_height="wrap_content"
++        android:layout_height="48dp"
+         android:layout_gravity="center_vertical"
+         android:fontFamily="sans-serif-condensed"
+         android:padding="2dp"
+diff --git a/packages/SystemUI/src/com/android/systemui/qs/QuickStatusBarHeader.java b/packages/SystemUI/src/com/android/systemui/qs/QuickStatusBarHeader.java
+index 9632fce6..d4a1f187 100644
+--- a/packages/SystemUI/src/com/android/systemui/qs/QuickStatusBarHeader.java
++++ b/packages/SystemUI/src/com/android/systemui/qs/QuickStatusBarHeader.java
+@@ -439,7 +439,9 @@ public class QuickStatusBarHeader extends RelativeLayout implements
+             lp.height = resources.getDimensionPixelSize(
+                     com.android.internal.R.dimen.quick_qs_offset_height);
+         } else {
+-            lp.height = FrameLayout.LayoutParams.WRAP_CONTENT;
++            lp.height = Math.max(getMinimumHeight(),
++                    resources.getDimensionPixelSize(
++                            com.android.internal.R.dimen.quick_qs_total_height));
+         }
+ 
+         setLayoutParams(lp);
+-- 
+2.43.0
+
