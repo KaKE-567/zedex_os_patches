@@ -408,10 +408,10 @@ index 0000000..283044a
 +</PreferenceScreen>
 diff --git a/res/xml/kake_gaming_settings.xml b/res/xml/kake_gaming_settings.xml
 new file mode 100644
-index 0000000..604dc4c
+index 0000000..38b58e2
 --- /dev/null
 +++ b/res/xml/kake_gaming_settings.xml
-@@ -0,0 +1,78 @@
+@@ -0,0 +1,85 @@
 +<?xml version="1.0" encoding="utf-8"?>
 +<!--
 +  Copyright (C) 2026 The Zedex OS Project - KaKe Elements
@@ -439,6 +439,13 @@ index 0000000..604dc4c
 +            android:title="Add Games"
 +            android:dialogTitle="Select Games &amp; Apps"
 +            android:summary="Choose installed games to automatically launch Game Mode" />
++
++        <SwitchPreference
++            android:key="gaming_mode_spoofing"
++            android:title="Unlock High FPS (Device Spoofing)"
++            android:summary="Enable to spoof flagship profile for 90 FPS. Keep disabled for PUBG/BGMI Ultimate Royale to use 100% genuine hardware and pass anti-cheat verification"
++            android:defaultValue="false"
++            settings:controller="com.android.settings.gaming.GamingModeGenericSwitchController" />
 +
 +    </PreferenceCategory>
 +

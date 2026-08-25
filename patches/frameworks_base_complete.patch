@@ -1,12 +1,12 @@
 diff --git a/core/java/android/app/Application.java b/core/java/android/app/Application.java
-index e12942f2..f089eaab 100644
+index e12942f2..294135cd 100644
 --- a/core/java/android/app/Application.java
 +++ b/core/java/android/app/Application.java
 @@ -350,6 +350,14 @@ public class Application extends ContextWrapper implements ComponentCallbacks2 {
      /* package */ final void attach(Context context) {
          attachBaseContext(context);
          mLoadedApk = ContextImpl.getImpl(context).mPackageInfo;
-+        com.android.internal.util.GamePropsUtils.setProps(context.getPackageName());
++        com.android.internal.util.GamePropsUtils.setProps(context, context.getPackageName());
 +        if (com.android.internal.util.GamePropsUtils.isGamePackage(context, context.getPackageName())) {
 +            try {
 +                android.provider.Settings.System.putInt(context.getContentResolver(), "gaming_mode_active", 1);
@@ -18,7 +18,7 @@ index e12942f2..f089eaab 100644
  
      @UnsupportedAppUsage
 diff --git a/core/java/android/app/Instrumentation.java b/core/java/android/app/Instrumentation.java
-index 9720e9f4..74155531 100644
+index 9720e9f4..7d319e41 100644
 --- a/core/java/android/app/Instrumentation.java
 +++ b/core/java/android/app/Instrumentation.java
 @@ -56,6 +56,7 @@ import android.view.Window;
@@ -33,7 +33,7 @@ index 9720e9f4..74155531 100644
      public Application newApplication(ClassLoader cl, String className, Context context)
              throws InstantiationException, IllegalAccessException, 
              ClassNotFoundException {
-+        GamePropsUtils.setProps(context.getPackageName());
++        GamePropsUtils.setProps(context, context.getPackageName());
          Application app = getFactory(context.getPackageName())
                  .instantiateApplication(cl, className);
          app.attach(context);
@@ -41,16 +41,16 @@ index 9720e9f4..74155531 100644
      static public Application newApplication(Class<?> clazz, Context context)
              throws InstantiationException, IllegalAccessException, 
              ClassNotFoundException {
-+        GamePropsUtils.setProps(context.getPackageName());
++        GamePropsUtils.setProps(context, context.getPackageName());
          Application app = (Application)clazz.newInstance();
          app.attach(context);
          return app;
 diff --git a/core/java/com/android/internal/util/GamePropsUtils.java b/core/java/com/android/internal/util/GamePropsUtils.java
 new file mode 100644
-index 00000000..fb21b9ae
+index 00000000..977a368c
 --- /dev/null
 +++ b/core/java/com/android/internal/util/GamePropsUtils.java
-@@ -0,0 +1,173 @@
+@@ -0,0 +1,196 @@
 +/*
 + * Copyright (C) 2020 The Android Open Source Project
 + * Copyright (C) 2026 The Zedex OS Project
@@ -70,7 +70,9 @@ index 00000000..fb21b9ae
 +
 +package com.android.internal.util;
 +
++import android.content.Context;
 +import android.os.Build;
++import android.provider.Settings;
 +import android.util.Log;
 +
 +import java.lang.reflect.Field;
@@ -84,7 +86,7 @@ index 00000000..fb21b9ae
 +    private static final String TAG = "GamePropsUtils";
 +    private static final boolean DEBUG = false;
 +
-+    // OnePlus 8 Pro Official Certified Release-Keys Profile (90 FPS + Ultimate Royale Pass)
++    // High-FPS Flagship Profile (OnePlus 8 Pro IN2020 Certified Release-Keys)
 +    private static final Map<String, Object> propsToChangeOP8Pro;
 +    private static final Map<String, Object> versionPropsOP8Pro;
 +
@@ -92,7 +94,7 @@ index 00000000..fb21b9ae
 +    private static final Map<String, Object> propsToChangePixel5;
 +    private static final Map<String, Object> versionPropsPixel5;
 +
-+    // Packages to spoof for PUBG/BGMI 90 FPS + Anti-Cheat Security Integrity Verification
++    // Packages to monitor for PUBG/BGMI & Games
 +    private static final List<String> packagesToSpoofPUBG = Arrays.asList(
 +        "com.pubg.imobile",                  // BGMI (Battlegrounds Mobile India)
 +        "com.tencent.ig",                    // PUBG Mobile (Global)
@@ -155,13 +157,13 @@ index 00000000..fb21b9ae
 +        return isGamePackage(null, packageName);
 +    }
 +
-+    public static boolean isGamePackage(android.content.Context context, String packageName) {
++    public static boolean isGamePackage(Context context, String packageName) {
 +        if (packageName == null || packageName.isEmpty()) return false;
 +        if (packagesToSpoofPUBG.contains(packageName)) return true;
 +
 +        if (context != null) {
 +            try {
-+                String userList = android.provider.Settings.System.getString(
++                String userList = Settings.System.getString(
 +                        context.getContentResolver(), "gaming_mode_app_list");
 +                if (userList != null && !userList.isEmpty()) {
 +                    String[] list = userList.split(";");
@@ -177,17 +179,38 @@ index 00000000..fb21b9ae
 +    }
 +
 +    public static void setProps(String packageName) {
++        setProps(null, packageName);
++    }
++
++    public static void setProps(Context context, String packageName) {
 +        if (packageName == null || packageName.isEmpty()) {
 +            return;
 +        }
 +
-+        if (packagesToSpoofPUBG.contains(packageName)) {
-+            if (DEBUG) Log.d(TAG, "Spoofing " + packageName + " as OnePlus 8 Pro (IN2020) for 90 FPS + Ultimate Royale Pass");
-+            for (Map.Entry<String, Object> prop : propsToChangeOP8Pro.entrySet()) {
-+                setPropValue(prop.getKey(), prop.getValue());
++        if (isGamePackage(context, packageName)) {
++            // Always hide userdebug / test-keys for anti-cheat integrity
++            setPropValue("TYPE", "user");
++            setPropValue("TAGS", "release-keys");
++
++            // Check if user enabled High FPS Flagship Spoofing in KaKe Game Space
++            boolean spoofEnabled = false;
++            if (context != null) {
++                try {
++                    spoofEnabled = Settings.System.getInt(
++                            context.getContentResolver(), "gaming_mode_spoofing", 0) == 1;
++                } catch (Exception ignored) {}
 +            }
-+            for (Map.Entry<String, Object> prop : versionPropsOP8Pro.entrySet()) {
-+                setVersionPropValue(prop.getKey(), prop.getValue());
++
++            if (spoofEnabled) {
++                if (DEBUG) Log.d(TAG, "Spoofing " + packageName + " as OnePlus 8 Pro (IN2020) for 90 FPS");
++                for (Map.Entry<String, Object> prop : propsToChangeOP8Pro.entrySet()) {
++                    setPropValue(prop.getKey(), prop.getValue());
++                }
++                for (Map.Entry<String, Object> prop : versionPropsOP8Pro.entrySet()) {
++                    setVersionPropValue(prop.getKey(), prop.getValue());
++                }
++            } else {
++                if (DEBUG) Log.d(TAG, "Keeping genuine native hardware for " + packageName + " (Anti-Cheat Ultimate Royale Safe)");
 +            }
 +        } else if (packagesToSpoofGMS.contains(packageName)) {
 +            if (DEBUG) Log.d(TAG, "Spoofing " + packageName + " as Google Pixel 5 for SafetyNet & Play Integrity");
