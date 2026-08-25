@@ -24,6 +24,53 @@ index 0000000..c7b1cea
 +        android:top="@dimen/dashboard_tile_foreground_image_inset"
 +        android:drawable="@drawable/ic_settings_gaming_white" />
 +</layer-list>
+diff --git a/res/drawable/ic_homepage_kake_elements.xml b/res/drawable/ic_homepage_kake_elements.xml
+new file mode 100644
+index 0000000..94c37b2
+--- /dev/null
++++ b/res/drawable/ic_homepage_kake_elements.xml
+@@ -0,0 +1,20 @@
++<?xml version="1.0" encoding="utf-8"?>
++<!--
++  Copyright (C) 2026 The Zedex OS Project
++  -->
++<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
++
++    <item>
++        <com.android.settingslib.widget.AdaptiveIconShapeDrawable
++            android:width="@dimen/dashboard_tile_image_size"
++            android:height="@dimen/dashboard_tile_image_size"
++            android:color="@color/homepage_display_background" />
++    </item>
++
++    <item
++        android:width="@dimen/dashboard_tile_foreground_image_size"
++        android:height="@dimen/dashboard_tile_foreground_image_size"
++        android:start="@dimen/dashboard_tile_foreground_image_inset"
++        android:top="@dimen/dashboard_tile_foreground_image_inset"
++        android:drawable="@drawable/ic_kake_elements_white" />
++</layer-list>
+diff --git a/res/drawable/ic_kake_elements_white.xml b/res/drawable/ic_kake_elements_white.xml
+new file mode 100644
+index 0000000..31d312d
+--- /dev/null
++++ b/res/drawable/ic_kake_elements_white.xml
+@@ -0,0 +1,15 @@
++<?xml version="1.0" encoding="utf-8"?>
++<!--
++  Copyright (C) 2026 The Zedex OS Project
++  -->
++<vector xmlns:android="http://schemas.android.com/apk/res/android"
++    android:width="24dp"
++    android:height="24dp"
++    android:viewportWidth="24"
++    android:viewportHeight="24">
++
++    <!-- Crown & Star / Fire Customization Icon -->
++    <path
++        android:fillColor="@android:color/white"
++        android:pathData="M5,16L3,5L8.5,10L12,4L15.5,10L21,5L19,16H5M19,19C19,19.55 18.55,20 18,20H6C5.45,20 5,19.55 5,19V17H19V19M12,2L9.5,7.5L4,8.5L8,12.5L7,18L12,15.5L17,18L16,12.5L20,8.5L14.5,7.5L12,2Z" />
++</vector>
 diff --git a/res/drawable/ic_settings_gaming_white.xml b/res/drawable/ic_settings_gaming_white.xml
 new file mode 100644
 index 0000000..07bb56d
@@ -300,6 +347,163 @@ index 9b5659b..373b5b1 100644
      <Preference
          android:key="gesture_assist_input_summary"
          android:title="@string/assist_gesture_title"
+diff --git a/res/xml/kake_elements_settings.xml b/res/xml/kake_elements_settings.xml
+new file mode 100644
+index 0000000..0bf16e0
+--- /dev/null
++++ b/res/xml/kake_elements_settings.xml
+@@ -0,0 +1,151 @@
++<?xml version="1.0" encoding="utf-8"?>
++<!--
++  Copyright (C) 2026 The Zedex OS Project - KaKe Elements
++  -->
++
++<PreferenceScreen
++    xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:settings="http://schemas.android.com/apk/res-auto"
++    android:key="kake_elements_settings_screen"
++    android:title="KaKe Elements">
++
++    <!-- Gaming Space Category -->
++    <PreferenceCategory
++        android:key="kake_gaming_category"
++        android:title="🎮 Gaming Space &amp; Game Mode">
++
++        <SwitchPreference
++            android:key="gaming_mode_toggle"
++            android:title="Master Game Mode Switch"
++            android:summary="Activate Game Mode immediately"
++            android:defaultValue="false"
++            settings:controller="com.android.settings.gaming.GamingModeTogglePreferenceController" />
++
++        <com.android.settings.gaming.GamingModeAppListPreference
++            android:key="gaming_mode_app_list"
++            android:title="Add Games (App Selector)"
++            android:dialogTitle="Select Games for Auto Game Mode"
++            android:summary="Choose installed games to automatically launch Game Mode" />
++
++        <SwitchPreference
++            android:key="gaming_mode_danmaku"
++            android:title="Danmaku Bullet Notifications"
++            android:summary="Display incoming messages as lightweight subtitle tickers instead of blocking cards"
++            android:defaultValue="true"
++            settings:controller="com.android.settings.gaming.GamingModeGenericSwitchController" />
++
++        <SwitchPreference
++            android:key="gaming_mode_block_heads_up"
++            android:title="Suppress Notification Banners"
++            android:summary="Completely block large heads-up banner popups during gameplay"
++            android:defaultValue="true"
++            settings:controller="com.android.settings.gaming.GamingModeGenericSwitchController" />
++
++        <SwitchPreference
++            android:key="gaming_mode_disable_ringer"
++            android:title="Mute Ringtone &amp; Notification Audio"
++            android:summary="Silence incoming calls and alerts so footsteps and voice chat stay clear"
++            android:defaultValue="false"
++            settings:controller="com.android.settings.gaming.GamingModeGenericSwitchController" />
++
++        <SwitchPreference
++            android:key="gaming_mode_lock_gestures"
++            android:title="Lock Back Gestures &amp; Navigation Bar"
++            android:summary="Prevent accidental exits during 3/4-finger claw grip aiming"
++            android:defaultValue="true"
++            settings:controller="com.android.settings.gaming.GamingModeGenericSwitchController" />
++
++        <SwitchPreference
++            android:key="gaming_mode_lock_brightness"
++            android:title="Lock Screen Brightness"
++            android:summary="Prevent auto-brightness from dimming the screen mid-game"
++            android:defaultValue="false"
++            settings:controller="com.android.settings.gaming.GamingModeGenericSwitchController" />
++
++    </PreferenceCategory>
++
++    <!-- Performance & Overclock Category -->
++    <PreferenceCategory
++        android:key="kake_perf_category"
++        android:title="⚡ Performance &amp; Overclock Engine">
++
++        <ListPreference
++            android:key="zedex_perf_profile"
++            android:title="@string/zedex_perf_profile_title"
++            android:summary="%s"
++            android:entries="@array/zedex_perf_profile_entries"
++            android:entryValues="@array/zedex_perf_profile_values"
++            android:defaultValue="gaming"
++            settings:controller="com.android.settings.fuelgauge.ZedexPerformanceProfilePreferenceController" />
++
++        <Preference
++            android:key="kake_spoofing_info"
++            android:title="90 FPS + HDR Game Spoofing"
++            android:summary="Xiaomi Redmi K30 Ultra (M2006J10C) — Active for PUBG, BGMI &amp; CODM"
++            android:selectable="false" />
++
++        <Preference
++            android:key="kake_zero_throttle_info"
++            android:title="Zero-Throttle Thermal Engine"
++            android:summary="2.32 GHz Kryo Boost, 95°C Thermal Ceiling, 0μs Governor Ramp &amp; 100% Flat Throttle Graph"
++            android:selectable="false" />
++
++        <Preference
++            android:key="kake_tcp_info"
++            android:title="Ultra-Low Ping Networking"
++            android:summary="TCP BBRPlus &amp; Zero Packet Drop for Esports Multiplayer"
++            android:selectable="false" />
++
++    </PreferenceCategory>
++
++    <!-- Status Bar & UI Styling -->
++    <PreferenceCategory
++        android:key="kake_ui_category"
++        android:title="📶 Status Bar &amp; UI Styling">
++
++        <Preference
++            android:key="kake_traffic_info"
++            android:title="Real-Time Network Speed Meter"
++            android:summary="Dynamic download/upload monitor beside Wi-Fi icon"
++            android:selectable="false" />
++
++        <Preference
++            android:key="kake_ios_signal_info"
++            android:title="iOS Style Cellular Signal"
++            android:summary="Authentic Apple iOS 4-bar vertical rounded pill indicators"
++            android:selectable="false" />
++
++        <Preference
++            android:key="kake_amoled_info"
++            android:title="Pure AMOLED Black Theme"
++            android:summary="Pitch black background on Lockscreen, Quick Settings &amp; Notifications"
++            android:selectable="false" />
++
++    </PreferenceCategory>
++
++    <!-- Maintainer & Support Hub -->
++    <PreferenceCategory
++        android:key="kake_developer_category"
++        android:title="👑 Maintainer &amp; Support Hub">
++
++        <Preference
++            android:key="kake_telegram_maintainer"
++            android:title="Maintainer"
++            android:summary="@Xx_KaKe_xX (Tap to message on Telegram)"
++            settings:allowDividerAbove="true">
++            <intent android:action="android.intent.action.VIEW"
++                    android:data="https://t.me/Xx_KaKe_xX" />
++        </Preference>
++
++        <Preference
++            android:key="kake_github_patches"
++            android:title="Source Code &amp; Patches"
++            android:summary="github.com/KaKE-567/zedex_os_patches"
++            settings:allowDividerAbove="true">
++            <intent android:action="android.intent.action.VIEW"
++                    android:data="https://github.com/KaKE-567/zedex_os_patches" />
++        </Preference>
++
++    </PreferenceCategory>
++
++</PreferenceScreen>
 diff --git a/res/xml/my_device_info.xml b/res/xml/my_device_info.xml
 index 9a6047c..567da5d 100644
 --- a/res/xml/my_device_info.xml
@@ -353,10 +557,26 @@ index 890de16..0a667d0 100644
          android:fragment="com.android.settings.fuelgauge.batterysaver.BatterySaverSettings"
          android:key="battery_saver_summary"
 diff --git a/res/xml/top_level_settings.xml b/res/xml/top_level_settings.xml
-index 367f426..8358d28 100644
+index 367f426..1f50a43 100644
 --- a/res/xml/top_level_settings.xml
 +++ b/res/xml/top_level_settings.xml
-@@ -55,6 +55,14 @@
+@@ -20,6 +20,15 @@
+     xmlns:settings="http://schemas.android.com/apk/res-auto"
+     android:key="top_level_settings">
+ 
++    <!-- KaKe Elements Customization Hub -->
++    <Preference
++        android:key="top_level_kake_elements"
++        android:title="👑 KaKe Elements"
++        android:summary="Gaming space, performance profiles, status bar &amp; exclusive tweaks"
++        android:icon="@drawable/ic_homepage_kake_elements"
++        android:order="-130"
++        android:fragment="com.android.settings.kake.KaKeElementsSettings" />
++
+     <Preference
+         android:key="top_level_network"
+         android:title="@string/network_dashboard_title"
+@@ -55,6 +64,14 @@
          android:order="-90"
          settings:controller="com.android.settings.fuelgauge.TopLevelBatteryPreferenceController"/>
  
@@ -1026,4 +1246,59 @@ index 0000000..cda17e3
 +        return Settings.System.putInt(mContext.getContentResolver(),
 +                KEY_THREE_FINGER_GESTURE, isChecked ? 1 : 0);
 +    }
++}
+diff --git a/src/com/android/settings/kake/KaKeElementsSettings.java b/src/com/android/settings/kake/KaKeElementsSettings.java
+new file mode 100644
+index 0000000..dd31655
+--- /dev/null
++++ b/src/com/android/settings/kake/KaKeElementsSettings.java
+@@ -0,0 +1,49 @@
++/*
++ * Copyright (C) 2026 The Zedex OS Project - KaKe Elements
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package com.android.settings.kake;
++
++import android.app.settings.SettingsEnums;
++import android.content.Context;
++import android.os.Bundle;
++
++import com.android.settings.R;
++import com.android.settings.dashboard.DashboardFragment;
++import com.android.settings.search.BaseSearchIndexProvider;
++import com.android.settingslib.search.SearchIndexable;
++
++@SearchIndexable(forTarget = SearchIndexable.ALL & ~SearchIndexable.ARC)
++public class KaKeElementsSettings extends DashboardFragment {
++    private static final String TAG = "KaKeElementsSettings";
++
++    @Override
++    public int getMetricsCategory() {
++        return SettingsEnums.UNKNOWN;
++    }
++
++    @Override
++    protected String getLogTag() {
++        return TAG;
++    }
++
++    @Override
++    protected int getPreferenceScreenResId() {
++        return R.xml.kake_elements_settings;
++    }
++
++    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER =
++            new BaseSearchIndexProvider(R.xml.kake_elements_settings);
 +}
