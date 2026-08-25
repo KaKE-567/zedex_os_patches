@@ -1,7 +1,7 @@
 From 4d6454af6248609c833ec80f848a8cf6acbacc4a Mon Sep 17 00:00:00 2001
 From: kake <kake@build.local>
 Date: Tue, 25 Aug 2026 09:14:08 +0000
-Subject: [PATCH 24/32] SystemUI: Set solid black backdrop behind notification
+Subject: [PATCH 24/33] SystemUI: Set solid black backdrop behind notification
  shade and QS
 
 Change-Id: I9411eef1fad3ed49a1471cc3489eb1b60e666f78

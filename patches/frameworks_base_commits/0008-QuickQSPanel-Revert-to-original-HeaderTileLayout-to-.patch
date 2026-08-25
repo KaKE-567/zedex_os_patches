@@ -1,7 +1,7 @@
 From d11e3fc34ab25514614cec8637f14dc0fbb7459d Mon Sep 17 00:00:00 2001
 From: kake <kake@build.local>
 Date: Mon, 24 Aug 2026 18:23:39 +0000
-Subject: [PATCH 08/32] QuickQSPanel: Revert to original HeaderTileLayout to
+Subject: [PATCH 08/33] QuickQSPanel: Revert to original HeaderTileLayout to
  fix blank half QS tiles
 
 Change-Id: Ib31a41b70cf22639bebfe4306fa5886102730a9d

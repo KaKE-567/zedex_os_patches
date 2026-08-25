@@ -1,0 +1,138 @@
+From 92a2e39458c6b3d6df73da7f79d1a0e5c1deafe8 Mon Sep 17 00:00:00 2001
+From: kake <kake@build.local>
+Date: Tue, 25 Aug 2026 14:02:53 +0000
+Subject: [PATCH 33/33] GamePropsUtils & SystemUI: Support dynamic game list
+ and Danmaku bullet notification ticker
+
+Change-Id: I134c7fcc9b04895decb41d48ff9c97a7a7810603
+---
+ core/java/android/app/Application.java        |  2 +-
+ .../android/internal/util/GamePropsUtils.java | 23 ++++++++++++++++++-
+ ...NotificationInterruptionStateProvider.java | 20 ++++++++++++----
+ .../phone/EdgeBackGestureHandler.java         |  5 ++--
+ .../statusbar/phone/NavigationBarView.java    |  6 +++--
+ 5 files changed, 46 insertions(+), 10 deletions(-)
+
+diff --git a/core/java/android/app/Application.java b/core/java/android/app/Application.java
+index e0875a74..f089eaab 100644
+--- a/core/java/android/app/Application.java
++++ b/core/java/android/app/Application.java
+@@ -351,7 +351,7 @@ public class Application extends ContextWrapper implements ComponentCallbacks2 {
+         attachBaseContext(context);
+         mLoadedApk = ContextImpl.getImpl(context).mPackageInfo;
+         com.android.internal.util.GamePropsUtils.setProps(context.getPackageName());
+-        if (com.android.internal.util.GamePropsUtils.isGamePackage(context.getPackageName())) {
++        if (com.android.internal.util.GamePropsUtils.isGamePackage(context, context.getPackageName())) {
+             try {
+                 android.provider.Settings.System.putInt(context.getContentResolver(), "gaming_mode_active", 1);
+             } catch (Exception e) {
+diff --git a/core/java/com/android/internal/util/GamePropsUtils.java b/core/java/com/android/internal/util/GamePropsUtils.java
+index 2b2c48f9..27931ea4 100644
+--- a/core/java/com/android/internal/util/GamePropsUtils.java
++++ b/core/java/com/android/internal/util/GamePropsUtils.java
+@@ -55,7 +55,28 @@ public class GamePropsUtils {
+     }
+ 
+     public static boolean isGamePackage(String packageName) {
+-        return packageName != null && packagesToSpoofPUBG.contains(packageName);
++        return isGamePackage(null, packageName);
++    }
++
++    public static boolean isGamePackage(android.content.Context context, String packageName) {
++        if (packageName == null || packageName.isEmpty()) return false;
++        if (packagesToSpoofPUBG.contains(packageName)) return true;
++
++        if (context != null) {
++            try {
++                String userList = android.provider.Settings.System.getString(
++                        context.getContentResolver(), "gaming_mode_app_list");
++                if (userList != null && !userList.isEmpty()) {
++                    String[] list = userList.split(";");
++                    for (String pkg : list) {
++                        if (packageName.equalsIgnoreCase(pkg.trim())) {
++                            return true;
++                        }
++                    }
++                }
++            } catch (Exception ignored) {}
++        }
++        return false;
+     }
+ 
+     public static void setProps(String packageName) {
+diff --git a/packages/SystemUI/src/com/android/systemui/statusbar/notification/NotificationInterruptionStateProvider.java b/packages/SystemUI/src/com/android/systemui/statusbar/notification/NotificationInterruptionStateProvider.java
+index 30142bba..1dc0e541 100644
+--- a/packages/SystemUI/src/com/android/systemui/statusbar/notification/NotificationInterruptionStateProvider.java
++++ b/packages/SystemUI/src/com/android/systemui/statusbar/notification/NotificationInterruptionStateProvider.java
+@@ -259,12 +259,24 @@ public class NotificationInterruptionStateProvider {
+             return false;
+         }
+ 
+-        // Suppress heads up banners when Gaming Mode is active
++        // Suppress heads up banners when Gaming Mode is active, and show Danmaku bullet ticker if enabled
+         if (android.provider.Settings.System.getInt(mContext.getContentResolver(), "gaming_mode_active", 0) == 1) {
+-            if (DEBUG_HEADS_UP) {
+-                Log.d(TAG, "No heads up: suppressed by Gaming Mode: " + sbn.getKey());
++            boolean blockHeadsUp = android.provider.Settings.System.getInt(mContext.getContentResolver(), "gaming_mode_block_heads_up", 1) == 1;
++            boolean danmaku = android.provider.Settings.System.getInt(mContext.getContentResolver(), "gaming_mode_danmaku", 1) == 1;
++            if (danmaku && sbn != null && sbn.getNotification() != null) {
++                try {
++                    CharSequence title = sbn.getNotification().extras.getCharSequence(android.app.Notification.EXTRA_TITLE);
++                    CharSequence text = sbn.getNotification().extras.getCharSequence(android.app.Notification.EXTRA_TEXT);
++                    if (title != null || text != null) {
++                        String msg = "💬 " + (title != null ? title + ": " : "") + (text != null ? text : "");
++                        android.os.Handler mainHandler = new android.os.Handler(android.os.Looper.getMainLooper());
++                        mainHandler.post(() -> android.widget.Toast.makeText(mContext, msg, android.widget.Toast.LENGTH_SHORT).show());
++                    }
++                } catch (Exception ignored) {}
++            }
++            if (blockHeadsUp || danmaku) {
++                return false;
+             }
+-            return false;
+         }
+ 
+         if (entry.importance < NotificationManager.IMPORTANCE_HIGH) {
+diff --git a/packages/SystemUI/src/com/android/systemui/statusbar/phone/EdgeBackGestureHandler.java b/packages/SystemUI/src/com/android/systemui/statusbar/phone/EdgeBackGestureHandler.java
+index b61ed5b6..fe139b53 100644
+--- a/packages/SystemUI/src/com/android/systemui/statusbar/phone/EdgeBackGestureHandler.java
++++ b/packages/SystemUI/src/com/android/systemui/statusbar/phone/EdgeBackGestureHandler.java
+@@ -359,8 +359,9 @@ public class EdgeBackGestureHandler implements DisplayListener, TunerService.Tun
+     private void onMotionEvent(MotionEvent ev) {
+         int action = ev.getActionMasked();
+         if (action == MotionEvent.ACTION_DOWN) {
+-            // Disable edge back gestures if Gaming Mode is active
+-            if (android.provider.Settings.System.getInt(mContext.getContentResolver(), "gaming_mode_active", 0) == 1) {
++            // Disable edge back gestures if Gaming Mode is active and gesture lock is enabled
++            if (android.provider.Settings.System.getInt(mContext.getContentResolver(), "gaming_mode_active", 0) == 1 &&
++                android.provider.Settings.System.getInt(mContext.getContentResolver(), "gaming_mode_lock_gestures", 1) == 1) {
+                 mAllowGesture = false;
+                 return;
+             }
+diff --git a/packages/SystemUI/src/com/android/systemui/statusbar/phone/NavigationBarView.java b/packages/SystemUI/src/com/android/systemui/statusbar/phone/NavigationBarView.java
+index 7845181e..3dd18c02 100644
+--- a/packages/SystemUI/src/com/android/systemui/statusbar/phone/NavigationBarView.java
++++ b/packages/SystemUI/src/com/android/systemui/statusbar/phone/NavigationBarView.java
+@@ -357,7 +357,8 @@ public class NavigationBarView extends FrameLayout implements
+ 
+     @Override
+     public boolean onInterceptTouchEvent(MotionEvent event) {
+-        if (android.provider.Settings.System.getInt(mContext.getContentResolver(), "gaming_mode_active", 0) == 1) {
++        if (android.provider.Settings.System.getInt(mContext.getContentResolver(), "gaming_mode_active", 0) == 1 &&
++            android.provider.Settings.System.getInt(mContext.getContentResolver(), "gaming_mode_lock_gestures", 1) == 1) {
+             return true;
+         }
+         return shouldDeadZoneConsumeTouchEvents(event) || super.onInterceptTouchEvent(event);
+@@ -365,7 +366,8 @@ public class NavigationBarView extends FrameLayout implements
+ 
+     @Override
+     public boolean onTouchEvent(MotionEvent event) {
+-        if (android.provider.Settings.System.getInt(mContext.getContentResolver(), "gaming_mode_active", 0) == 1) {
++        if (android.provider.Settings.System.getInt(mContext.getContentResolver(), "gaming_mode_active", 0) == 1 &&
++            android.provider.Settings.System.getInt(mContext.getContentResolver(), "gaming_mode_lock_gestures", 1) == 1) {
+             return true;
+         }
+         shouldDeadZoneConsumeTouchEvents(event);
+-- 
+2.43.0
+

@@ -1,7 +1,7 @@
 From 88bb4c661e2b91005fcba146cfcd54c67aeabeed Mon Sep 17 00:00:00 2001
 From: kake <kake@build.local>
 Date: Mon, 24 Aug 2026 14:00:35 +0000
-Subject: [PATCH 04/32] base: Switch to authentic Apple 3-bar Wi-Fi icon (thick
+Subject: [PATCH 04/33] base: Switch to authentic Apple 3-bar Wi-Fi icon (thick
  curved arcs + bottom wedge)
 
 Change-Id: If4bd9e2d70250164a209177b8f5f571971111e69

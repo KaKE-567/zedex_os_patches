@@ -1,7 +1,7 @@
 From bdc813f2b58a9f0c8ab846a41b791db41022c1e4 Mon Sep 17 00:00:00 2001
 From: kake <kake@build.local>
 Date: Tue, 25 Aug 2026 13:57:37 +0000
-Subject: [PATCH 32/32] SystemUI: Add PerfProfileTile for dynamic performance
+Subject: [PATCH 32/33] SystemUI: Add PerfProfileTile for dynamic performance
  profile switching
 
 Change-Id: I99be23b3737acba115eee79d974d75923a7e0fa6

@@ -158,10 +158,10 @@ index eb8a82c..2c56633 100644
 \ No newline at end of file
 diff --git a/res/xml/gaming_mode_settings.xml b/res/xml/gaming_mode_settings.xml
 new file mode 100644
-index 0000000..ef2dd0c
+index 0000000..d6c0ec7
 --- /dev/null
 +++ b/res/xml/gaming_mode_settings.xml
-@@ -0,0 +1,73 @@
+@@ -0,0 +1,120 @@
 +<?xml version="1.0" encoding="utf-8"?>
 +<!--
 +  Copyright (C) 2026 The Zedex OS Project
@@ -175,14 +175,73 @@ index 0000000..ef2dd0c
 +
 +    <PreferenceCategory
 +        android:key="gaming_mode_main_category"
-+        android:title="Game Mode Controls">
++        android:title="Master Controls">
 +
 +        <SwitchPreference
 +            android:key="gaming_mode_toggle"
 +            android:title="Enable Game Mode"
-+            android:summary="Lock navigation bar, disable edge back gestures, and suppress notifications"
++            android:summary="Manually turn on Gaming Mode features right now"
 +            android:defaultValue="false"
 +            settings:controller="com.android.settings.gaming.GamingModeTogglePreferenceController" />
++
++        <com.android.settings.gaming.GamingModeAppListPreference
++            android:key="gaming_mode_app_list"
++            android:title="Add Games"
++            android:dialogTitle="Select Games &amp; Apps for Game Mode"
++            android:summary="Choose installed games to automatically activate Game Mode on launch" />
++
++    </PreferenceCategory>
++
++    <PreferenceCategory
++        android:key="gaming_notification_category"
++        android:title="In-Game Notifications">
++
++        <SwitchPreference
++            android:key="gaming_mode_danmaku"
++            android:title="Danmaku Bullet Notifications"
++            android:summary="Display incoming messages as lightweight subtitle tickers instead of blocking cards"
++            android:defaultValue="true"
++            settings:controller="com.android.settings.gaming.GamingModeGenericSwitchController" />
++
++        <SwitchPreference
++            android:key="gaming_mode_block_heads_up"
++            android:title="Suppress Notification Banners"
++            android:summary="Completely block large heads-up banner popups during gameplay"
++            android:defaultValue="true"
++            settings:controller="com.android.settings.gaming.GamingModeGenericSwitchController" />
++
++        <SwitchPreference
++            android:key="gaming_mode_disable_ringer"
++            android:title="Mute Ringtone &amp; Notification Audio"
++            android:summary="Silence incoming calls and alerts so game footsteps and voice chat stay clear"
++            android:defaultValue="false"
++            settings:controller="com.android.settings.gaming.GamingModeGenericSwitchController" />
++
++    </PreferenceCategory>
++
++    <PreferenceCategory
++        android:key="gaming_controls_category"
++        android:title="Controls &amp; Display">
++
++        <SwitchPreference
++            android:key="gaming_mode_lock_gestures"
++            android:title="Lock Back Gestures &amp; Navigation Bar"
++            android:summary="Prevent accidental exits during 3/4-finger claw grip aiming"
++            android:defaultValue="true"
++            settings:controller="com.android.settings.gaming.GamingModeGenericSwitchController" />
++
++        <SwitchPreference
++            android:key="gaming_mode_lock_brightness"
++            android:title="Lock Screen Brightness"
++            android:summary="Prevent auto-brightness from dimming the screen during gaming"
++            android:defaultValue="false"
++            settings:controller="com.android.settings.gaming.GamingModeGenericSwitchController" />
++
++    </PreferenceCategory>
++
++    <PreferenceCategory
++        android:key="gaming_performance_category"
++        android:title="Performance Engine">
 +
 +        <ListPreference
 +            android:key="zedex_perf_profile"
@@ -192,12 +251,6 @@ index 0000000..ef2dd0c
 +            android:entryValues="@array/zedex_perf_profile_values"
 +            android:defaultValue="gaming"
 +            settings:controller="com.android.settings.fuelgauge.ZedexPerformanceProfilePreferenceController" />
-+
-+    </PreferenceCategory>
-+
-+    <PreferenceCategory
-+        android:key="gaming_features_category"
-+        android:title="Hardware &amp; Game Enhancements">
 +
 +        <Preference
 +            android:key="game_spoofing_info"
@@ -209,12 +262,6 @@ index 0000000..ef2dd0c
 +            android:key="game_engine_info"
 +            android:title="Zero-Throttle Performance Engine"
 +            android:summary="2.32 GHz Kryo Boost, 0μs Governor Ramp, 95°C Thermal Headroom &amp; 8-Thread ART JIT"
-+            android:selectable="false" />
-+
-+        <Preference
-+            android:key="gaming_network_info"
-+            android:title="Ultra-Low Ping Networking"
-+            android:summary="TCP BBRPlus &amp; Zero Packet Drop for Online Multiplayer"
 +            android:selectable="false" />
 +
 +    </PreferenceCategory>
@@ -598,6 +645,197 @@ index 0000000..04a668e
 +        } catch (IOException e) {
 +            // Node might not exist or permission denied
 +        }
++    }
++}
+diff --git a/src/com/android/settings/gaming/GamingModeAppListPreference.java b/src/com/android/settings/gaming/GamingModeAppListPreference.java
+new file mode 100644
+index 0000000..7be91a3
+--- /dev/null
++++ b/src/com/android/settings/gaming/GamingModeAppListPreference.java
+@@ -0,0 +1,121 @@
++/*
++ * Copyright (C) 2026 The Zedex OS Project
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package com.android.settings.gaming;
++
++import android.content.Context;
++import android.content.pm.ApplicationInfo;
++import android.content.pm.PackageManager;
++import android.provider.Settings;
++import android.util.AttributeSet;
++
++import androidx.preference.MultiSelectListPreference;
++
++import java.util.ArrayList;
++import java.util.Collections;
++import java.util.Comparator;
++import java.util.HashSet;
++import java.util.List;
++import java.util.Set;
++
++public class GamingModeAppListPreference extends MultiSelectListPreference {
++
++    public GamingModeAppListPreference(Context context, AttributeSet attrs) {
++        super(context, attrs);
++        loadInstalledApps();
++    }
++
++    public GamingModeAppListPreference(Context context) {
++        super(context);
++        loadInstalledApps();
++    }
++
++    private void loadInstalledApps() {
++        Context context = getContext();
++        PackageManager pm = context.getPackageManager();
++        List<ApplicationInfo> apps = pm.getInstalledApplications(PackageManager.GET_META_DATA);
++
++        List<AppItem> appList = new ArrayList<>();
++        for (ApplicationInfo info : apps) {
++            if (pm.getLaunchIntentForPackage(info.packageName) != null) {
++                String label = info.loadLabel(pm).toString();
++                appList.add(new AppItem(label, info.packageName));
++            }
++        }
++
++        Collections.sort(appList, Comparator.comparing(a -> a.label.toLowerCase()));
++
++        CharSequence[] entries = new CharSequence[appList.size()];
++        CharSequence[] entryValues = new CharSequence[appList.size()];
++
++        for (int i = 0; i < appList.size(); i++) {
++            entries[i] = appList.get(i).label;
++            entryValues[i] = appList.get(i).packageName;
++        }
++
++        setEntries(entries);
++        setEntryValues(entryValues);
++
++        // Load saved values from Settings.System
++        String savedString = Settings.System.getString(context.getContentResolver(), "gaming_mode_app_list");
++        Set<String> savedSet = new HashSet<>();
++        if (savedString != null && !savedString.isEmpty()) {
++            String[] pkgs = savedString.split(";");
++            Collections.addAll(savedSet, pkgs);
++        } else {
++            // Default preloaded games
++            savedSet.add("com.pubg.imobile");
++            savedSet.add("com.tencent.ig");
++            savedSet.add("com.activision.callofduty.shooter");
++            savedSet.add("com.pubg.krmobile");
++            savedSet.add("com.dts.freefireth");
++            savedSet.add("com.dts.freefiremax");
++        }
++        setValues(savedSet);
++        updateSummary(savedSet);
++
++        setOnPreferenceChangeListener((preference, newValue) -> {
++            @SuppressWarnings("unchecked")
++            Set<String> newSet = (Set<String>) newValue;
++            StringBuilder sb = new StringBuilder();
++            for (String pkg : newSet) {
++                if (sb.length() > 0) sb.append(";");
++                sb.append(pkg);
++            }
++            Settings.System.putString(context.getContentResolver(), "gaming_mode_app_list", sb.toString());
++            updateSummary(newSet);
++            return true;
++        });
++    }
++
++    private void updateSummary(Set<String> set) {
++        if (set == null || set.isEmpty()) {
++            setSummary("No games configured (Tap to add games)");
++        } else {
++            setSummary(set.size() + " game(s) configured for automatic Game Mode");
++        }
++    }
++
++    private static class AppItem {
++        final String label;
++        final String packageName;
++
++        AppItem(String label, String packageName) {
++            this.label = label;
++            this.packageName = packageName;
++        }
++    }
++}
+diff --git a/src/com/android/settings/gaming/GamingModeGenericSwitchController.java b/src/com/android/settings/gaming/GamingModeGenericSwitchController.java
+new file mode 100644
+index 0000000..8ad7f9e
+--- /dev/null
++++ b/src/com/android/settings/gaming/GamingModeGenericSwitchController.java
+@@ -0,0 +1,58 @@
++/*
++ * Copyright (C) 2026 The Zedex OS Project
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package com.android.settings.gaming;
++
++import android.content.Context;
++import android.provider.Settings;
++
++import androidx.preference.Preference;
++import androidx.preference.SwitchPreference;
++
++import com.android.settings.core.BasePreferenceController;
++
++public class GamingModeGenericSwitchController extends BasePreferenceController
++        implements Preference.OnPreferenceChangeListener {
++
++    public GamingModeGenericSwitchController(Context context, String key) {
++        super(context, key);
++    }
++
++    @Override
++    public int getAvailabilityStatus() {
++        return AVAILABLE;
++    }
++
++    @Override
++    public void updateState(Preference preference) {
++        super.updateState(preference);
++        if (preference instanceof SwitchPreference) {
++            boolean enabled = Settings.System.getInt(
++                    mContext.getContentResolver(), getPreferenceKey(), 1) == 1;
++            ((SwitchPreference) preference).setChecked(enabled);
++        }
++    }
++
++    @Override
++    public boolean onPreferenceChange(Preference preference, Object newValue) {
++        boolean isChecked = (Boolean) newValue;
++        Settings.System.putInt(mContext.getContentResolver(), getPreferenceKey(), isChecked ? 1 : 0);
++        if (preference instanceof SwitchPreference) {
++            ((SwitchPreference) preference).setChecked(isChecked);
++        }
++        return true;
 +    }
 +}
 diff --git a/src/com/android/settings/gaming/GamingModeSettings.java b/src/com/android/settings/gaming/GamingModeSettings.java

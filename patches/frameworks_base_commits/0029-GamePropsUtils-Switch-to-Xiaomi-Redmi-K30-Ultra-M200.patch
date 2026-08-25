@@ -1,7 +1,7 @@
 From 943e03eb53676e2f5d48790da214f1d1c363a923 Mon Sep 17 00:00:00 2001
 From: kake <kake@build.local>
 Date: Tue, 25 Aug 2026 12:02:30 +0000
-Subject: [PATCH 29/32] GamePropsUtils: Switch to Xiaomi Redmi K30 Ultra
+Subject: [PATCH 29/33] GamePropsUtils: Switch to Xiaomi Redmi K30 Ultra
  (M2006J10C) for HDR Extreme and 90 FPS support
 
 Change-Id: I62a13d8737b03b6e471507c638e0f64ebc45e85b

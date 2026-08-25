@@ -1,7 +1,7 @@
 From 39230accfb81aa25c9ad22965a029cdc193dff41 Mon Sep 17 00:00:00 2001
 From: kake <kake@build.local>
 Date: Mon, 24 Aug 2026 14:57:58 +0000
-Subject: [PATCH 05/32] SystemUI: Modernize Quick Settings with Android 13/14
+Subject: [PATCH 05/33] SystemUI: Modernize Quick Settings with Android 13/14
  Material You 2-column pill tiles and thick brightness slider
 
 Change-Id: If0c90fcb74788be6d2fac3d2214c1759f002d4d8

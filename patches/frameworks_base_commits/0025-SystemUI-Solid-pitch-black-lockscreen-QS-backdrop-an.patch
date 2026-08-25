@@ -1,7 +1,7 @@
 From 3c404c954d708cdbc9a2aedd51a1217d5188902f Mon Sep 17 00:00:00 2001
 From: kake <kake@build.local>
 Date: Tue, 25 Aug 2026 09:48:58 +0000
-Subject: [PATCH 25/32] SystemUI: Solid pitch black lockscreen QS backdrop and
+Subject: [PATCH 25/33] SystemUI: Solid pitch black lockscreen QS backdrop and
  balanced 10dp capsule pill spacing
 
 Change-Id: I0ceed526f4d1e625c4e05a179c5d58bad23276f4

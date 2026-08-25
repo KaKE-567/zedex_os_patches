@@ -1,7 +1,7 @@
 From 65133db4e071439d8b556060fa1180f26233e56f Mon Sep 17 00:00:00 2001
 From: kake <kake@build.local>
 Date: Mon, 24 Aug 2026 20:38:03 +0000
-Subject: [PATCH 14/32] NotificationPanelView: Fix swapped X/Y coordinates in
+Subject: [PATCH 14/33] NotificationPanelView: Fix swapped X/Y coordinates in
  handleQsTouch and handleQsDown
 
 Change-Id: Iad8277e7ce72798e9719d2088c4fadc062ab46ba
