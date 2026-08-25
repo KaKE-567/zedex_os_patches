@@ -559,24 +559,13 @@ index 0000000..13a9468
 +
 +</PreferenceScreen>
 diff --git a/res/xml/my_device_info.xml b/res/xml/my_device_info.xml
-index 9a6047c..567da5d 100644
+index 9a6047c..97ed4f0 100644
 --- a/res/xml/my_device_info.xml
 +++ b/res/xml/my_device_info.xml
-@@ -192,4 +192,27 @@
+@@ -192,4 +192,16 @@
          settings:enableCopying="true"
          settings:controller="com.android.settings.deviceinfo.BuildNumberPreferenceController"/>
  
-+    <!-- Performance Profile -->
-+    <ListPreference
-+        android:key="zedex_perf_profile"
-+        android:order="53"
-+        android:title="@string/zedex_perf_profile_title"
-+        android:summary="%s"
-+        android:entries="@array/zedex_perf_profile_entries"
-+        android:entryValues="@array/zedex_perf_profile_values"
-+        android:defaultValue="gaming"
-+        settings:allowDividerAbove="true"
-+        settings:controller="com.android.settings.fuelgauge.ZedexPerformanceProfilePreferenceController" />
 +
 +    <!-- Maintainer -->
 +    <Preference
@@ -591,21 +580,13 @@ index 9a6047c..567da5d 100644
 +
  </PreferenceScreen>
 diff --git a/res/xml/power_usage_summary.xml b/res/xml/power_usage_summary.xml
-index 890de16..0a667d0 100644
+index 890de16..c3f421e 100644
 --- a/res/xml/power_usage_summary.xml
 +++ b/res/xml/power_usage_summary.xml
-@@ -34,6 +34,15 @@
+@@ -34,6 +34,7 @@
          android:title="@string/summary_placeholder"
          settings:controller="com.android.settings.fuelgauge.batterytip.BatteryTipPreferenceController" />
  
-+    <ListPreference
-+        android:key="zedex_perf_profile"
-+        android:title="@string/zedex_perf_profile_title"
-+        android:summary="%s"
-+        android:entries="@array/zedex_perf_profile_entries"
-+        android:entryValues="@array/zedex_perf_profile_values"
-+        android:defaultValue="gaming"
-+        settings:controller="com.android.settings.fuelgauge.ZedexPerformanceProfilePreferenceController" />
 +
      <Preference
          android:fragment="com.android.settings.fuelgauge.batterysaver.BatterySaverSettings"
@@ -913,10 +894,10 @@ index 0000000..01ada4c
 +}
 diff --git a/src/com/android/settings/gaming/GamingModeAppListPreference.java b/src/com/android/settings/gaming/GamingModeAppListPreference.java
 new file mode 100644
-index 0000000..7be91a3
+index 0000000..2c4062c
 --- /dev/null
 +++ b/src/com/android/settings/gaming/GamingModeAppListPreference.java
-@@ -0,0 +1,121 @@
+@@ -0,0 +1,113 @@
 +/*
 + * Copyright (C) 2026 The Zedex OS Project
 + *
@@ -994,14 +975,6 @@ index 0000000..7be91a3
 +        if (savedString != null && !savedString.isEmpty()) {
 +            String[] pkgs = savedString.split(";");
 +            Collections.addAll(savedSet, pkgs);
-+        } else {
-+            // Default preloaded games
-+            savedSet.add("com.pubg.imobile");
-+            savedSet.add("com.tencent.ig");
-+            savedSet.add("com.activision.callofduty.shooter");
-+            savedSet.add("com.pubg.krmobile");
-+            savedSet.add("com.dts.freefireth");
-+            savedSet.add("com.dts.freefiremax");
 +        }
 +        setValues(savedSet);
 +        updateSummary(savedSet);
