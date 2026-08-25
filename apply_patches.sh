@@ -19,22 +19,25 @@ echo "      🚀 Applying Zedex OS 1.0 OFFICIAL Patches       "
 echo "======================================================"
 echo "[*] Target Android Tree: $SRC_DIR"
 
-echo "[1/6] 📱 Patching frameworks/base (SystemUI, Material You QS, iOS battery, 90fps)..."
+echo "[1/7] 📱 Patching frameworks/base (SystemUI, Material You QS, iOS battery, K30 Ultra 90FPS+HDR)..."
 git -C "$SRC_DIR/frameworks/base" apply --whitespace=nowarn "$SCRIPT_DIR/patches/frameworks_base_complete.patch"
 
-echo "[2/6] ⚙️  Patching packages/apps/Settings (Three-finger gesture, UI strings)..."
+echo "[2/7] ⚙️  Patching packages/apps/Settings (Three-finger gesture, Telegram Maintainer button)..."
 git -C "$SRC_DIR/packages/apps/Settings" apply --whitespace=nowarn "$SCRIPT_DIR/patches/packages_apps_Settings.patch"
 
-echo "[3/6] 🏠 Patching packages/apps/Trebuchet (Launcher icon size slider 70-140%)..."
+echo "[3/7] 🏠 Patching packages/apps/Trebuchet (Launcher icon size slider 70-140%)..."
 git -C "$SRC_DIR/packages/apps/Trebuchet" apply --whitespace=nowarn "$SCRIPT_DIR/patches/packages_apps_Trebuchet.patch"
 
-echo "[4/6] 📊 Patching packages/apps/LineageParts (Network traffic monitor on notch)..."
+echo "[4/7] 📊 Patching packages/apps/LineageParts (Network traffic monitor on notch)..."
 git -C "$SRC_DIR/packages/apps/LineageParts" apply --whitespace=nowarn "$SCRIPT_DIR/patches/packages_apps_LineageParts.patch"
 
-echo "[5/6] 🔨 Patching build/make (Release keys signing, clean build fingerprint)..."
+echo "[5/7] 📶 Patching lineage-sdk (Accurate real-time network traffic speed meter & dynamic units)..."
+git -C "$SRC_DIR/lineage-sdk" apply --whitespace=nowarn "$SCRIPT_DIR/patches/lineage_sdk.patch"
+
+echo "[6/7] 🔨 Patching build/make (Release keys signing, clean build fingerprint)..."
 git -C "$SRC_DIR/build/make" apply --whitespace=nowarn "$SCRIPT_DIR/patches/build_make.patch"
 
-echo "[6/6] 🎨 Patching vendor/lineage (Zedex OS branding, OFFICIAL buildtype, wallpaper)..."
+echo "[7/7] 🎨 Patching vendor/lineage (Zedex OS branding, OFFICIAL buildtype, wallpaper)..."
 git -C "$SRC_DIR/vendor/lineage" apply --whitespace=nowarn "$SCRIPT_DIR/patches/vendor_lineage.patch"
 
 echo "======================================================"
