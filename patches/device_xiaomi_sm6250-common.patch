@@ -240,7 +240,7 @@ index 874b5e7..f813c2e 100644
 +    write /sys/module/cpu_boost/parameters/input_boost_ms 40
 +
 diff --git a/system.prop b/system.prop
-index 3a91df8..29ee4e5 100644
+index 3a91df8..f0271ed 100644
 --- a/system.prop
 +++ b/system.prop
 @@ -84,9 +84,11 @@ debug.egl.hw=1
@@ -276,3 +276,17 @@ index 3a91df8..29ee4e5 100644
  
  # IMS
  persist.dbg.volte_avail_ovr=1
+@@ -181,3 +191,13 @@ persist.vendor.sensors.enable.mag_filter=true
+ # WFD
+ persist.debug.wfd.enable=1
+ persist.sys.wfd.virtual=0
++
++# Anti-Cheat & Security Integrity (PUBG Ultimate Royale & SafetyNet Bypass)
++ro.build.type=user
++ro.build.tags=release-keys
++ro.boot.flash.locked=1
++ro.boot.verifiedbootstate=green
++ro.boot.veritymode=enforcing
++ro.boot.vbmeta.device_state=locked
++ro.debuggable=0
++ro.secure=1
