@@ -1,0 +1,3695 @@
+diff --git a/device.mk b/device.mk
+index e0f1401..1c11e63 100644
+--- a/device.mk
++++ b/device.mk
+@@ -39,17 +39,4 @@ PRODUCT_COPY_FILES += \
+     frameworks/native/data/etc/com.nxp.mifare.xml:$(TARGET_COPY_OUT_ODM)/etc/permissions/sku_joyeuse/com.nxp.mifare.xml
+ 
+ # Thermal
+-PRODUCT_COPY_FILES += \
+-    $(LOCAL_PATH)/thermal/thermal-engine-map.conf:$(TARGET_COPY_OUT_VENDOR)/etc/thermal-engine-map.conf \
+-    $(LOCAL_PATH)/thermal/thermal-engine-map-curtana.conf:$(TARGET_COPY_OUT_VENDOR)/etc/thermal-engine-map-curtana.conf \
+-    $(LOCAL_PATH)/thermal/thermal-engine-normal-curtana.conf:$(TARGET_COPY_OUT_VENDOR)/etc/thermal-engine-normal-curtana.conf \
+-    $(LOCAL_PATH)/thermal/thermal-engine-camera-curtana.conf:$(TARGET_COPY_OUT_VENDOR)/etc/thermal-engine-camera-curtana.conf \
+-    $(LOCAL_PATH)/thermal/thermal-engine-map-excalibur.conf:$(TARGET_COPY_OUT_VENDOR)/etc/thermal-engine-map-excalibur.conf \
+-    $(LOCAL_PATH)/thermal/thermal-engine-normal-excalibur.conf:$(TARGET_COPY_OUT_VENDOR)/etc/thermal-engine-normal-excalibur.conf \
+-    $(LOCAL_PATH)/thermal/thermal-engine-camera-excalibur.conf:$(TARGET_COPY_OUT_VENDOR)/etc/thermal-engine-camera-excalibur.conf \
+-    $(LOCAL_PATH)/thermal/thermal-engine-map-gram.conf:$(TARGET_COPY_OUT_VENDOR)/etc/thermal-engine-map-gram.conf \
+-    $(LOCAL_PATH)/thermal/thermal-engine-normal-gram.conf:$(TARGET_COPY_OUT_VENDOR)/etc/thermal-engine-normal-gram.conf \
+-    $(LOCAL_PATH)/thermal/thermal-engine-camera-gram.conf:$(TARGET_COPY_OUT_VENDOR)/etc/thermal-engine-camera-gram.conf \
+-    $(LOCAL_PATH)/thermal/thermal-engine-map-joyeuse.conf:$(TARGET_COPY_OUT_VENDOR)/etc/thermal-engine-map-joyeuse.conf \
+-    $(LOCAL_PATH)/thermal/thermal-engine-normal-joyeuse.conf:$(TARGET_COPY_OUT_VENDOR)/etc/thermal-engine-normal-joyeuse.conf \
+-    $(LOCAL_PATH)/thermal/thermal-engine-camera-joyeuse.conf:$(TARGET_COPY_OUT_VENDOR)/etc/thermal-engine-camera-joyeuse.conf
++PRODUCT_COPY_FILES += $(foreach f,$(wildcard $(LOCAL_PATH)/thermal/*.conf),$(f):$(TARGET_COPY_OUT_VENDOR)/etc/$(notdir $(f)))
+diff --git a/thermal/thermal-engine-arvr-curtana.conf b/thermal/thermal-engine-arvr-curtana.conf
+new file mode 100644
+index 0000000..7350643
+--- /dev/null
++++ b/thermal/thermal-engine-arvr-curtana.conf
+@@ -0,0 +1,68 @@
++# SENSOR : ALIAS
++# Ultimate Gaming & Benchmark Zero-Throttle Thermal Profile for Xiaomi Miatoll (Zedex OS)
++
++[SS-QUIET-THERMAL-S1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu0
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 1804800
++
++[SS-QUIET-THERMAL-G1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu6
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 2323200
++
++[LCD_MONITOR]
++algo_type monitor
++sampling 5000
++sensor backlight_therm
++thresholds 75000 80000 90000
++thresholds_clr 70000 75000 85000
++actions lcd lcd lcd
++action_info 409 614 819
++
++[BATTERY_CHARGING_STL]
++algo_type monitor
++sampling 1000
++sensor quiet-therm-usr
++thresholds 50000 52000 55000 58000 60000 62000 65000
++thresholds_clr 48000 50000 53000 56000 58000 60000 63000
++actions battery battery battery battery battery battery battery
++action_info 1 2 3 4 5 6 8
++
++[LCD_MONITOR_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions lcd
++action_info 3685
++
++[CPU_HOTPLUG_MONITOR]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 105000
++thresholds_clr 100000
++actions hotplug_1+hotplug_2+hotplug_3+hotplug_4+hotplug_5+hotplug_6
++action_info 0+0+0+0+0+0
++
++[HIGH_TEMP_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions temp_state
++action_info 4
++
+diff --git a/thermal/thermal-engine-arvr-excalibur.conf b/thermal/thermal-engine-arvr-excalibur.conf
+new file mode 100644
+index 0000000..7350643
+--- /dev/null
++++ b/thermal/thermal-engine-arvr-excalibur.conf
+@@ -0,0 +1,68 @@
++# SENSOR : ALIAS
++# Ultimate Gaming & Benchmark Zero-Throttle Thermal Profile for Xiaomi Miatoll (Zedex OS)
++
++[SS-QUIET-THERMAL-S1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu0
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 1804800
++
++[SS-QUIET-THERMAL-G1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu6
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 2323200
++
++[LCD_MONITOR]
++algo_type monitor
++sampling 5000
++sensor backlight_therm
++thresholds 75000 80000 90000
++thresholds_clr 70000 75000 85000
++actions lcd lcd lcd
++action_info 409 614 819
++
++[BATTERY_CHARGING_STL]
++algo_type monitor
++sampling 1000
++sensor quiet-therm-usr
++thresholds 50000 52000 55000 58000 60000 62000 65000
++thresholds_clr 48000 50000 53000 56000 58000 60000 63000
++actions battery battery battery battery battery battery battery
++action_info 1 2 3 4 5 6 8
++
++[LCD_MONITOR_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions lcd
++action_info 3685
++
++[CPU_HOTPLUG_MONITOR]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 105000
++thresholds_clr 100000
++actions hotplug_1+hotplug_2+hotplug_3+hotplug_4+hotplug_5+hotplug_6
++action_info 0+0+0+0+0+0
++
++[HIGH_TEMP_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions temp_state
++action_info 4
++
+diff --git a/thermal/thermal-engine-arvr-gram.conf b/thermal/thermal-engine-arvr-gram.conf
+new file mode 100644
+index 0000000..7350643
+--- /dev/null
++++ b/thermal/thermal-engine-arvr-gram.conf
+@@ -0,0 +1,68 @@
++# SENSOR : ALIAS
++# Ultimate Gaming & Benchmark Zero-Throttle Thermal Profile for Xiaomi Miatoll (Zedex OS)
++
++[SS-QUIET-THERMAL-S1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu0
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 1804800
++
++[SS-QUIET-THERMAL-G1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu6
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 2323200
++
++[LCD_MONITOR]
++algo_type monitor
++sampling 5000
++sensor backlight_therm
++thresholds 75000 80000 90000
++thresholds_clr 70000 75000 85000
++actions lcd lcd lcd
++action_info 409 614 819
++
++[BATTERY_CHARGING_STL]
++algo_type monitor
++sampling 1000
++sensor quiet-therm-usr
++thresholds 50000 52000 55000 58000 60000 62000 65000
++thresholds_clr 48000 50000 53000 56000 58000 60000 63000
++actions battery battery battery battery battery battery battery
++action_info 1 2 3 4 5 6 8
++
++[LCD_MONITOR_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions lcd
++action_info 3685
++
++[CPU_HOTPLUG_MONITOR]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 105000
++thresholds_clr 100000
++actions hotplug_1+hotplug_2+hotplug_3+hotplug_4+hotplug_5+hotplug_6
++action_info 0+0+0+0+0+0
++
++[HIGH_TEMP_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions temp_state
++action_info 4
++
+diff --git a/thermal/thermal-engine-arvr-joyeuse.conf b/thermal/thermal-engine-arvr-joyeuse.conf
+new file mode 100644
+index 0000000..7350643
+--- /dev/null
++++ b/thermal/thermal-engine-arvr-joyeuse.conf
+@@ -0,0 +1,68 @@
++# SENSOR : ALIAS
++# Ultimate Gaming & Benchmark Zero-Throttle Thermal Profile for Xiaomi Miatoll (Zedex OS)
++
++[SS-QUIET-THERMAL-S1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu0
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 1804800
++
++[SS-QUIET-THERMAL-G1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu6
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 2323200
++
++[LCD_MONITOR]
++algo_type monitor
++sampling 5000
++sensor backlight_therm
++thresholds 75000 80000 90000
++thresholds_clr 70000 75000 85000
++actions lcd lcd lcd
++action_info 409 614 819
++
++[BATTERY_CHARGING_STL]
++algo_type monitor
++sampling 1000
++sensor quiet-therm-usr
++thresholds 50000 52000 55000 58000 60000 62000 65000
++thresholds_clr 48000 50000 53000 56000 58000 60000 63000
++actions battery battery battery battery battery battery battery
++action_info 1 2 3 4 5 6 8
++
++[LCD_MONITOR_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions lcd
++action_info 3685
++
++[CPU_HOTPLUG_MONITOR]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 105000
++thresholds_clr 100000
++actions hotplug_1+hotplug_2+hotplug_3+hotplug_4+hotplug_5+hotplug_6
++action_info 0+0+0+0+0+0
++
++[HIGH_TEMP_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions temp_state
++action_info 4
++
+diff --git a/thermal/thermal-engine-camera-curtana.conf b/thermal/thermal-engine-camera-curtana.conf
+index 29ff9de..7350643 100644
+--- a/thermal/thermal-engine-camera-curtana.conf
++++ b/thermal/thermal-engine-camera-curtana.conf
+@@ -1,13 +1,13 @@
+ # SENSOR : ALIAS
+-# High Performance Gaming Thermal Configuration for Xiaomi Miatoll (Zedex OS)
++# Ultimate Gaming & Benchmark Zero-Throttle Thermal Profile for Xiaomi Miatoll (Zedex OS)
+ 
+ [SS-QUIET-THERMAL-S1]
+ algo_type ss
+ sampling 5000
+ sensor nvm-therm-usr
+ device cpu0
+-set_point 75000
+-set_point_clr 70000
++set_point 95000
++set_point_clr 90000
+ time_constant 0
+ device_max_limit 1804800
+ 
+@@ -16,17 +16,17 @@ algo_type ss
+ sampling 5000
+ sensor nvm-therm-usr
+ device cpu6
+-set_point 75000
+-set_point_clr 70000
++set_point 95000
++set_point_clr 90000
+ time_constant 0
+-device_max_limit 2304000
++device_max_limit 2323200
+ 
+ [LCD_MONITOR]
+ algo_type monitor
+ sampling 5000
+ sensor backlight_therm
+-thresholds 58000 65000 75000
+-thresholds_clr 55000 62000 70000
++thresholds 75000 80000 90000
++thresholds_clr 70000 75000 85000
+ actions lcd lcd lcd
+ action_info 409 614 819
+ 
+@@ -34,8 +34,8 @@ action_info 409 614 819
+ algo_type monitor
+ sampling 1000
+ sensor quiet-therm-usr
+-thresholds 42000 44000 46000 48000 50000 52000 55000
+-thresholds_clr 40000 42000 44000 46000 48000 50000 53000
++thresholds 50000 52000 55000 58000 60000 62000 65000
++thresholds_clr 48000 50000 53000 56000 58000 60000 63000
+ actions battery battery battery battery battery battery battery
+ action_info 1 2 3 4 5 6 8
+ 
+@@ -43,8 +43,8 @@ action_info 1 2 3 4 5 6 8
+ algo_type monitor
+ sampling 5000
+ sensor quiet-therm-usr
+-thresholds 75000
+-thresholds_clr 70000
++thresholds 95000
++thresholds_clr 90000
+ actions lcd
+ action_info 3685
+ 
+@@ -52,16 +52,17 @@ action_info 3685
+ algo_type monitor
+ sampling 5000
+ sensor quiet-therm-usr
+-thresholds 85000
+-thresholds_clr 80000
++thresholds 105000
++thresholds_clr 100000
+ actions hotplug_1+hotplug_2+hotplug_3+hotplug_4+hotplug_5+hotplug_6
+-action_info 1+1+1+1+1+1
++action_info 0+0+0+0+0+0
+ 
+ [HIGH_TEMP_STATE]
+ algo_type monitor
+ sampling 5000
+ sensor quiet-therm-usr
+-thresholds 80000
+-thresholds_clr 75000
++thresholds 95000
++thresholds_clr 90000
+ actions temp_state
+ action_info 4
++
+diff --git a/thermal/thermal-engine-camera-excalibur.conf b/thermal/thermal-engine-camera-excalibur.conf
+index 29ff9de..7350643 100644
+--- a/thermal/thermal-engine-camera-excalibur.conf
++++ b/thermal/thermal-engine-camera-excalibur.conf
+@@ -1,13 +1,13 @@
+ # SENSOR : ALIAS
+-# High Performance Gaming Thermal Configuration for Xiaomi Miatoll (Zedex OS)
++# Ultimate Gaming & Benchmark Zero-Throttle Thermal Profile for Xiaomi Miatoll (Zedex OS)
+ 
+ [SS-QUIET-THERMAL-S1]
+ algo_type ss
+ sampling 5000
+ sensor nvm-therm-usr
+ device cpu0
+-set_point 75000
+-set_point_clr 70000
++set_point 95000
++set_point_clr 90000
+ time_constant 0
+ device_max_limit 1804800
+ 
+@@ -16,17 +16,17 @@ algo_type ss
+ sampling 5000
+ sensor nvm-therm-usr
+ device cpu6
+-set_point 75000
+-set_point_clr 70000
++set_point 95000
++set_point_clr 90000
+ time_constant 0
+-device_max_limit 2304000
++device_max_limit 2323200
+ 
+ [LCD_MONITOR]
+ algo_type monitor
+ sampling 5000
+ sensor backlight_therm
+-thresholds 58000 65000 75000
+-thresholds_clr 55000 62000 70000
++thresholds 75000 80000 90000
++thresholds_clr 70000 75000 85000
+ actions lcd lcd lcd
+ action_info 409 614 819
+ 
+@@ -34,8 +34,8 @@ action_info 409 614 819
+ algo_type monitor
+ sampling 1000
+ sensor quiet-therm-usr
+-thresholds 42000 44000 46000 48000 50000 52000 55000
+-thresholds_clr 40000 42000 44000 46000 48000 50000 53000
++thresholds 50000 52000 55000 58000 60000 62000 65000
++thresholds_clr 48000 50000 53000 56000 58000 60000 63000
+ actions battery battery battery battery battery battery battery
+ action_info 1 2 3 4 5 6 8
+ 
+@@ -43,8 +43,8 @@ action_info 1 2 3 4 5 6 8
+ algo_type monitor
+ sampling 5000
+ sensor quiet-therm-usr
+-thresholds 75000
+-thresholds_clr 70000
++thresholds 95000
++thresholds_clr 90000
+ actions lcd
+ action_info 3685
+ 
+@@ -52,16 +52,17 @@ action_info 3685
+ algo_type monitor
+ sampling 5000
+ sensor quiet-therm-usr
+-thresholds 85000
+-thresholds_clr 80000
++thresholds 105000
++thresholds_clr 100000
+ actions hotplug_1+hotplug_2+hotplug_3+hotplug_4+hotplug_5+hotplug_6
+-action_info 1+1+1+1+1+1
++action_info 0+0+0+0+0+0
+ 
+ [HIGH_TEMP_STATE]
+ algo_type monitor
+ sampling 5000
+ sensor quiet-therm-usr
+-thresholds 80000
+-thresholds_clr 75000
++thresholds 95000
++thresholds_clr 90000
+ actions temp_state
+ action_info 4
++
+diff --git a/thermal/thermal-engine-camera-gram.conf b/thermal/thermal-engine-camera-gram.conf
+index 29ff9de..7350643 100644
+--- a/thermal/thermal-engine-camera-gram.conf
++++ b/thermal/thermal-engine-camera-gram.conf
+@@ -1,13 +1,13 @@
+ # SENSOR : ALIAS
+-# High Performance Gaming Thermal Configuration for Xiaomi Miatoll (Zedex OS)
++# Ultimate Gaming & Benchmark Zero-Throttle Thermal Profile for Xiaomi Miatoll (Zedex OS)
+ 
+ [SS-QUIET-THERMAL-S1]
+ algo_type ss
+ sampling 5000
+ sensor nvm-therm-usr
+ device cpu0
+-set_point 75000
+-set_point_clr 70000
++set_point 95000
++set_point_clr 90000
+ time_constant 0
+ device_max_limit 1804800
+ 
+@@ -16,17 +16,17 @@ algo_type ss
+ sampling 5000
+ sensor nvm-therm-usr
+ device cpu6
+-set_point 75000
+-set_point_clr 70000
++set_point 95000
++set_point_clr 90000
+ time_constant 0
+-device_max_limit 2304000
++device_max_limit 2323200
+ 
+ [LCD_MONITOR]
+ algo_type monitor
+ sampling 5000
+ sensor backlight_therm
+-thresholds 58000 65000 75000
+-thresholds_clr 55000 62000 70000
++thresholds 75000 80000 90000
++thresholds_clr 70000 75000 85000
+ actions lcd lcd lcd
+ action_info 409 614 819
+ 
+@@ -34,8 +34,8 @@ action_info 409 614 819
+ algo_type monitor
+ sampling 1000
+ sensor quiet-therm-usr
+-thresholds 42000 44000 46000 48000 50000 52000 55000
+-thresholds_clr 40000 42000 44000 46000 48000 50000 53000
++thresholds 50000 52000 55000 58000 60000 62000 65000
++thresholds_clr 48000 50000 53000 56000 58000 60000 63000
+ actions battery battery battery battery battery battery battery
+ action_info 1 2 3 4 5 6 8
+ 
+@@ -43,8 +43,8 @@ action_info 1 2 3 4 5 6 8
+ algo_type monitor
+ sampling 5000
+ sensor quiet-therm-usr
+-thresholds 75000
+-thresholds_clr 70000
++thresholds 95000
++thresholds_clr 90000
+ actions lcd
+ action_info 3685
+ 
+@@ -52,16 +52,17 @@ action_info 3685
+ algo_type monitor
+ sampling 5000
+ sensor quiet-therm-usr
+-thresholds 85000
+-thresholds_clr 80000
++thresholds 105000
++thresholds_clr 100000
+ actions hotplug_1+hotplug_2+hotplug_3+hotplug_4+hotplug_5+hotplug_6
+-action_info 1+1+1+1+1+1
++action_info 0+0+0+0+0+0
+ 
+ [HIGH_TEMP_STATE]
+ algo_type monitor
+ sampling 5000
+ sensor quiet-therm-usr
+-thresholds 80000
+-thresholds_clr 75000
++thresholds 95000
++thresholds_clr 90000
+ actions temp_state
+ action_info 4
++
+diff --git a/thermal/thermal-engine-camera-joyeuse.conf b/thermal/thermal-engine-camera-joyeuse.conf
+index 29ff9de..7350643 100644
+--- a/thermal/thermal-engine-camera-joyeuse.conf
++++ b/thermal/thermal-engine-camera-joyeuse.conf
+@@ -1,13 +1,13 @@
+ # SENSOR : ALIAS
+-# High Performance Gaming Thermal Configuration for Xiaomi Miatoll (Zedex OS)
++# Ultimate Gaming & Benchmark Zero-Throttle Thermal Profile for Xiaomi Miatoll (Zedex OS)
+ 
+ [SS-QUIET-THERMAL-S1]
+ algo_type ss
+ sampling 5000
+ sensor nvm-therm-usr
+ device cpu0
+-set_point 75000
+-set_point_clr 70000
++set_point 95000
++set_point_clr 90000
+ time_constant 0
+ device_max_limit 1804800
+ 
+@@ -16,17 +16,17 @@ algo_type ss
+ sampling 5000
+ sensor nvm-therm-usr
+ device cpu6
+-set_point 75000
+-set_point_clr 70000
++set_point 95000
++set_point_clr 90000
+ time_constant 0
+-device_max_limit 2304000
++device_max_limit 2323200
+ 
+ [LCD_MONITOR]
+ algo_type monitor
+ sampling 5000
+ sensor backlight_therm
+-thresholds 58000 65000 75000
+-thresholds_clr 55000 62000 70000
++thresholds 75000 80000 90000
++thresholds_clr 70000 75000 85000
+ actions lcd lcd lcd
+ action_info 409 614 819
+ 
+@@ -34,8 +34,8 @@ action_info 409 614 819
+ algo_type monitor
+ sampling 1000
+ sensor quiet-therm-usr
+-thresholds 42000 44000 46000 48000 50000 52000 55000
+-thresholds_clr 40000 42000 44000 46000 48000 50000 53000
++thresholds 50000 52000 55000 58000 60000 62000 65000
++thresholds_clr 48000 50000 53000 56000 58000 60000 63000
+ actions battery battery battery battery battery battery battery
+ action_info 1 2 3 4 5 6 8
+ 
+@@ -43,8 +43,8 @@ action_info 1 2 3 4 5 6 8
+ algo_type monitor
+ sampling 5000
+ sensor quiet-therm-usr
+-thresholds 75000
+-thresholds_clr 70000
++thresholds 95000
++thresholds_clr 90000
+ actions lcd
+ action_info 3685
+ 
+@@ -52,16 +52,17 @@ action_info 3685
+ algo_type monitor
+ sampling 5000
+ sensor quiet-therm-usr
+-thresholds 85000
+-thresholds_clr 80000
++thresholds 105000
++thresholds_clr 100000
+ actions hotplug_1+hotplug_2+hotplug_3+hotplug_4+hotplug_5+hotplug_6
+-action_info 1+1+1+1+1+1
++action_info 0+0+0+0+0+0
+ 
+ [HIGH_TEMP_STATE]
+ algo_type monitor
+ sampling 5000
+ sensor quiet-therm-usr
+-thresholds 80000
+-thresholds_clr 75000
++thresholds 95000
++thresholds_clr 90000
+ actions temp_state
+ action_info 4
++
+diff --git a/thermal/thermal-engine-class0-curtana.conf b/thermal/thermal-engine-class0-curtana.conf
+new file mode 100644
+index 0000000..7350643
+--- /dev/null
++++ b/thermal/thermal-engine-class0-curtana.conf
+@@ -0,0 +1,68 @@
++# SENSOR : ALIAS
++# Ultimate Gaming & Benchmark Zero-Throttle Thermal Profile for Xiaomi Miatoll (Zedex OS)
++
++[SS-QUIET-THERMAL-S1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu0
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 1804800
++
++[SS-QUIET-THERMAL-G1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu6
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 2323200
++
++[LCD_MONITOR]
++algo_type monitor
++sampling 5000
++sensor backlight_therm
++thresholds 75000 80000 90000
++thresholds_clr 70000 75000 85000
++actions lcd lcd lcd
++action_info 409 614 819
++
++[BATTERY_CHARGING_STL]
++algo_type monitor
++sampling 1000
++sensor quiet-therm-usr
++thresholds 50000 52000 55000 58000 60000 62000 65000
++thresholds_clr 48000 50000 53000 56000 58000 60000 63000
++actions battery battery battery battery battery battery battery
++action_info 1 2 3 4 5 6 8
++
++[LCD_MONITOR_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions lcd
++action_info 3685
++
++[CPU_HOTPLUG_MONITOR]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 105000
++thresholds_clr 100000
++actions hotplug_1+hotplug_2+hotplug_3+hotplug_4+hotplug_5+hotplug_6
++action_info 0+0+0+0+0+0
++
++[HIGH_TEMP_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions temp_state
++action_info 4
++
+diff --git a/thermal/thermal-engine-class0-excalibur.conf b/thermal/thermal-engine-class0-excalibur.conf
+new file mode 100644
+index 0000000..7350643
+--- /dev/null
++++ b/thermal/thermal-engine-class0-excalibur.conf
+@@ -0,0 +1,68 @@
++# SENSOR : ALIAS
++# Ultimate Gaming & Benchmark Zero-Throttle Thermal Profile for Xiaomi Miatoll (Zedex OS)
++
++[SS-QUIET-THERMAL-S1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu0
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 1804800
++
++[SS-QUIET-THERMAL-G1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu6
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 2323200
++
++[LCD_MONITOR]
++algo_type monitor
++sampling 5000
++sensor backlight_therm
++thresholds 75000 80000 90000
++thresholds_clr 70000 75000 85000
++actions lcd lcd lcd
++action_info 409 614 819
++
++[BATTERY_CHARGING_STL]
++algo_type monitor
++sampling 1000
++sensor quiet-therm-usr
++thresholds 50000 52000 55000 58000 60000 62000 65000
++thresholds_clr 48000 50000 53000 56000 58000 60000 63000
++actions battery battery battery battery battery battery battery
++action_info 1 2 3 4 5 6 8
++
++[LCD_MONITOR_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions lcd
++action_info 3685
++
++[CPU_HOTPLUG_MONITOR]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 105000
++thresholds_clr 100000
++actions hotplug_1+hotplug_2+hotplug_3+hotplug_4+hotplug_5+hotplug_6
++action_info 0+0+0+0+0+0
++
++[HIGH_TEMP_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions temp_state
++action_info 4
++
+diff --git a/thermal/thermal-engine-class0-gram.conf b/thermal/thermal-engine-class0-gram.conf
+new file mode 100644
+index 0000000..7350643
+--- /dev/null
++++ b/thermal/thermal-engine-class0-gram.conf
+@@ -0,0 +1,68 @@
++# SENSOR : ALIAS
++# Ultimate Gaming & Benchmark Zero-Throttle Thermal Profile for Xiaomi Miatoll (Zedex OS)
++
++[SS-QUIET-THERMAL-S1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu0
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 1804800
++
++[SS-QUIET-THERMAL-G1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu6
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 2323200
++
++[LCD_MONITOR]
++algo_type monitor
++sampling 5000
++sensor backlight_therm
++thresholds 75000 80000 90000
++thresholds_clr 70000 75000 85000
++actions lcd lcd lcd
++action_info 409 614 819
++
++[BATTERY_CHARGING_STL]
++algo_type monitor
++sampling 1000
++sensor quiet-therm-usr
++thresholds 50000 52000 55000 58000 60000 62000 65000
++thresholds_clr 48000 50000 53000 56000 58000 60000 63000
++actions battery battery battery battery battery battery battery
++action_info 1 2 3 4 5 6 8
++
++[LCD_MONITOR_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions lcd
++action_info 3685
++
++[CPU_HOTPLUG_MONITOR]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 105000
++thresholds_clr 100000
++actions hotplug_1+hotplug_2+hotplug_3+hotplug_4+hotplug_5+hotplug_6
++action_info 0+0+0+0+0+0
++
++[HIGH_TEMP_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions temp_state
++action_info 4
++
+diff --git a/thermal/thermal-engine-class0-joyeuse.conf b/thermal/thermal-engine-class0-joyeuse.conf
+new file mode 100644
+index 0000000..7350643
+--- /dev/null
++++ b/thermal/thermal-engine-class0-joyeuse.conf
+@@ -0,0 +1,68 @@
++# SENSOR : ALIAS
++# Ultimate Gaming & Benchmark Zero-Throttle Thermal Profile for Xiaomi Miatoll (Zedex OS)
++
++[SS-QUIET-THERMAL-S1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu0
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 1804800
++
++[SS-QUIET-THERMAL-G1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu6
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 2323200
++
++[LCD_MONITOR]
++algo_type monitor
++sampling 5000
++sensor backlight_therm
++thresholds 75000 80000 90000
++thresholds_clr 70000 75000 85000
++actions lcd lcd lcd
++action_info 409 614 819
++
++[BATTERY_CHARGING_STL]
++algo_type monitor
++sampling 1000
++sensor quiet-therm-usr
++thresholds 50000 52000 55000 58000 60000 62000 65000
++thresholds_clr 48000 50000 53000 56000 58000 60000 63000
++actions battery battery battery battery battery battery battery
++action_info 1 2 3 4 5 6 8
++
++[LCD_MONITOR_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions lcd
++action_info 3685
++
++[CPU_HOTPLUG_MONITOR]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 105000
++thresholds_clr 100000
++actions hotplug_1+hotplug_2+hotplug_3+hotplug_4+hotplug_5+hotplug_6
++action_info 0+0+0+0+0+0
++
++[HIGH_TEMP_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions temp_state
++action_info 4
++
+diff --git a/thermal/thermal-engine-extreme-curtana.conf b/thermal/thermal-engine-extreme-curtana.conf
+new file mode 100644
+index 0000000..7350643
+--- /dev/null
++++ b/thermal/thermal-engine-extreme-curtana.conf
+@@ -0,0 +1,68 @@
++# SENSOR : ALIAS
++# Ultimate Gaming & Benchmark Zero-Throttle Thermal Profile for Xiaomi Miatoll (Zedex OS)
++
++[SS-QUIET-THERMAL-S1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu0
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 1804800
++
++[SS-QUIET-THERMAL-G1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu6
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 2323200
++
++[LCD_MONITOR]
++algo_type monitor
++sampling 5000
++sensor backlight_therm
++thresholds 75000 80000 90000
++thresholds_clr 70000 75000 85000
++actions lcd lcd lcd
++action_info 409 614 819
++
++[BATTERY_CHARGING_STL]
++algo_type monitor
++sampling 1000
++sensor quiet-therm-usr
++thresholds 50000 52000 55000 58000 60000 62000 65000
++thresholds_clr 48000 50000 53000 56000 58000 60000 63000
++actions battery battery battery battery battery battery battery
++action_info 1 2 3 4 5 6 8
++
++[LCD_MONITOR_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions lcd
++action_info 3685
++
++[CPU_HOTPLUG_MONITOR]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 105000
++thresholds_clr 100000
++actions hotplug_1+hotplug_2+hotplug_3+hotplug_4+hotplug_5+hotplug_6
++action_info 0+0+0+0+0+0
++
++[HIGH_TEMP_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions temp_state
++action_info 4
++
+diff --git a/thermal/thermal-engine-extreme-excalibur.conf b/thermal/thermal-engine-extreme-excalibur.conf
+new file mode 100644
+index 0000000..7350643
+--- /dev/null
++++ b/thermal/thermal-engine-extreme-excalibur.conf
+@@ -0,0 +1,68 @@
++# SENSOR : ALIAS
++# Ultimate Gaming & Benchmark Zero-Throttle Thermal Profile for Xiaomi Miatoll (Zedex OS)
++
++[SS-QUIET-THERMAL-S1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu0
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 1804800
++
++[SS-QUIET-THERMAL-G1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu6
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 2323200
++
++[LCD_MONITOR]
++algo_type monitor
++sampling 5000
++sensor backlight_therm
++thresholds 75000 80000 90000
++thresholds_clr 70000 75000 85000
++actions lcd lcd lcd
++action_info 409 614 819
++
++[BATTERY_CHARGING_STL]
++algo_type monitor
++sampling 1000
++sensor quiet-therm-usr
++thresholds 50000 52000 55000 58000 60000 62000 65000
++thresholds_clr 48000 50000 53000 56000 58000 60000 63000
++actions battery battery battery battery battery battery battery
++action_info 1 2 3 4 5 6 8
++
++[LCD_MONITOR_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions lcd
++action_info 3685
++
++[CPU_HOTPLUG_MONITOR]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 105000
++thresholds_clr 100000
++actions hotplug_1+hotplug_2+hotplug_3+hotplug_4+hotplug_5+hotplug_6
++action_info 0+0+0+0+0+0
++
++[HIGH_TEMP_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions temp_state
++action_info 4
++
+diff --git a/thermal/thermal-engine-extreme-gram.conf b/thermal/thermal-engine-extreme-gram.conf
+new file mode 100644
+index 0000000..7350643
+--- /dev/null
++++ b/thermal/thermal-engine-extreme-gram.conf
+@@ -0,0 +1,68 @@
++# SENSOR : ALIAS
++# Ultimate Gaming & Benchmark Zero-Throttle Thermal Profile for Xiaomi Miatoll (Zedex OS)
++
++[SS-QUIET-THERMAL-S1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu0
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 1804800
++
++[SS-QUIET-THERMAL-G1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu6
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 2323200
++
++[LCD_MONITOR]
++algo_type monitor
++sampling 5000
++sensor backlight_therm
++thresholds 75000 80000 90000
++thresholds_clr 70000 75000 85000
++actions lcd lcd lcd
++action_info 409 614 819
++
++[BATTERY_CHARGING_STL]
++algo_type monitor
++sampling 1000
++sensor quiet-therm-usr
++thresholds 50000 52000 55000 58000 60000 62000 65000
++thresholds_clr 48000 50000 53000 56000 58000 60000 63000
++actions battery battery battery battery battery battery battery
++action_info 1 2 3 4 5 6 8
++
++[LCD_MONITOR_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions lcd
++action_info 3685
++
++[CPU_HOTPLUG_MONITOR]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 105000
++thresholds_clr 100000
++actions hotplug_1+hotplug_2+hotplug_3+hotplug_4+hotplug_5+hotplug_6
++action_info 0+0+0+0+0+0
++
++[HIGH_TEMP_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions temp_state
++action_info 4
++
+diff --git a/thermal/thermal-engine-extreme-joyeuse.conf b/thermal/thermal-engine-extreme-joyeuse.conf
+new file mode 100644
+index 0000000..7350643
+--- /dev/null
++++ b/thermal/thermal-engine-extreme-joyeuse.conf
+@@ -0,0 +1,68 @@
++# SENSOR : ALIAS
++# Ultimate Gaming & Benchmark Zero-Throttle Thermal Profile for Xiaomi Miatoll (Zedex OS)
++
++[SS-QUIET-THERMAL-S1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu0
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 1804800
++
++[SS-QUIET-THERMAL-G1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu6
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 2323200
++
++[LCD_MONITOR]
++algo_type monitor
++sampling 5000
++sensor backlight_therm
++thresholds 75000 80000 90000
++thresholds_clr 70000 75000 85000
++actions lcd lcd lcd
++action_info 409 614 819
++
++[BATTERY_CHARGING_STL]
++algo_type monitor
++sampling 1000
++sensor quiet-therm-usr
++thresholds 50000 52000 55000 58000 60000 62000 65000
++thresholds_clr 48000 50000 53000 56000 58000 60000 63000
++actions battery battery battery battery battery battery battery
++action_info 1 2 3 4 5 6 8
++
++[LCD_MONITOR_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions lcd
++action_info 3685
++
++[CPU_HOTPLUG_MONITOR]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 105000
++thresholds_clr 100000
++actions hotplug_1+hotplug_2+hotplug_3+hotplug_4+hotplug_5+hotplug_6
++action_info 0+0+0+0+0+0
++
++[HIGH_TEMP_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions temp_state
++action_info 4
++
+diff --git a/thermal/thermal-engine-high-curtana.conf b/thermal/thermal-engine-high-curtana.conf
+new file mode 100644
+index 0000000..7350643
+--- /dev/null
++++ b/thermal/thermal-engine-high-curtana.conf
+@@ -0,0 +1,68 @@
++# SENSOR : ALIAS
++# Ultimate Gaming & Benchmark Zero-Throttle Thermal Profile for Xiaomi Miatoll (Zedex OS)
++
++[SS-QUIET-THERMAL-S1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu0
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 1804800
++
++[SS-QUIET-THERMAL-G1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu6
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 2323200
++
++[LCD_MONITOR]
++algo_type monitor
++sampling 5000
++sensor backlight_therm
++thresholds 75000 80000 90000
++thresholds_clr 70000 75000 85000
++actions lcd lcd lcd
++action_info 409 614 819
++
++[BATTERY_CHARGING_STL]
++algo_type monitor
++sampling 1000
++sensor quiet-therm-usr
++thresholds 50000 52000 55000 58000 60000 62000 65000
++thresholds_clr 48000 50000 53000 56000 58000 60000 63000
++actions battery battery battery battery battery battery battery
++action_info 1 2 3 4 5 6 8
++
++[LCD_MONITOR_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions lcd
++action_info 3685
++
++[CPU_HOTPLUG_MONITOR]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 105000
++thresholds_clr 100000
++actions hotplug_1+hotplug_2+hotplug_3+hotplug_4+hotplug_5+hotplug_6
++action_info 0+0+0+0+0+0
++
++[HIGH_TEMP_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions temp_state
++action_info 4
++
+diff --git a/thermal/thermal-engine-high-excalibur.conf b/thermal/thermal-engine-high-excalibur.conf
+new file mode 100644
+index 0000000..7350643
+--- /dev/null
++++ b/thermal/thermal-engine-high-excalibur.conf
+@@ -0,0 +1,68 @@
++# SENSOR : ALIAS
++# Ultimate Gaming & Benchmark Zero-Throttle Thermal Profile for Xiaomi Miatoll (Zedex OS)
++
++[SS-QUIET-THERMAL-S1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu0
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 1804800
++
++[SS-QUIET-THERMAL-G1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu6
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 2323200
++
++[LCD_MONITOR]
++algo_type monitor
++sampling 5000
++sensor backlight_therm
++thresholds 75000 80000 90000
++thresholds_clr 70000 75000 85000
++actions lcd lcd lcd
++action_info 409 614 819
++
++[BATTERY_CHARGING_STL]
++algo_type monitor
++sampling 1000
++sensor quiet-therm-usr
++thresholds 50000 52000 55000 58000 60000 62000 65000
++thresholds_clr 48000 50000 53000 56000 58000 60000 63000
++actions battery battery battery battery battery battery battery
++action_info 1 2 3 4 5 6 8
++
++[LCD_MONITOR_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions lcd
++action_info 3685
++
++[CPU_HOTPLUG_MONITOR]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 105000
++thresholds_clr 100000
++actions hotplug_1+hotplug_2+hotplug_3+hotplug_4+hotplug_5+hotplug_6
++action_info 0+0+0+0+0+0
++
++[HIGH_TEMP_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions temp_state
++action_info 4
++
+diff --git a/thermal/thermal-engine-high-gram.conf b/thermal/thermal-engine-high-gram.conf
+new file mode 100644
+index 0000000..7350643
+--- /dev/null
++++ b/thermal/thermal-engine-high-gram.conf
+@@ -0,0 +1,68 @@
++# SENSOR : ALIAS
++# Ultimate Gaming & Benchmark Zero-Throttle Thermal Profile for Xiaomi Miatoll (Zedex OS)
++
++[SS-QUIET-THERMAL-S1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu0
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 1804800
++
++[SS-QUIET-THERMAL-G1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu6
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 2323200
++
++[LCD_MONITOR]
++algo_type monitor
++sampling 5000
++sensor backlight_therm
++thresholds 75000 80000 90000
++thresholds_clr 70000 75000 85000
++actions lcd lcd lcd
++action_info 409 614 819
++
++[BATTERY_CHARGING_STL]
++algo_type monitor
++sampling 1000
++sensor quiet-therm-usr
++thresholds 50000 52000 55000 58000 60000 62000 65000
++thresholds_clr 48000 50000 53000 56000 58000 60000 63000
++actions battery battery battery battery battery battery battery
++action_info 1 2 3 4 5 6 8
++
++[LCD_MONITOR_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions lcd
++action_info 3685
++
++[CPU_HOTPLUG_MONITOR]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 105000
++thresholds_clr 100000
++actions hotplug_1+hotplug_2+hotplug_3+hotplug_4+hotplug_5+hotplug_6
++action_info 0+0+0+0+0+0
++
++[HIGH_TEMP_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions temp_state
++action_info 4
++
+diff --git a/thermal/thermal-engine-high-joyeuse.conf b/thermal/thermal-engine-high-joyeuse.conf
+new file mode 100644
+index 0000000..7350643
+--- /dev/null
++++ b/thermal/thermal-engine-high-joyeuse.conf
+@@ -0,0 +1,68 @@
++# SENSOR : ALIAS
++# Ultimate Gaming & Benchmark Zero-Throttle Thermal Profile for Xiaomi Miatoll (Zedex OS)
++
++[SS-QUIET-THERMAL-S1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu0
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 1804800
++
++[SS-QUIET-THERMAL-G1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu6
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 2323200
++
++[LCD_MONITOR]
++algo_type monitor
++sampling 5000
++sensor backlight_therm
++thresholds 75000 80000 90000
++thresholds_clr 70000 75000 85000
++actions lcd lcd lcd
++action_info 409 614 819
++
++[BATTERY_CHARGING_STL]
++algo_type monitor
++sampling 1000
++sensor quiet-therm-usr
++thresholds 50000 52000 55000 58000 60000 62000 65000
++thresholds_clr 48000 50000 53000 56000 58000 60000 63000
++actions battery battery battery battery battery battery battery
++action_info 1 2 3 4 5 6 8
++
++[LCD_MONITOR_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions lcd
++action_info 3685
++
++[CPU_HOTPLUG_MONITOR]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 105000
++thresholds_clr 100000
++actions hotplug_1+hotplug_2+hotplug_3+hotplug_4+hotplug_5+hotplug_6
++action_info 0+0+0+0+0+0
++
++[HIGH_TEMP_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions temp_state
++action_info 4
++
+diff --git a/thermal/thermal-engine-nolimits-curtana.conf b/thermal/thermal-engine-nolimits-curtana.conf
+new file mode 100644
+index 0000000..7350643
+--- /dev/null
++++ b/thermal/thermal-engine-nolimits-curtana.conf
+@@ -0,0 +1,68 @@
++# SENSOR : ALIAS
++# Ultimate Gaming & Benchmark Zero-Throttle Thermal Profile for Xiaomi Miatoll (Zedex OS)
++
++[SS-QUIET-THERMAL-S1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu0
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 1804800
++
++[SS-QUIET-THERMAL-G1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu6
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 2323200
++
++[LCD_MONITOR]
++algo_type monitor
++sampling 5000
++sensor backlight_therm
++thresholds 75000 80000 90000
++thresholds_clr 70000 75000 85000
++actions lcd lcd lcd
++action_info 409 614 819
++
++[BATTERY_CHARGING_STL]
++algo_type monitor
++sampling 1000
++sensor quiet-therm-usr
++thresholds 50000 52000 55000 58000 60000 62000 65000
++thresholds_clr 48000 50000 53000 56000 58000 60000 63000
++actions battery battery battery battery battery battery battery
++action_info 1 2 3 4 5 6 8
++
++[LCD_MONITOR_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions lcd
++action_info 3685
++
++[CPU_HOTPLUG_MONITOR]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 105000
++thresholds_clr 100000
++actions hotplug_1+hotplug_2+hotplug_3+hotplug_4+hotplug_5+hotplug_6
++action_info 0+0+0+0+0+0
++
++[HIGH_TEMP_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions temp_state
++action_info 4
++
+diff --git a/thermal/thermal-engine-nolimits-excalibur.conf b/thermal/thermal-engine-nolimits-excalibur.conf
+new file mode 100644
+index 0000000..7350643
+--- /dev/null
++++ b/thermal/thermal-engine-nolimits-excalibur.conf
+@@ -0,0 +1,68 @@
++# SENSOR : ALIAS
++# Ultimate Gaming & Benchmark Zero-Throttle Thermal Profile for Xiaomi Miatoll (Zedex OS)
++
++[SS-QUIET-THERMAL-S1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu0
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 1804800
++
++[SS-QUIET-THERMAL-G1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu6
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 2323200
++
++[LCD_MONITOR]
++algo_type monitor
++sampling 5000
++sensor backlight_therm
++thresholds 75000 80000 90000
++thresholds_clr 70000 75000 85000
++actions lcd lcd lcd
++action_info 409 614 819
++
++[BATTERY_CHARGING_STL]
++algo_type monitor
++sampling 1000
++sensor quiet-therm-usr
++thresholds 50000 52000 55000 58000 60000 62000 65000
++thresholds_clr 48000 50000 53000 56000 58000 60000 63000
++actions battery battery battery battery battery battery battery
++action_info 1 2 3 4 5 6 8
++
++[LCD_MONITOR_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions lcd
++action_info 3685
++
++[CPU_HOTPLUG_MONITOR]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 105000
++thresholds_clr 100000
++actions hotplug_1+hotplug_2+hotplug_3+hotplug_4+hotplug_5+hotplug_6
++action_info 0+0+0+0+0+0
++
++[HIGH_TEMP_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions temp_state
++action_info 4
++
+diff --git a/thermal/thermal-engine-nolimits-gram.conf b/thermal/thermal-engine-nolimits-gram.conf
+new file mode 100644
+index 0000000..7350643
+--- /dev/null
++++ b/thermal/thermal-engine-nolimits-gram.conf
+@@ -0,0 +1,68 @@
++# SENSOR : ALIAS
++# Ultimate Gaming & Benchmark Zero-Throttle Thermal Profile for Xiaomi Miatoll (Zedex OS)
++
++[SS-QUIET-THERMAL-S1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu0
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 1804800
++
++[SS-QUIET-THERMAL-G1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu6
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 2323200
++
++[LCD_MONITOR]
++algo_type monitor
++sampling 5000
++sensor backlight_therm
++thresholds 75000 80000 90000
++thresholds_clr 70000 75000 85000
++actions lcd lcd lcd
++action_info 409 614 819
++
++[BATTERY_CHARGING_STL]
++algo_type monitor
++sampling 1000
++sensor quiet-therm-usr
++thresholds 50000 52000 55000 58000 60000 62000 65000
++thresholds_clr 48000 50000 53000 56000 58000 60000 63000
++actions battery battery battery battery battery battery battery
++action_info 1 2 3 4 5 6 8
++
++[LCD_MONITOR_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions lcd
++action_info 3685
++
++[CPU_HOTPLUG_MONITOR]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 105000
++thresholds_clr 100000
++actions hotplug_1+hotplug_2+hotplug_3+hotplug_4+hotplug_5+hotplug_6
++action_info 0+0+0+0+0+0
++
++[HIGH_TEMP_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions temp_state
++action_info 4
++
+diff --git a/thermal/thermal-engine-nolimits-joyeuse.conf b/thermal/thermal-engine-nolimits-joyeuse.conf
+new file mode 100644
+index 0000000..7350643
+--- /dev/null
++++ b/thermal/thermal-engine-nolimits-joyeuse.conf
+@@ -0,0 +1,68 @@
++# SENSOR : ALIAS
++# Ultimate Gaming & Benchmark Zero-Throttle Thermal Profile for Xiaomi Miatoll (Zedex OS)
++
++[SS-QUIET-THERMAL-S1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu0
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 1804800
++
++[SS-QUIET-THERMAL-G1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu6
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 2323200
++
++[LCD_MONITOR]
++algo_type monitor
++sampling 5000
++sensor backlight_therm
++thresholds 75000 80000 90000
++thresholds_clr 70000 75000 85000
++actions lcd lcd lcd
++action_info 409 614 819
++
++[BATTERY_CHARGING_STL]
++algo_type monitor
++sampling 1000
++sensor quiet-therm-usr
++thresholds 50000 52000 55000 58000 60000 62000 65000
++thresholds_clr 48000 50000 53000 56000 58000 60000 63000
++actions battery battery battery battery battery battery battery
++action_info 1 2 3 4 5 6 8
++
++[LCD_MONITOR_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions lcd
++action_info 3685
++
++[CPU_HOTPLUG_MONITOR]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 105000
++thresholds_clr 100000
++actions hotplug_1+hotplug_2+hotplug_3+hotplug_4+hotplug_5+hotplug_6
++action_info 0+0+0+0+0+0
++
++[HIGH_TEMP_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions temp_state
++action_info 4
++
+diff --git a/thermal/thermal-engine-normal-curtana.conf b/thermal/thermal-engine-normal-curtana.conf
+index 29ff9de..7350643 100644
+--- a/thermal/thermal-engine-normal-curtana.conf
++++ b/thermal/thermal-engine-normal-curtana.conf
+@@ -1,13 +1,13 @@
+ # SENSOR : ALIAS
+-# High Performance Gaming Thermal Configuration for Xiaomi Miatoll (Zedex OS)
++# Ultimate Gaming & Benchmark Zero-Throttle Thermal Profile for Xiaomi Miatoll (Zedex OS)
+ 
+ [SS-QUIET-THERMAL-S1]
+ algo_type ss
+ sampling 5000
+ sensor nvm-therm-usr
+ device cpu0
+-set_point 75000
+-set_point_clr 70000
++set_point 95000
++set_point_clr 90000
+ time_constant 0
+ device_max_limit 1804800
+ 
+@@ -16,17 +16,17 @@ algo_type ss
+ sampling 5000
+ sensor nvm-therm-usr
+ device cpu6
+-set_point 75000
+-set_point_clr 70000
++set_point 95000
++set_point_clr 90000
+ time_constant 0
+-device_max_limit 2304000
++device_max_limit 2323200
+ 
+ [LCD_MONITOR]
+ algo_type monitor
+ sampling 5000
+ sensor backlight_therm
+-thresholds 58000 65000 75000
+-thresholds_clr 55000 62000 70000
++thresholds 75000 80000 90000
++thresholds_clr 70000 75000 85000
+ actions lcd lcd lcd
+ action_info 409 614 819
+ 
+@@ -34,8 +34,8 @@ action_info 409 614 819
+ algo_type monitor
+ sampling 1000
+ sensor quiet-therm-usr
+-thresholds 42000 44000 46000 48000 50000 52000 55000
+-thresholds_clr 40000 42000 44000 46000 48000 50000 53000
++thresholds 50000 52000 55000 58000 60000 62000 65000
++thresholds_clr 48000 50000 53000 56000 58000 60000 63000
+ actions battery battery battery battery battery battery battery
+ action_info 1 2 3 4 5 6 8
+ 
+@@ -43,8 +43,8 @@ action_info 1 2 3 4 5 6 8
+ algo_type monitor
+ sampling 5000
+ sensor quiet-therm-usr
+-thresholds 75000
+-thresholds_clr 70000
++thresholds 95000
++thresholds_clr 90000
+ actions lcd
+ action_info 3685
+ 
+@@ -52,16 +52,17 @@ action_info 3685
+ algo_type monitor
+ sampling 5000
+ sensor quiet-therm-usr
+-thresholds 85000
+-thresholds_clr 80000
++thresholds 105000
++thresholds_clr 100000
+ actions hotplug_1+hotplug_2+hotplug_3+hotplug_4+hotplug_5+hotplug_6
+-action_info 1+1+1+1+1+1
++action_info 0+0+0+0+0+0
+ 
+ [HIGH_TEMP_STATE]
+ algo_type monitor
+ sampling 5000
+ sensor quiet-therm-usr
+-thresholds 80000
+-thresholds_clr 75000
++thresholds 95000
++thresholds_clr 90000
+ actions temp_state
+ action_info 4
++
+diff --git a/thermal/thermal-engine-normal-excalibur.conf b/thermal/thermal-engine-normal-excalibur.conf
+index 29ff9de..7350643 100644
+--- a/thermal/thermal-engine-normal-excalibur.conf
++++ b/thermal/thermal-engine-normal-excalibur.conf
+@@ -1,13 +1,13 @@
+ # SENSOR : ALIAS
+-# High Performance Gaming Thermal Configuration for Xiaomi Miatoll (Zedex OS)
++# Ultimate Gaming & Benchmark Zero-Throttle Thermal Profile for Xiaomi Miatoll (Zedex OS)
+ 
+ [SS-QUIET-THERMAL-S1]
+ algo_type ss
+ sampling 5000
+ sensor nvm-therm-usr
+ device cpu0
+-set_point 75000
+-set_point_clr 70000
++set_point 95000
++set_point_clr 90000
+ time_constant 0
+ device_max_limit 1804800
+ 
+@@ -16,17 +16,17 @@ algo_type ss
+ sampling 5000
+ sensor nvm-therm-usr
+ device cpu6
+-set_point 75000
+-set_point_clr 70000
++set_point 95000
++set_point_clr 90000
+ time_constant 0
+-device_max_limit 2304000
++device_max_limit 2323200
+ 
+ [LCD_MONITOR]
+ algo_type monitor
+ sampling 5000
+ sensor backlight_therm
+-thresholds 58000 65000 75000
+-thresholds_clr 55000 62000 70000
++thresholds 75000 80000 90000
++thresholds_clr 70000 75000 85000
+ actions lcd lcd lcd
+ action_info 409 614 819
+ 
+@@ -34,8 +34,8 @@ action_info 409 614 819
+ algo_type monitor
+ sampling 1000
+ sensor quiet-therm-usr
+-thresholds 42000 44000 46000 48000 50000 52000 55000
+-thresholds_clr 40000 42000 44000 46000 48000 50000 53000
++thresholds 50000 52000 55000 58000 60000 62000 65000
++thresholds_clr 48000 50000 53000 56000 58000 60000 63000
+ actions battery battery battery battery battery battery battery
+ action_info 1 2 3 4 5 6 8
+ 
+@@ -43,8 +43,8 @@ action_info 1 2 3 4 5 6 8
+ algo_type monitor
+ sampling 5000
+ sensor quiet-therm-usr
+-thresholds 75000
+-thresholds_clr 70000
++thresholds 95000
++thresholds_clr 90000
+ actions lcd
+ action_info 3685
+ 
+@@ -52,16 +52,17 @@ action_info 3685
+ algo_type monitor
+ sampling 5000
+ sensor quiet-therm-usr
+-thresholds 85000
+-thresholds_clr 80000
++thresholds 105000
++thresholds_clr 100000
+ actions hotplug_1+hotplug_2+hotplug_3+hotplug_4+hotplug_5+hotplug_6
+-action_info 1+1+1+1+1+1
++action_info 0+0+0+0+0+0
+ 
+ [HIGH_TEMP_STATE]
+ algo_type monitor
+ sampling 5000
+ sensor quiet-therm-usr
+-thresholds 80000
+-thresholds_clr 75000
++thresholds 95000
++thresholds_clr 90000
+ actions temp_state
+ action_info 4
++
+diff --git a/thermal/thermal-engine-normal-gram.conf b/thermal/thermal-engine-normal-gram.conf
+index 29ff9de..7350643 100644
+--- a/thermal/thermal-engine-normal-gram.conf
++++ b/thermal/thermal-engine-normal-gram.conf
+@@ -1,13 +1,13 @@
+ # SENSOR : ALIAS
+-# High Performance Gaming Thermal Configuration for Xiaomi Miatoll (Zedex OS)
++# Ultimate Gaming & Benchmark Zero-Throttle Thermal Profile for Xiaomi Miatoll (Zedex OS)
+ 
+ [SS-QUIET-THERMAL-S1]
+ algo_type ss
+ sampling 5000
+ sensor nvm-therm-usr
+ device cpu0
+-set_point 75000
+-set_point_clr 70000
++set_point 95000
++set_point_clr 90000
+ time_constant 0
+ device_max_limit 1804800
+ 
+@@ -16,17 +16,17 @@ algo_type ss
+ sampling 5000
+ sensor nvm-therm-usr
+ device cpu6
+-set_point 75000
+-set_point_clr 70000
++set_point 95000
++set_point_clr 90000
+ time_constant 0
+-device_max_limit 2304000
++device_max_limit 2323200
+ 
+ [LCD_MONITOR]
+ algo_type monitor
+ sampling 5000
+ sensor backlight_therm
+-thresholds 58000 65000 75000
+-thresholds_clr 55000 62000 70000
++thresholds 75000 80000 90000
++thresholds_clr 70000 75000 85000
+ actions lcd lcd lcd
+ action_info 409 614 819
+ 
+@@ -34,8 +34,8 @@ action_info 409 614 819
+ algo_type monitor
+ sampling 1000
+ sensor quiet-therm-usr
+-thresholds 42000 44000 46000 48000 50000 52000 55000
+-thresholds_clr 40000 42000 44000 46000 48000 50000 53000
++thresholds 50000 52000 55000 58000 60000 62000 65000
++thresholds_clr 48000 50000 53000 56000 58000 60000 63000
+ actions battery battery battery battery battery battery battery
+ action_info 1 2 3 4 5 6 8
+ 
+@@ -43,8 +43,8 @@ action_info 1 2 3 4 5 6 8
+ algo_type monitor
+ sampling 5000
+ sensor quiet-therm-usr
+-thresholds 75000
+-thresholds_clr 70000
++thresholds 95000
++thresholds_clr 90000
+ actions lcd
+ action_info 3685
+ 
+@@ -52,16 +52,17 @@ action_info 3685
+ algo_type monitor
+ sampling 5000
+ sensor quiet-therm-usr
+-thresholds 85000
+-thresholds_clr 80000
++thresholds 105000
++thresholds_clr 100000
+ actions hotplug_1+hotplug_2+hotplug_3+hotplug_4+hotplug_5+hotplug_6
+-action_info 1+1+1+1+1+1
++action_info 0+0+0+0+0+0
+ 
+ [HIGH_TEMP_STATE]
+ algo_type monitor
+ sampling 5000
+ sensor quiet-therm-usr
+-thresholds 80000
+-thresholds_clr 75000
++thresholds 95000
++thresholds_clr 90000
+ actions temp_state
+ action_info 4
++
+diff --git a/thermal/thermal-engine-normal-joyeuse.conf b/thermal/thermal-engine-normal-joyeuse.conf
+index 29ff9de..7350643 100644
+--- a/thermal/thermal-engine-normal-joyeuse.conf
++++ b/thermal/thermal-engine-normal-joyeuse.conf
+@@ -1,13 +1,13 @@
+ # SENSOR : ALIAS
+-# High Performance Gaming Thermal Configuration for Xiaomi Miatoll (Zedex OS)
++# Ultimate Gaming & Benchmark Zero-Throttle Thermal Profile for Xiaomi Miatoll (Zedex OS)
+ 
+ [SS-QUIET-THERMAL-S1]
+ algo_type ss
+ sampling 5000
+ sensor nvm-therm-usr
+ device cpu0
+-set_point 75000
+-set_point_clr 70000
++set_point 95000
++set_point_clr 90000
+ time_constant 0
+ device_max_limit 1804800
+ 
+@@ -16,17 +16,17 @@ algo_type ss
+ sampling 5000
+ sensor nvm-therm-usr
+ device cpu6
+-set_point 75000
+-set_point_clr 70000
++set_point 95000
++set_point_clr 90000
+ time_constant 0
+-device_max_limit 2304000
++device_max_limit 2323200
+ 
+ [LCD_MONITOR]
+ algo_type monitor
+ sampling 5000
+ sensor backlight_therm
+-thresholds 58000 65000 75000
+-thresholds_clr 55000 62000 70000
++thresholds 75000 80000 90000
++thresholds_clr 70000 75000 85000
+ actions lcd lcd lcd
+ action_info 409 614 819
+ 
+@@ -34,8 +34,8 @@ action_info 409 614 819
+ algo_type monitor
+ sampling 1000
+ sensor quiet-therm-usr
+-thresholds 42000 44000 46000 48000 50000 52000 55000
+-thresholds_clr 40000 42000 44000 46000 48000 50000 53000
++thresholds 50000 52000 55000 58000 60000 62000 65000
++thresholds_clr 48000 50000 53000 56000 58000 60000 63000
+ actions battery battery battery battery battery battery battery
+ action_info 1 2 3 4 5 6 8
+ 
+@@ -43,8 +43,8 @@ action_info 1 2 3 4 5 6 8
+ algo_type monitor
+ sampling 5000
+ sensor quiet-therm-usr
+-thresholds 75000
+-thresholds_clr 70000
++thresholds 95000
++thresholds_clr 90000
+ actions lcd
+ action_info 3685
+ 
+@@ -52,16 +52,17 @@ action_info 3685
+ algo_type monitor
+ sampling 5000
+ sensor quiet-therm-usr
+-thresholds 85000
+-thresholds_clr 80000
++thresholds 105000
++thresholds_clr 100000
+ actions hotplug_1+hotplug_2+hotplug_3+hotplug_4+hotplug_5+hotplug_6
+-action_info 1+1+1+1+1+1
++action_info 0+0+0+0+0+0
+ 
+ [HIGH_TEMP_STATE]
+ algo_type monitor
+ sampling 5000
+ sensor quiet-therm-usr
+-thresholds 80000
+-thresholds_clr 75000
++thresholds 95000
++thresholds_clr 90000
+ actions temp_state
+ action_info 4
++
+diff --git a/thermal/thermal-engine-phone-curtana.conf b/thermal/thermal-engine-phone-curtana.conf
+new file mode 100644
+index 0000000..7350643
+--- /dev/null
++++ b/thermal/thermal-engine-phone-curtana.conf
+@@ -0,0 +1,68 @@
++# SENSOR : ALIAS
++# Ultimate Gaming & Benchmark Zero-Throttle Thermal Profile for Xiaomi Miatoll (Zedex OS)
++
++[SS-QUIET-THERMAL-S1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu0
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 1804800
++
++[SS-QUIET-THERMAL-G1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu6
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 2323200
++
++[LCD_MONITOR]
++algo_type monitor
++sampling 5000
++sensor backlight_therm
++thresholds 75000 80000 90000
++thresholds_clr 70000 75000 85000
++actions lcd lcd lcd
++action_info 409 614 819
++
++[BATTERY_CHARGING_STL]
++algo_type monitor
++sampling 1000
++sensor quiet-therm-usr
++thresholds 50000 52000 55000 58000 60000 62000 65000
++thresholds_clr 48000 50000 53000 56000 58000 60000 63000
++actions battery battery battery battery battery battery battery
++action_info 1 2 3 4 5 6 8
++
++[LCD_MONITOR_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions lcd
++action_info 3685
++
++[CPU_HOTPLUG_MONITOR]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 105000
++thresholds_clr 100000
++actions hotplug_1+hotplug_2+hotplug_3+hotplug_4+hotplug_5+hotplug_6
++action_info 0+0+0+0+0+0
++
++[HIGH_TEMP_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions temp_state
++action_info 4
++
+diff --git a/thermal/thermal-engine-phone-excalibur.conf b/thermal/thermal-engine-phone-excalibur.conf
+new file mode 100644
+index 0000000..7350643
+--- /dev/null
++++ b/thermal/thermal-engine-phone-excalibur.conf
+@@ -0,0 +1,68 @@
++# SENSOR : ALIAS
++# Ultimate Gaming & Benchmark Zero-Throttle Thermal Profile for Xiaomi Miatoll (Zedex OS)
++
++[SS-QUIET-THERMAL-S1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu0
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 1804800
++
++[SS-QUIET-THERMAL-G1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu6
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 2323200
++
++[LCD_MONITOR]
++algo_type monitor
++sampling 5000
++sensor backlight_therm
++thresholds 75000 80000 90000
++thresholds_clr 70000 75000 85000
++actions lcd lcd lcd
++action_info 409 614 819
++
++[BATTERY_CHARGING_STL]
++algo_type monitor
++sampling 1000
++sensor quiet-therm-usr
++thresholds 50000 52000 55000 58000 60000 62000 65000
++thresholds_clr 48000 50000 53000 56000 58000 60000 63000
++actions battery battery battery battery battery battery battery
++action_info 1 2 3 4 5 6 8
++
++[LCD_MONITOR_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions lcd
++action_info 3685
++
++[CPU_HOTPLUG_MONITOR]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 105000
++thresholds_clr 100000
++actions hotplug_1+hotplug_2+hotplug_3+hotplug_4+hotplug_5+hotplug_6
++action_info 0+0+0+0+0+0
++
++[HIGH_TEMP_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions temp_state
++action_info 4
++
+diff --git a/thermal/thermal-engine-phone-gram.conf b/thermal/thermal-engine-phone-gram.conf
+new file mode 100644
+index 0000000..7350643
+--- /dev/null
++++ b/thermal/thermal-engine-phone-gram.conf
+@@ -0,0 +1,68 @@
++# SENSOR : ALIAS
++# Ultimate Gaming & Benchmark Zero-Throttle Thermal Profile for Xiaomi Miatoll (Zedex OS)
++
++[SS-QUIET-THERMAL-S1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu0
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 1804800
++
++[SS-QUIET-THERMAL-G1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu6
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 2323200
++
++[LCD_MONITOR]
++algo_type monitor
++sampling 5000
++sensor backlight_therm
++thresholds 75000 80000 90000
++thresholds_clr 70000 75000 85000
++actions lcd lcd lcd
++action_info 409 614 819
++
++[BATTERY_CHARGING_STL]
++algo_type monitor
++sampling 1000
++sensor quiet-therm-usr
++thresholds 50000 52000 55000 58000 60000 62000 65000
++thresholds_clr 48000 50000 53000 56000 58000 60000 63000
++actions battery battery battery battery battery battery battery
++action_info 1 2 3 4 5 6 8
++
++[LCD_MONITOR_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions lcd
++action_info 3685
++
++[CPU_HOTPLUG_MONITOR]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 105000
++thresholds_clr 100000
++actions hotplug_1+hotplug_2+hotplug_3+hotplug_4+hotplug_5+hotplug_6
++action_info 0+0+0+0+0+0
++
++[HIGH_TEMP_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions temp_state
++action_info 4
++
+diff --git a/thermal/thermal-engine-phone-joyeuse.conf b/thermal/thermal-engine-phone-joyeuse.conf
+new file mode 100644
+index 0000000..7350643
+--- /dev/null
++++ b/thermal/thermal-engine-phone-joyeuse.conf
+@@ -0,0 +1,68 @@
++# SENSOR : ALIAS
++# Ultimate Gaming & Benchmark Zero-Throttle Thermal Profile for Xiaomi Miatoll (Zedex OS)
++
++[SS-QUIET-THERMAL-S1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu0
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 1804800
++
++[SS-QUIET-THERMAL-G1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu6
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 2323200
++
++[LCD_MONITOR]
++algo_type monitor
++sampling 5000
++sensor backlight_therm
++thresholds 75000 80000 90000
++thresholds_clr 70000 75000 85000
++actions lcd lcd lcd
++action_info 409 614 819
++
++[BATTERY_CHARGING_STL]
++algo_type monitor
++sampling 1000
++sensor quiet-therm-usr
++thresholds 50000 52000 55000 58000 60000 62000 65000
++thresholds_clr 48000 50000 53000 56000 58000 60000 63000
++actions battery battery battery battery battery battery battery
++action_info 1 2 3 4 5 6 8
++
++[LCD_MONITOR_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions lcd
++action_info 3685
++
++[CPU_HOTPLUG_MONITOR]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 105000
++thresholds_clr 100000
++actions hotplug_1+hotplug_2+hotplug_3+hotplug_4+hotplug_5+hotplug_6
++action_info 0+0+0+0+0+0
++
++[HIGH_TEMP_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions temp_state
++action_info 4
++
+diff --git a/thermal/thermal-engine-pubgmhd-curtana.conf b/thermal/thermal-engine-pubgmhd-curtana.conf
+new file mode 100644
+index 0000000..7350643
+--- /dev/null
++++ b/thermal/thermal-engine-pubgmhd-curtana.conf
+@@ -0,0 +1,68 @@
++# SENSOR : ALIAS
++# Ultimate Gaming & Benchmark Zero-Throttle Thermal Profile for Xiaomi Miatoll (Zedex OS)
++
++[SS-QUIET-THERMAL-S1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu0
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 1804800
++
++[SS-QUIET-THERMAL-G1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu6
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 2323200
++
++[LCD_MONITOR]
++algo_type monitor
++sampling 5000
++sensor backlight_therm
++thresholds 75000 80000 90000
++thresholds_clr 70000 75000 85000
++actions lcd lcd lcd
++action_info 409 614 819
++
++[BATTERY_CHARGING_STL]
++algo_type monitor
++sampling 1000
++sensor quiet-therm-usr
++thresholds 50000 52000 55000 58000 60000 62000 65000
++thresholds_clr 48000 50000 53000 56000 58000 60000 63000
++actions battery battery battery battery battery battery battery
++action_info 1 2 3 4 5 6 8
++
++[LCD_MONITOR_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions lcd
++action_info 3685
++
++[CPU_HOTPLUG_MONITOR]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 105000
++thresholds_clr 100000
++actions hotplug_1+hotplug_2+hotplug_3+hotplug_4+hotplug_5+hotplug_6
++action_info 0+0+0+0+0+0
++
++[HIGH_TEMP_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions temp_state
++action_info 4
++
+diff --git a/thermal/thermal-engine-pubgmhd-excalibur.conf b/thermal/thermal-engine-pubgmhd-excalibur.conf
+new file mode 100644
+index 0000000..7350643
+--- /dev/null
++++ b/thermal/thermal-engine-pubgmhd-excalibur.conf
+@@ -0,0 +1,68 @@
++# SENSOR : ALIAS
++# Ultimate Gaming & Benchmark Zero-Throttle Thermal Profile for Xiaomi Miatoll (Zedex OS)
++
++[SS-QUIET-THERMAL-S1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu0
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 1804800
++
++[SS-QUIET-THERMAL-G1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu6
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 2323200
++
++[LCD_MONITOR]
++algo_type monitor
++sampling 5000
++sensor backlight_therm
++thresholds 75000 80000 90000
++thresholds_clr 70000 75000 85000
++actions lcd lcd lcd
++action_info 409 614 819
++
++[BATTERY_CHARGING_STL]
++algo_type monitor
++sampling 1000
++sensor quiet-therm-usr
++thresholds 50000 52000 55000 58000 60000 62000 65000
++thresholds_clr 48000 50000 53000 56000 58000 60000 63000
++actions battery battery battery battery battery battery battery
++action_info 1 2 3 4 5 6 8
++
++[LCD_MONITOR_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions lcd
++action_info 3685
++
++[CPU_HOTPLUG_MONITOR]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 105000
++thresholds_clr 100000
++actions hotplug_1+hotplug_2+hotplug_3+hotplug_4+hotplug_5+hotplug_6
++action_info 0+0+0+0+0+0
++
++[HIGH_TEMP_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions temp_state
++action_info 4
++
+diff --git a/thermal/thermal-engine-pubgmhd-gram.conf b/thermal/thermal-engine-pubgmhd-gram.conf
+new file mode 100644
+index 0000000..7350643
+--- /dev/null
++++ b/thermal/thermal-engine-pubgmhd-gram.conf
+@@ -0,0 +1,68 @@
++# SENSOR : ALIAS
++# Ultimate Gaming & Benchmark Zero-Throttle Thermal Profile for Xiaomi Miatoll (Zedex OS)
++
++[SS-QUIET-THERMAL-S1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu0
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 1804800
++
++[SS-QUIET-THERMAL-G1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu6
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 2323200
++
++[LCD_MONITOR]
++algo_type monitor
++sampling 5000
++sensor backlight_therm
++thresholds 75000 80000 90000
++thresholds_clr 70000 75000 85000
++actions lcd lcd lcd
++action_info 409 614 819
++
++[BATTERY_CHARGING_STL]
++algo_type monitor
++sampling 1000
++sensor quiet-therm-usr
++thresholds 50000 52000 55000 58000 60000 62000 65000
++thresholds_clr 48000 50000 53000 56000 58000 60000 63000
++actions battery battery battery battery battery battery battery
++action_info 1 2 3 4 5 6 8
++
++[LCD_MONITOR_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions lcd
++action_info 3685
++
++[CPU_HOTPLUG_MONITOR]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 105000
++thresholds_clr 100000
++actions hotplug_1+hotplug_2+hotplug_3+hotplug_4+hotplug_5+hotplug_6
++action_info 0+0+0+0+0+0
++
++[HIGH_TEMP_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions temp_state
++action_info 4
++
+diff --git a/thermal/thermal-engine-pubgmhd-joyeuse.conf b/thermal/thermal-engine-pubgmhd-joyeuse.conf
+new file mode 100644
+index 0000000..7350643
+--- /dev/null
++++ b/thermal/thermal-engine-pubgmhd-joyeuse.conf
+@@ -0,0 +1,68 @@
++# SENSOR : ALIAS
++# Ultimate Gaming & Benchmark Zero-Throttle Thermal Profile for Xiaomi Miatoll (Zedex OS)
++
++[SS-QUIET-THERMAL-S1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu0
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 1804800
++
++[SS-QUIET-THERMAL-G1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu6
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 2323200
++
++[LCD_MONITOR]
++algo_type monitor
++sampling 5000
++sensor backlight_therm
++thresholds 75000 80000 90000
++thresholds_clr 70000 75000 85000
++actions lcd lcd lcd
++action_info 409 614 819
++
++[BATTERY_CHARGING_STL]
++algo_type monitor
++sampling 1000
++sensor quiet-therm-usr
++thresholds 50000 52000 55000 58000 60000 62000 65000
++thresholds_clr 48000 50000 53000 56000 58000 60000 63000
++actions battery battery battery battery battery battery battery
++action_info 1 2 3 4 5 6 8
++
++[LCD_MONITOR_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions lcd
++action_info 3685
++
++[CPU_HOTPLUG_MONITOR]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 105000
++thresholds_clr 100000
++actions hotplug_1+hotplug_2+hotplug_3+hotplug_4+hotplug_5+hotplug_6
++action_info 0+0+0+0+0+0
++
++[HIGH_TEMP_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions temp_state
++action_info 4
++
+diff --git a/thermal/thermal-engine-sgame-curtana.conf b/thermal/thermal-engine-sgame-curtana.conf
+new file mode 100644
+index 0000000..7350643
+--- /dev/null
++++ b/thermal/thermal-engine-sgame-curtana.conf
+@@ -0,0 +1,68 @@
++# SENSOR : ALIAS
++# Ultimate Gaming & Benchmark Zero-Throttle Thermal Profile for Xiaomi Miatoll (Zedex OS)
++
++[SS-QUIET-THERMAL-S1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu0
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 1804800
++
++[SS-QUIET-THERMAL-G1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu6
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 2323200
++
++[LCD_MONITOR]
++algo_type monitor
++sampling 5000
++sensor backlight_therm
++thresholds 75000 80000 90000
++thresholds_clr 70000 75000 85000
++actions lcd lcd lcd
++action_info 409 614 819
++
++[BATTERY_CHARGING_STL]
++algo_type monitor
++sampling 1000
++sensor quiet-therm-usr
++thresholds 50000 52000 55000 58000 60000 62000 65000
++thresholds_clr 48000 50000 53000 56000 58000 60000 63000
++actions battery battery battery battery battery battery battery
++action_info 1 2 3 4 5 6 8
++
++[LCD_MONITOR_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions lcd
++action_info 3685
++
++[CPU_HOTPLUG_MONITOR]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 105000
++thresholds_clr 100000
++actions hotplug_1+hotplug_2+hotplug_3+hotplug_4+hotplug_5+hotplug_6
++action_info 0+0+0+0+0+0
++
++[HIGH_TEMP_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions temp_state
++action_info 4
++
+diff --git a/thermal/thermal-engine-sgame-excalibur.conf b/thermal/thermal-engine-sgame-excalibur.conf
+new file mode 100644
+index 0000000..7350643
+--- /dev/null
++++ b/thermal/thermal-engine-sgame-excalibur.conf
+@@ -0,0 +1,68 @@
++# SENSOR : ALIAS
++# Ultimate Gaming & Benchmark Zero-Throttle Thermal Profile for Xiaomi Miatoll (Zedex OS)
++
++[SS-QUIET-THERMAL-S1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu0
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 1804800
++
++[SS-QUIET-THERMAL-G1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu6
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 2323200
++
++[LCD_MONITOR]
++algo_type monitor
++sampling 5000
++sensor backlight_therm
++thresholds 75000 80000 90000
++thresholds_clr 70000 75000 85000
++actions lcd lcd lcd
++action_info 409 614 819
++
++[BATTERY_CHARGING_STL]
++algo_type monitor
++sampling 1000
++sensor quiet-therm-usr
++thresholds 50000 52000 55000 58000 60000 62000 65000
++thresholds_clr 48000 50000 53000 56000 58000 60000 63000
++actions battery battery battery battery battery battery battery
++action_info 1 2 3 4 5 6 8
++
++[LCD_MONITOR_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions lcd
++action_info 3685
++
++[CPU_HOTPLUG_MONITOR]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 105000
++thresholds_clr 100000
++actions hotplug_1+hotplug_2+hotplug_3+hotplug_4+hotplug_5+hotplug_6
++action_info 0+0+0+0+0+0
++
++[HIGH_TEMP_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions temp_state
++action_info 4
++
+diff --git a/thermal/thermal-engine-sgame-gram.conf b/thermal/thermal-engine-sgame-gram.conf
+new file mode 100644
+index 0000000..7350643
+--- /dev/null
++++ b/thermal/thermal-engine-sgame-gram.conf
+@@ -0,0 +1,68 @@
++# SENSOR : ALIAS
++# Ultimate Gaming & Benchmark Zero-Throttle Thermal Profile for Xiaomi Miatoll (Zedex OS)
++
++[SS-QUIET-THERMAL-S1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu0
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 1804800
++
++[SS-QUIET-THERMAL-G1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu6
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 2323200
++
++[LCD_MONITOR]
++algo_type monitor
++sampling 5000
++sensor backlight_therm
++thresholds 75000 80000 90000
++thresholds_clr 70000 75000 85000
++actions lcd lcd lcd
++action_info 409 614 819
++
++[BATTERY_CHARGING_STL]
++algo_type monitor
++sampling 1000
++sensor quiet-therm-usr
++thresholds 50000 52000 55000 58000 60000 62000 65000
++thresholds_clr 48000 50000 53000 56000 58000 60000 63000
++actions battery battery battery battery battery battery battery
++action_info 1 2 3 4 5 6 8
++
++[LCD_MONITOR_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions lcd
++action_info 3685
++
++[CPU_HOTPLUG_MONITOR]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 105000
++thresholds_clr 100000
++actions hotplug_1+hotplug_2+hotplug_3+hotplug_4+hotplug_5+hotplug_6
++action_info 0+0+0+0+0+0
++
++[HIGH_TEMP_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions temp_state
++action_info 4
++
+diff --git a/thermal/thermal-engine-sgame-joyeuse.conf b/thermal/thermal-engine-sgame-joyeuse.conf
+new file mode 100644
+index 0000000..7350643
+--- /dev/null
++++ b/thermal/thermal-engine-sgame-joyeuse.conf
+@@ -0,0 +1,68 @@
++# SENSOR : ALIAS
++# Ultimate Gaming & Benchmark Zero-Throttle Thermal Profile for Xiaomi Miatoll (Zedex OS)
++
++[SS-QUIET-THERMAL-S1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu0
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 1804800
++
++[SS-QUIET-THERMAL-G1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu6
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 2323200
++
++[LCD_MONITOR]
++algo_type monitor
++sampling 5000
++sensor backlight_therm
++thresholds 75000 80000 90000
++thresholds_clr 70000 75000 85000
++actions lcd lcd lcd
++action_info 409 614 819
++
++[BATTERY_CHARGING_STL]
++algo_type monitor
++sampling 1000
++sensor quiet-therm-usr
++thresholds 50000 52000 55000 58000 60000 62000 65000
++thresholds_clr 48000 50000 53000 56000 58000 60000 63000
++actions battery battery battery battery battery battery battery
++action_info 1 2 3 4 5 6 8
++
++[LCD_MONITOR_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions lcd
++action_info 3685
++
++[CPU_HOTPLUG_MONITOR]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 105000
++thresholds_clr 100000
++actions hotplug_1+hotplug_2+hotplug_3+hotplug_4+hotplug_5+hotplug_6
++action_info 0+0+0+0+0+0
++
++[HIGH_TEMP_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions temp_state
++action_info 4
++
+diff --git a/thermal/thermal-engine-tgame-curtana.conf b/thermal/thermal-engine-tgame-curtana.conf
+new file mode 100644
+index 0000000..7350643
+--- /dev/null
++++ b/thermal/thermal-engine-tgame-curtana.conf
+@@ -0,0 +1,68 @@
++# SENSOR : ALIAS
++# Ultimate Gaming & Benchmark Zero-Throttle Thermal Profile for Xiaomi Miatoll (Zedex OS)
++
++[SS-QUIET-THERMAL-S1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu0
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 1804800
++
++[SS-QUIET-THERMAL-G1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu6
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 2323200
++
++[LCD_MONITOR]
++algo_type monitor
++sampling 5000
++sensor backlight_therm
++thresholds 75000 80000 90000
++thresholds_clr 70000 75000 85000
++actions lcd lcd lcd
++action_info 409 614 819
++
++[BATTERY_CHARGING_STL]
++algo_type monitor
++sampling 1000
++sensor quiet-therm-usr
++thresholds 50000 52000 55000 58000 60000 62000 65000
++thresholds_clr 48000 50000 53000 56000 58000 60000 63000
++actions battery battery battery battery battery battery battery
++action_info 1 2 3 4 5 6 8
++
++[LCD_MONITOR_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions lcd
++action_info 3685
++
++[CPU_HOTPLUG_MONITOR]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 105000
++thresholds_clr 100000
++actions hotplug_1+hotplug_2+hotplug_3+hotplug_4+hotplug_5+hotplug_6
++action_info 0+0+0+0+0+0
++
++[HIGH_TEMP_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions temp_state
++action_info 4
++
+diff --git a/thermal/thermal-engine-tgame-excalibur.conf b/thermal/thermal-engine-tgame-excalibur.conf
+new file mode 100644
+index 0000000..7350643
+--- /dev/null
++++ b/thermal/thermal-engine-tgame-excalibur.conf
+@@ -0,0 +1,68 @@
++# SENSOR : ALIAS
++# Ultimate Gaming & Benchmark Zero-Throttle Thermal Profile for Xiaomi Miatoll (Zedex OS)
++
++[SS-QUIET-THERMAL-S1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu0
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 1804800
++
++[SS-QUIET-THERMAL-G1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu6
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 2323200
++
++[LCD_MONITOR]
++algo_type monitor
++sampling 5000
++sensor backlight_therm
++thresholds 75000 80000 90000
++thresholds_clr 70000 75000 85000
++actions lcd lcd lcd
++action_info 409 614 819
++
++[BATTERY_CHARGING_STL]
++algo_type monitor
++sampling 1000
++sensor quiet-therm-usr
++thresholds 50000 52000 55000 58000 60000 62000 65000
++thresholds_clr 48000 50000 53000 56000 58000 60000 63000
++actions battery battery battery battery battery battery battery
++action_info 1 2 3 4 5 6 8
++
++[LCD_MONITOR_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions lcd
++action_info 3685
++
++[CPU_HOTPLUG_MONITOR]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 105000
++thresholds_clr 100000
++actions hotplug_1+hotplug_2+hotplug_3+hotplug_4+hotplug_5+hotplug_6
++action_info 0+0+0+0+0+0
++
++[HIGH_TEMP_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions temp_state
++action_info 4
++
+diff --git a/thermal/thermal-engine-tgame-gram.conf b/thermal/thermal-engine-tgame-gram.conf
+new file mode 100644
+index 0000000..7350643
+--- /dev/null
++++ b/thermal/thermal-engine-tgame-gram.conf
+@@ -0,0 +1,68 @@
++# SENSOR : ALIAS
++# Ultimate Gaming & Benchmark Zero-Throttle Thermal Profile for Xiaomi Miatoll (Zedex OS)
++
++[SS-QUIET-THERMAL-S1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu0
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 1804800
++
++[SS-QUIET-THERMAL-G1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu6
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 2323200
++
++[LCD_MONITOR]
++algo_type monitor
++sampling 5000
++sensor backlight_therm
++thresholds 75000 80000 90000
++thresholds_clr 70000 75000 85000
++actions lcd lcd lcd
++action_info 409 614 819
++
++[BATTERY_CHARGING_STL]
++algo_type monitor
++sampling 1000
++sensor quiet-therm-usr
++thresholds 50000 52000 55000 58000 60000 62000 65000
++thresholds_clr 48000 50000 53000 56000 58000 60000 63000
++actions battery battery battery battery battery battery battery
++action_info 1 2 3 4 5 6 8
++
++[LCD_MONITOR_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions lcd
++action_info 3685
++
++[CPU_HOTPLUG_MONITOR]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 105000
++thresholds_clr 100000
++actions hotplug_1+hotplug_2+hotplug_3+hotplug_4+hotplug_5+hotplug_6
++action_info 0+0+0+0+0+0
++
++[HIGH_TEMP_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions temp_state
++action_info 4
++
+diff --git a/thermal/thermal-engine-tgame-joyeuse.conf b/thermal/thermal-engine-tgame-joyeuse.conf
+new file mode 100644
+index 0000000..7350643
+--- /dev/null
++++ b/thermal/thermal-engine-tgame-joyeuse.conf
+@@ -0,0 +1,68 @@
++# SENSOR : ALIAS
++# Ultimate Gaming & Benchmark Zero-Throttle Thermal Profile for Xiaomi Miatoll (Zedex OS)
++
++[SS-QUIET-THERMAL-S1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu0
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 1804800
++
++[SS-QUIET-THERMAL-G1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu6
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 2323200
++
++[LCD_MONITOR]
++algo_type monitor
++sampling 5000
++sensor backlight_therm
++thresholds 75000 80000 90000
++thresholds_clr 70000 75000 85000
++actions lcd lcd lcd
++action_info 409 614 819
++
++[BATTERY_CHARGING_STL]
++algo_type monitor
++sampling 1000
++sensor quiet-therm-usr
++thresholds 50000 52000 55000 58000 60000 62000 65000
++thresholds_clr 48000 50000 53000 56000 58000 60000 63000
++actions battery battery battery battery battery battery battery
++action_info 1 2 3 4 5 6 8
++
++[LCD_MONITOR_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions lcd
++action_info 3685
++
++[CPU_HOTPLUG_MONITOR]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 105000
++thresholds_clr 100000
++actions hotplug_1+hotplug_2+hotplug_3+hotplug_4+hotplug_5+hotplug_6
++action_info 0+0+0+0+0+0
++
++[HIGH_TEMP_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions temp_state
++action_info 4
++
+diff --git a/thermal/thermal-engine-youtobe-curtana.conf b/thermal/thermal-engine-youtobe-curtana.conf
+new file mode 100644
+index 0000000..7350643
+--- /dev/null
++++ b/thermal/thermal-engine-youtobe-curtana.conf
+@@ -0,0 +1,68 @@
++# SENSOR : ALIAS
++# Ultimate Gaming & Benchmark Zero-Throttle Thermal Profile for Xiaomi Miatoll (Zedex OS)
++
++[SS-QUIET-THERMAL-S1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu0
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 1804800
++
++[SS-QUIET-THERMAL-G1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu6
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 2323200
++
++[LCD_MONITOR]
++algo_type monitor
++sampling 5000
++sensor backlight_therm
++thresholds 75000 80000 90000
++thresholds_clr 70000 75000 85000
++actions lcd lcd lcd
++action_info 409 614 819
++
++[BATTERY_CHARGING_STL]
++algo_type monitor
++sampling 1000
++sensor quiet-therm-usr
++thresholds 50000 52000 55000 58000 60000 62000 65000
++thresholds_clr 48000 50000 53000 56000 58000 60000 63000
++actions battery battery battery battery battery battery battery
++action_info 1 2 3 4 5 6 8
++
++[LCD_MONITOR_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions lcd
++action_info 3685
++
++[CPU_HOTPLUG_MONITOR]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 105000
++thresholds_clr 100000
++actions hotplug_1+hotplug_2+hotplug_3+hotplug_4+hotplug_5+hotplug_6
++action_info 0+0+0+0+0+0
++
++[HIGH_TEMP_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions temp_state
++action_info 4
++
+diff --git a/thermal/thermal-engine-youtobe-excalibur.conf b/thermal/thermal-engine-youtobe-excalibur.conf
+new file mode 100644
+index 0000000..7350643
+--- /dev/null
++++ b/thermal/thermal-engine-youtobe-excalibur.conf
+@@ -0,0 +1,68 @@
++# SENSOR : ALIAS
++# Ultimate Gaming & Benchmark Zero-Throttle Thermal Profile for Xiaomi Miatoll (Zedex OS)
++
++[SS-QUIET-THERMAL-S1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu0
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 1804800
++
++[SS-QUIET-THERMAL-G1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu6
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 2323200
++
++[LCD_MONITOR]
++algo_type monitor
++sampling 5000
++sensor backlight_therm
++thresholds 75000 80000 90000
++thresholds_clr 70000 75000 85000
++actions lcd lcd lcd
++action_info 409 614 819
++
++[BATTERY_CHARGING_STL]
++algo_type monitor
++sampling 1000
++sensor quiet-therm-usr
++thresholds 50000 52000 55000 58000 60000 62000 65000
++thresholds_clr 48000 50000 53000 56000 58000 60000 63000
++actions battery battery battery battery battery battery battery
++action_info 1 2 3 4 5 6 8
++
++[LCD_MONITOR_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions lcd
++action_info 3685
++
++[CPU_HOTPLUG_MONITOR]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 105000
++thresholds_clr 100000
++actions hotplug_1+hotplug_2+hotplug_3+hotplug_4+hotplug_5+hotplug_6
++action_info 0+0+0+0+0+0
++
++[HIGH_TEMP_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions temp_state
++action_info 4
++
+diff --git a/thermal/thermal-engine-youtobe-gram.conf b/thermal/thermal-engine-youtobe-gram.conf
+new file mode 100644
+index 0000000..7350643
+--- /dev/null
++++ b/thermal/thermal-engine-youtobe-gram.conf
+@@ -0,0 +1,68 @@
++# SENSOR : ALIAS
++# Ultimate Gaming & Benchmark Zero-Throttle Thermal Profile for Xiaomi Miatoll (Zedex OS)
++
++[SS-QUIET-THERMAL-S1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu0
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 1804800
++
++[SS-QUIET-THERMAL-G1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu6
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 2323200
++
++[LCD_MONITOR]
++algo_type monitor
++sampling 5000
++sensor backlight_therm
++thresholds 75000 80000 90000
++thresholds_clr 70000 75000 85000
++actions lcd lcd lcd
++action_info 409 614 819
++
++[BATTERY_CHARGING_STL]
++algo_type monitor
++sampling 1000
++sensor quiet-therm-usr
++thresholds 50000 52000 55000 58000 60000 62000 65000
++thresholds_clr 48000 50000 53000 56000 58000 60000 63000
++actions battery battery battery battery battery battery battery
++action_info 1 2 3 4 5 6 8
++
++[LCD_MONITOR_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions lcd
++action_info 3685
++
++[CPU_HOTPLUG_MONITOR]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 105000
++thresholds_clr 100000
++actions hotplug_1+hotplug_2+hotplug_3+hotplug_4+hotplug_5+hotplug_6
++action_info 0+0+0+0+0+0
++
++[HIGH_TEMP_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions temp_state
++action_info 4
++
+diff --git a/thermal/thermal-engine-youtobe-joyeuse.conf b/thermal/thermal-engine-youtobe-joyeuse.conf
+new file mode 100644
+index 0000000..7350643
+--- /dev/null
++++ b/thermal/thermal-engine-youtobe-joyeuse.conf
+@@ -0,0 +1,68 @@
++# SENSOR : ALIAS
++# Ultimate Gaming & Benchmark Zero-Throttle Thermal Profile for Xiaomi Miatoll (Zedex OS)
++
++[SS-QUIET-THERMAL-S1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu0
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 1804800
++
++[SS-QUIET-THERMAL-G1]
++algo_type ss
++sampling 5000
++sensor nvm-therm-usr
++device cpu6
++set_point 95000
++set_point_clr 90000
++time_constant 0
++device_max_limit 2323200
++
++[LCD_MONITOR]
++algo_type monitor
++sampling 5000
++sensor backlight_therm
++thresholds 75000 80000 90000
++thresholds_clr 70000 75000 85000
++actions lcd lcd lcd
++action_info 409 614 819
++
++[BATTERY_CHARGING_STL]
++algo_type monitor
++sampling 1000
++sensor quiet-therm-usr
++thresholds 50000 52000 55000 58000 60000 62000 65000
++thresholds_clr 48000 50000 53000 56000 58000 60000 63000
++actions battery battery battery battery battery battery battery
++action_info 1 2 3 4 5 6 8
++
++[LCD_MONITOR_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions lcd
++action_info 3685
++
++[CPU_HOTPLUG_MONITOR]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 105000
++thresholds_clr 100000
++actions hotplug_1+hotplug_2+hotplug_3+hotplug_4+hotplug_5+hotplug_6
++action_info 0+0+0+0+0+0
++
++[HIGH_TEMP_STATE]
++algo_type monitor
++sampling 5000
++sensor quiet-therm-usr
++thresholds 95000
++thresholds_clr 90000
++actions temp_state
++action_info 4
++
