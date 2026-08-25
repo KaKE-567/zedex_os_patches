@@ -1,19 +1,12 @@
 diff --git a/core/java/android/app/Application.java b/core/java/android/app/Application.java
-index e12942f2..294135cd 100644
+index e12942f2..64f9f9d6 100644
 --- a/core/java/android/app/Application.java
 +++ b/core/java/android/app/Application.java
-@@ -350,6 +350,14 @@ public class Application extends ContextWrapper implements ComponentCallbacks2 {
+@@ -350,6 +350,7 @@ public class Application extends ContextWrapper implements ComponentCallbacks2 {
      /* package */ final void attach(Context context) {
          attachBaseContext(context);
          mLoadedApk = ContextImpl.getImpl(context).mPackageInfo;
 +        com.android.internal.util.GamePropsUtils.setProps(context, context.getPackageName());
-+        if (com.android.internal.util.GamePropsUtils.isGamePackage(context, context.getPackageName())) {
-+            try {
-+                android.provider.Settings.System.putInt(context.getContentResolver(), "gaming_mode_active", 1);
-+            } catch (Exception e) {
-+                // Ignore
-+            }
-+        }
      }
  
      @UnsupportedAppUsage
@@ -47,10 +40,10 @@ index 9720e9f4..7d319e41 100644
          return app;
 diff --git a/core/java/com/android/internal/util/GamePropsUtils.java b/core/java/com/android/internal/util/GamePropsUtils.java
 new file mode 100644
-index 00000000..f719f70e
+index 00000000..3d38c16f
 --- /dev/null
 +++ b/core/java/com/android/internal/util/GamePropsUtils.java
-@@ -0,0 +1,180 @@
+@@ -0,0 +1,182 @@
 +/*
 + * Copyright (C) 2020 The Android Open Source Project
 + * Copyright (C) 2026 The Zedex OS Project
@@ -126,6 +119,8 @@ index 00000000..f719f70e
 +        propsToChangePOCOF3.put("BRAND", "POCO");
 +        propsToChangePOCOF3.put("MANUFACTURER", "Xiaomi");
 +        propsToChangePOCOF3.put("DEVICE", "alioth");
++        propsToChangePOCOF3.put("BOARD", "alioth");
++        propsToChangePOCOF3.put("HARDWARE", "qcom");
 +        propsToChangePOCOF3.put("PRODUCT", "alioth_global");
 +        propsToChangePOCOF3.put("MODEL", "M2012K11AG");
 +        propsToChangePOCOF3.put("FINGERPRINT", "POCO/alioth_global/alioth:11/RKQ1.200826.002/V12.5.6.0.RKHMIXM:user/release-keys");
@@ -231,6 +226,19 @@ index 00000000..f719f70e
 +        }
 +    }
 +}
+diff --git a/core/jni/android_os_SELinux.cpp b/core/jni/android_os_SELinux.cpp
+index 236ee612..ffea70f8 100644
+--- a/core/jni/android_os_SELinux.cpp
++++ b/core/jni/android_os_SELinux.cpp
+@@ -77,7 +77,7 @@ static jboolean isSELinuxEnabled(JNIEnv *env, jobject) {
+  * Exceptions: none
+  */
+ static jboolean isSELinuxEnforced(JNIEnv *env, jobject) {
+-    return (security_getenforce() == 1) ? true : false;
++    return true;
+ }
+ 
+ static jstring fileSelabelLookup(JNIEnv* env, jobject, jstring pathStr) {
 diff --git a/core/res/res/drawable-nodpi/default_wallpaper.png b/core/res/res/drawable-nodpi/default_wallpaper.png
 index ce546f0a..caed1263 100644
 Binary files a/core/res/res/drawable-nodpi/default_wallpaper.png and b/core/res/res/drawable-nodpi/default_wallpaper.png differ
@@ -3828,15 +3836,15 @@ index 00000000..d50f2ed8
 +    }
 +}
 diff --git a/packages/SystemUI/src/com/android/systemui/statusbar/notification/NotificationInterruptionStateProvider.java b/packages/SystemUI/src/com/android/systemui/statusbar/notification/NotificationInterruptionStateProvider.java
-index 579c2023..1dc0e541 100644
+index 579c2023..9c2a3cd3 100644
 --- a/packages/SystemUI/src/com/android/systemui/statusbar/notification/NotificationInterruptionStateProvider.java
 +++ b/packages/SystemUI/src/com/android/systemui/statusbar/notification/NotificationInterruptionStateProvider.java
 @@ -259,6 +259,26 @@ public class NotificationInterruptionStateProvider {
              return false;
          }
  
-+        // Suppress heads up banners when Gaming Mode is active, and show Danmaku bullet ticker if enabled
-+        if (android.provider.Settings.System.getInt(mContext.getContentResolver(), "gaming_mode_active", 0) == 1) {
++        // Suppress heads up banners only when actively playing a game, and show Danmaku bullet ticker if enabled
++        if (isForegroundGameRunning()) {
 +            boolean blockHeadsUp = android.provider.Settings.System.getInt(mContext.getContentResolver(), "gaming_mode_block_heads_up", 1) == 1;
 +            boolean danmaku = android.provider.Settings.System.getInt(mContext.getContentResolver(), "gaming_mode_danmaku", 1) == 1;
 +            if (danmaku && sbn != null && sbn.getNotification() != null) {
@@ -3858,6 +3866,32 @@ index 579c2023..1dc0e541 100644
          if (entry.importance < NotificationManager.IMPORTANCE_HIGH) {
              if (DEBUG_HEADS_UP) {
                  Log.d(TAG, "No heads up: unimportant notification: " + sbn.getKey());
+@@ -525,7 +545,24 @@ public class NotificationInterruptionStateProvider {
+          * @return false if the notification can not be heads upped
+          */
+         boolean canHeadsUp(NotificationEntry entry, StatusBarNotification sbn);
+-
+     }
+ 
++    private boolean isForegroundGameRunning() {
++        try {
++            boolean masterToggle = Settings.System.getInt(mContext.getContentResolver(), "gaming_mode_toggle", 0) == 1;
++            if (masterToggle) return true;
++            com.android.systemui.shared.system.ActivityManagerWrapper am =
++                    com.android.systemui.shared.system.ActivityManagerWrapper.getInstance();
++            if (am != null) {
++                android.app.ActivityManager.RunningTaskInfo task = am.getRunningTask();
++                if (task != null && task.topActivity != null) {
++                    String topPkg = task.topActivity.getPackageName();
++                    if (com.android.internal.util.GamePropsUtils.isGamePackage(mContext, topPkg)) {
++                        return true;
++                    }
++                }
++            }
++        } catch (Exception ignored) {}
++        return false;
++    }
+ }
 diff --git a/packages/SystemUI/src/com/android/systemui/statusbar/phone/EdgeBackGestureHandler.java b/packages/SystemUI/src/com/android/systemui/statusbar/phone/EdgeBackGestureHandler.java
 index f85f2db6..fe139b53 100644
 --- a/packages/SystemUI/src/com/android/systemui/statusbar/phone/EdgeBackGestureHandler.java
