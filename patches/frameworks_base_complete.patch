@@ -47,7 +47,7 @@ index 9720e9f4..7d319e41 100644
          return app;
 diff --git a/core/java/com/android/internal/util/GamePropsUtils.java b/core/java/com/android/internal/util/GamePropsUtils.java
 new file mode 100644
-index 00000000..1fd0546d
+index 00000000..f719f70e
 --- /dev/null
 +++ b/core/java/com/android/internal/util/GamePropsUtils.java
 @@ -0,0 +1,180 @@
@@ -86,15 +86,15 @@ index 00000000..1fd0546d
 +    private static final String TAG = "GamePropsUtils";
 +    private static final boolean DEBUG = false;
 +
-+    // POCO X3 NFC Official Certified Profile (Adreno 618 Native Match + 90 FPS + Ultimate Royale Pass)
-+    private static final Map<String, Object> propsToChangePOCOX3;
-+    private static final Map<String, Object> versionPropsPOCOX3;
++    // POCO F3 (M2012K11AG / alioth) Official Certified Profile (Qualcomm Snapdragon Flagship + HDR + 90 FPS + Ultimate Royale Pass)
++    private static final Map<String, Object> propsToChangePOCOF3;
++    private static final Map<String, Object> versionPropsPOCOF3;
 +
 +    // Google Pixel 5 Profile for Play Integrity / SafetyNet Pass
 +    private static final Map<String, Object> propsToChangePixel5;
 +    private static final Map<String, Object> versionPropsPixel5;
 +
-+    // Packages to spoof for PUBG/BGMI 90 FPS & Anti-Cheat Ultimate Royale Security Pass
++    // Packages to spoof for PUBG/BGMI HDR + 90 FPS & Anti-Cheat Ultimate Royale Security Pass
 +    private static final List<String> packagesToSpoofPUBG = Arrays.asList(
 +        "com.pubg.imobile",                  // BGMI (Battlegrounds Mobile India)
 +        "com.tencent.ig",                    // PUBG Mobile (Global)
@@ -120,22 +120,22 @@ index 00000000..1fd0546d
 +    );
 +
 +    static {
-+        // POCO X3 NFC (M2007J20CG / surya) - Certified Adreno 618 / Snapdragon 732G Profile
-+        // 100% GPU architecture match + Native 90 FPS support + Ultimate Royale Security Verification Pass
-+        propsToChangePOCOX3 = new HashMap<>();
-+        propsToChangePOCOX3.put("BRAND", "POCO");
-+        propsToChangePOCOX3.put("MANUFACTURER", "Xiaomi");
-+        propsToChangePOCOX3.put("DEVICE", "surya");
-+        propsToChangePOCOX3.put("PRODUCT", "surya_global");
-+        propsToChangePOCOX3.put("MODEL", "M2007J20CG");
-+        propsToChangePOCOX3.put("FINGERPRINT", "POCO/surya_global/surya:11/RKQ1.200826.002/V12.5.8.0.RJGMIXM:user/release-keys");
-+        propsToChangePOCOX3.put("TYPE", "user");
-+        propsToChangePOCOX3.put("TAGS", "release-keys");
-+        propsToChangePOCOX3.put("ID", "RKQ1.200826.002");
++        // POCO F3 (M2012K11AG / alioth) - Certified Qualcomm Adreno Snapdragon 870 Profile
++        // Full HDR Graphics + 90 FPS + Qualcomm GPU Architecture Match + Ultimate Royale Security Pass
++        propsToChangePOCOF3 = new HashMap<>();
++        propsToChangePOCOF3.put("BRAND", "POCO");
++        propsToChangePOCOF3.put("MANUFACTURER", "Xiaomi");
++        propsToChangePOCOF3.put("DEVICE", "alioth");
++        propsToChangePOCOF3.put("PRODUCT", "alioth_global");
++        propsToChangePOCOF3.put("MODEL", "M2012K11AG");
++        propsToChangePOCOF3.put("FINGERPRINT", "POCO/alioth_global/alioth:11/RKQ1.200826.002/V12.5.6.0.RKHMIXM:user/release-keys");
++        propsToChangePOCOF3.put("TYPE", "user");
++        propsToChangePOCOF3.put("TAGS", "release-keys");
++        propsToChangePOCOF3.put("ID", "RKQ1.200826.002");
 +
-+        versionPropsPOCOX3 = new HashMap<>();
-+        versionPropsPOCOX3.put("SECURITY_PATCH", "2022-03-01");
-+        versionPropsPOCOX3.put("INCREMENTAL", "V12.5.8.0.RJGMIXM");
++        versionPropsPOCOF3 = new HashMap<>();
++        versionPropsPOCOF3.put("SECURITY_PATCH", "2022-02-01");
++        versionPropsPOCOF3.put("INCREMENTAL", "V12.5.6.0.RKHMIXM");
 +
 +        // Google Pixel 5 Certified Release-Keys Profile
 +        propsToChangePixel5 = new HashMap<>();
@@ -189,11 +189,11 @@ index 00000000..1fd0546d
 +        }
 +
 +        if (isGamePackage(context, packageName)) {
-+            if (DEBUG) Log.d(TAG, "Spoofing " + packageName + " as POCO X3 NFC (M2007J20CG) for 90 FPS + Ultimate Royale Pass");
-+            for (Map.Entry<String, Object> prop : propsToChangePOCOX3.entrySet()) {
++            if (DEBUG) Log.d(TAG, "Spoofing " + packageName + " as POCO F3 (M2012K11AG) for HDR + 90 FPS + Ultimate Royale Pass");
++            for (Map.Entry<String, Object> prop : propsToChangePOCOF3.entrySet()) {
 +                setPropValue(prop.getKey(), prop.getValue());
 +            }
-+            for (Map.Entry<String, Object> prop : versionPropsPOCOX3.entrySet()) {
++            for (Map.Entry<String, Object> prop : versionPropsPOCOF3.entrySet()) {
 +                setVersionPropValue(prop.getKey(), prop.getValue());
 +            }
 +        } else if (packagesToSpoofGMS.contains(packageName)) {
