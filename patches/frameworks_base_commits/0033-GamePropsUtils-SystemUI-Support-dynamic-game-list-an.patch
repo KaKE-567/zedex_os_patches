@@ -1,7 +1,7 @@
 From 92a2e39458c6b3d6df73da7f79d1a0e5c1deafe8 Mon Sep 17 00:00:00 2001
 From: kake <kake@build.local>
 Date: Tue, 25 Aug 2026 14:02:53 +0000
-Subject: [PATCH 33/33] GamePropsUtils & SystemUI: Support dynamic game list
+Subject: [PATCH 33/34] GamePropsUtils & SystemUI: Support dynamic game list
  and Danmaku bullet notification ticker
 
 Change-Id: I134c7fcc9b04895decb41d48ff9c97a7a7810603

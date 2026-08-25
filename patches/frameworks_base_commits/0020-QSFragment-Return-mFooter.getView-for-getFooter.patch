@@ -1,7 +1,7 @@
 From ac7d1090eacbc15c2a77a9e8eaf446375b8bb892 Mon Sep 17 00:00:00 2001
 From: kake <kake@build.local>
 Date: Tue, 25 Aug 2026 07:28:47 +0000
-Subject: [PATCH 20/33] QSFragment: Return mFooter.getView() for getFooter()
+Subject: [PATCH 20/34] QSFragment: Return mFooter.getView() for getFooter()
 
 Change-Id: Icf073d950ff59b3035b648b513c2ec19cee9a0ec
 ---

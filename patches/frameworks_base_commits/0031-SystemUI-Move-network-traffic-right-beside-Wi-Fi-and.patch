@@ -1,7 +1,7 @@
 From acb83376740c561505385c72ae089873153755c9 Mon Sep 17 00:00:00 2001
 From: kake <kake@build.local>
 Date: Tue, 25 Aug 2026 12:17:59 +0000
-Subject: [PATCH 31/33] SystemUI: Move network traffic right beside Wi-Fi and
+Subject: [PATCH 31/34] SystemUI: Move network traffic right beside Wi-Fi and
  add authentic iOS 4-bar mobile signal icons
 
 Change-Id: I9837758e92f76cf391b48ae1b4e3dad0b1f8b27f

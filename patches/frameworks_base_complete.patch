@@ -2621,10 +2621,23 @@ index 80aed819..4363ff3c 100644
                  showBatteryPercent == 2;
          if (drawPercentOnly && (!drawPercentInside || mCharging) ||
 diff --git a/packages/SystemUI/src/com/android/systemui/qs/QSAnimator.java b/packages/SystemUI/src/com/android/systemui/qs/QSAnimator.java
-index 728f0c01..bcdce86e 100644
+index 728f0c01..328e6fc2 100644
 --- a/packages/SystemUI/src/com/android/systemui/qs/QSAnimator.java
 +++ b/packages/SystemUI/src/com/android/systemui/qs/QSAnimator.java
-@@ -186,16 +186,9 @@ public class QSAnimator implements Callback, PageListener, Listener, OnLayoutCha
+@@ -177,25 +177,19 @@ public class QSAnimator implements Callback, PageListener, Listener, OnLayoutCha
+ 
+     @Override
+     public void onPageChanged(boolean isFirst) {
+-        if (mOnFirstPage == isFirst) return;
++        mOnFirstPage = isFirst;
+         if (!isFirst) {
+-            clearAnimationState();
++            mQuickQsPanel.setVisibility(View.INVISIBLE);
++            mQuickQsPanel.setAlpha(0);
+         }
+-        mOnFirstPage = isFirst;
++        setPosition(mLastPosition);
+     }
  
      private void updateAnimators() {
          TouchAnimator.Builder firstPageBuilder = new Builder();
@@ -2641,7 +2654,7 @@ index 728f0c01..bcdce86e 100644
  
          clearAnimationState();
          mAllViews.clear();
-@@ -204,154 +197,62 @@ public class QSAnimator implements Callback, PageListener, Listener, OnLayoutCha
+@@ -204,154 +198,62 @@ public class QSAnimator implements Callback, PageListener, Listener, OnLayoutCha
          QSTileLayout tileLayout = mQsPanel.getTileLayout();
          mAllViews.add((View) tileLayout);
          int height = mQs.getView() != null ? mQs.getView().getMeasuredHeight() : 0;
@@ -2835,27 +2848,33 @@ index 728f0c01..bcdce86e 100644
      }
  
      public void setPosition(float position) {
-@@ -364,18 +265,13 @@ public class QSAnimator implements Callback, PageListener, Listener, OnLayoutCha
+@@ -364,18 +266,13 @@ public class QSAnimator implements Callback, PageListener, Listener, OnLayoutCha
              }
          }
          mLastPosition = position;
 -        if (mOnFirstPage && mAllowFancy) {
 -            mQuickQsPanel.setAlpha(1);
-+        if (mOnFirstPage) {
-             mFirstPageAnimator.setPosition(position);
+-            mFirstPageAnimator.setPosition(position);
 -            mFirstPageDelayedAnimator.setPosition(position);
 -            mTranslationXAnimator.setPosition(position);
 -            mTranslationYAnimator.setPosition(position);
-             if (mBrightnessAnimator != null) {
-                 mBrightnessAnimator.setPosition(position);
-             }
-         } else {
-             mNonfirstPageAnimator.setPosition(position);
+-            if (mBrightnessAnimator != null) {
+-                mBrightnessAnimator.setPosition(position);
+-            }
+-        } else {
+-            mNonfirstPageAnimator.setPosition(position);
 -            mNonfirstPageDelayedAnimator.setPosition(position);
++        mFirstPageAnimator.setPosition(position);
++        if (mBrightnessAnimator != null) {
++            mBrightnessAnimator.setPosition(position);
++        }
++        if (!mOnFirstPage) {
++            mQuickQsPanel.setVisibility(View.INVISIBLE);
++            mQuickQsPanel.setAlpha(0);
          }
      }
  
-@@ -396,17 +292,11 @@ public class QSAnimator implements Callback, PageListener, Listener, OnLayoutCha
+@@ -396,12 +293,6 @@ public class QSAnimator implements Callback, PageListener, Listener, OnLayoutCha
      @Override
      public void onAnimationStarted() {
          updateQQSVisibility();
@@ -2868,12 +2887,6 @@ index 728f0c01..bcdce86e 100644
      }
  
      private void clearAnimationState() {
-         final int N = mAllViews.size();
--        mQuickQsPanel.setAlpha(0);
-+        mQuickQsPanel.setAlpha(1);
-         for (int i = 0; i < N; i++) {
-             View v = mAllViews.get(i);
-             v.setAlpha(1);
 diff --git a/packages/SystemUI/src/com/android/systemui/qs/QSFragment.java b/packages/SystemUI/src/com/android/systemui/qs/QSFragment.java
 index 0a3b43a7..63240d77 100644
 --- a/packages/SystemUI/src/com/android/systemui/qs/QSFragment.java

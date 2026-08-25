@@ -1,0 +1,64 @@
+From 8579b53ff8791cb9173ad8ebe9992aeb68470e9b Mon Sep 17 00:00:00 2001
+From: kake <kake@build.local>
+Date: Tue, 25 Aug 2026 14:17:59 +0000
+Subject: [PATCH 34/34] QSAnimator: Fix top header pencil and settings icons
+ popping up when swiping to page 2
+
+Change-Id: I5cdc1f31e00eecb054cfc3924c60cd76fc37cba2
+---
+ .../com/android/systemui/qs/QSAnimator.java   | 23 ++++++++++---------
+ 1 file changed, 12 insertions(+), 11 deletions(-)
+
+diff --git a/packages/SystemUI/src/com/android/systemui/qs/QSAnimator.java b/packages/SystemUI/src/com/android/systemui/qs/QSAnimator.java
+index bcdce86e..328e6fc2 100644
+--- a/packages/SystemUI/src/com/android/systemui/qs/QSAnimator.java
++++ b/packages/SystemUI/src/com/android/systemui/qs/QSAnimator.java
+@@ -177,11 +177,12 @@ public class QSAnimator implements Callback, PageListener, Listener, OnLayoutCha
+ 
+     @Override
+     public void onPageChanged(boolean isFirst) {
+-        if (mOnFirstPage == isFirst) return;
++        mOnFirstPage = isFirst;
+         if (!isFirst) {
+-            clearAnimationState();
++            mQuickQsPanel.setVisibility(View.INVISIBLE);
++            mQuickQsPanel.setAlpha(0);
+         }
+-        mOnFirstPage = isFirst;
++        setPosition(mLastPosition);
+     }
+ 
+     private void updateAnimators() {
+@@ -265,13 +266,13 @@ public class QSAnimator implements Callback, PageListener, Listener, OnLayoutCha
+             }
+         }
+         mLastPosition = position;
+-        if (mOnFirstPage) {
+-            mFirstPageAnimator.setPosition(position);
+-            if (mBrightnessAnimator != null) {
+-                mBrightnessAnimator.setPosition(position);
+-            }
+-        } else {
+-            mNonfirstPageAnimator.setPosition(position);
++        mFirstPageAnimator.setPosition(position);
++        if (mBrightnessAnimator != null) {
++            mBrightnessAnimator.setPosition(position);
++        }
++        if (!mOnFirstPage) {
++            mQuickQsPanel.setVisibility(View.INVISIBLE);
++            mQuickQsPanel.setAlpha(0);
+         }
+     }
+ 
+@@ -296,7 +297,7 @@ public class QSAnimator implements Callback, PageListener, Listener, OnLayoutCha
+ 
+     private void clearAnimationState() {
+         final int N = mAllViews.size();
+-        mQuickQsPanel.setAlpha(1);
++        mQuickQsPanel.setAlpha(0);
+         for (int i = 0; i < N; i++) {
+             View v = mAllViews.get(i);
+             v.setAlpha(1);
+-- 
+2.43.0
+

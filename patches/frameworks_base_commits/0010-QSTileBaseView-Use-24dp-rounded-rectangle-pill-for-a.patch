@@ -1,7 +1,7 @@
 From 861cfc82f9ff7316c1782cabb8ad5817d0d1d7b0 Mon Sep 17 00:00:00 2001
 From: kake <kake@build.local>
 Date: Mon, 24 Aug 2026 18:55:45 +0000
-Subject: [PATCH 10/33] QSTileBaseView: Use 24dp rounded rectangle pill for all
+Subject: [PATCH 10/34] QSTileBaseView: Use 24dp rounded rectangle pill for all
  tiles
 
 Change-Id: I8b683aa0eddd7897caae0a3e8e8b6650688b77db
