@@ -114,7 +114,7 @@ index 12ad48e..a67a396 100644
      <string name="device_hostname">Device hostname</string>
  
 diff --git a/res/values/strings.xml b/res/values/strings.xml
-index 9c2e511..7a4fe5c 100644
+index 9c2e511..83eb6fd 100644
 --- a/res/values/strings.xml
 +++ b/res/values/strings.xml
 @@ -11478,4 +11478,19 @@
@@ -127,7 +127,7 @@ index 9c2e511..7a4fe5c 100644
 +    <string-array name="zedex_perf_profile_entries">
 +        <item>🎮 Gaming Mode (2.32 GHz Boost, 95°C Ceiling, 0μs Ramp)</item>
 +        <item>🚀 Benchmark Overdrive (8 Cores Locked Max, SchedTune Boost 25)</item>
-+        <item>⚖️ Balanced (Dynamic Smart Scaling, Smooth 60/90 FPS)</item>
++        <item>⚖️ Balanced (Intelligent Dynamic Frequency Scaling)</item>
 +        <item>🔋 Battery Saver (Capped 1.4 GHz, Max Efficiency)</item>
 +    </string-array>
 +    <string-array name="zedex_perf_profile_values" translatable="false">
@@ -576,7 +576,7 @@ index 3cd42a7..aaa2668 100644
      }
 diff --git a/src/com/android/settings/fuelgauge/ZedexPerformanceProfilePreferenceController.java b/src/com/android/settings/fuelgauge/ZedexPerformanceProfilePreferenceController.java
 new file mode 100644
-index 0000000..04a668e
+index 0000000..60a2ec6
 --- /dev/null
 +++ b/src/com/android/settings/fuelgauge/ZedexPerformanceProfilePreferenceController.java
 @@ -0,0 +1,220 @@
@@ -676,7 +676,7 @@ index 0000000..04a668e
 +                break;
 +            case PROFILE_BALANCED:
 +            default:
-+                listPref.setSummary("⚖️ Balanced — Smart Dynamic Frequency Scaling & Smooth FPS");
++                listPref.setSummary("⚖️ Balanced — Intelligent Dynamic Frequency Scaling");
 +                break;
 +        }
 +    }
