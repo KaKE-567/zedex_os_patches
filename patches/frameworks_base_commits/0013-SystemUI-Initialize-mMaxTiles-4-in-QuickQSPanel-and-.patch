@@ -1,7 +1,7 @@
 From aa46ddde93df6958fcaccac4f46a1d123474fa63 Mon Sep 17 00:00:00 2001
 From: kake <kake@build.local>
 Date: Mon, 24 Aug 2026 20:08:22 +0000
-Subject: [PATCH 13/31] SystemUI: Initialize mMaxTiles=4 in QuickQSPanel and
+Subject: [PATCH 13/32] SystemUI: Initialize mMaxTiles=4 in QuickQSPanel and
  fix label marquee overlap glitch
 
 Change-Id: I8d7d46f4c3e5d44c44b147e153fb018c99ba46d2

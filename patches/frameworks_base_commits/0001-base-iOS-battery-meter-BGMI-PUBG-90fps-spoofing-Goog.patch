@@ -1,7 +1,7 @@
 From 881c9f130f5132e7ff79d29c0f9a74b3f417d26e Mon Sep 17 00:00:00 2001
 From: kake <kake@build.local>
 Date: Mon, 24 Aug 2026 12:43:50 +0000
-Subject: [PATCH 01/31] base: iOS battery meter, BGMI/PUBG 90fps spoofing,
+Subject: [PATCH 01/32] base: iOS battery meter, BGMI/PUBG 90fps spoofing,
  Google Sans, 136dp gesture pill, 3-finger screenshot
 
 Change-Id: Iafedca04e5774841bcb1dab707cc78a406dca948

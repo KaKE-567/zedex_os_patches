@@ -1,7 +1,7 @@
 From 4b83691343bf41935261ef33f150ca975abba8dc Mon Sep 17 00:00:00 2001
 From: kake <kake@build.local>
 Date: Tue, 25 Aug 2026 08:08:43 +0000
-Subject: [PATCH 22/31] SystemUI: Enlarge Wi-Fi icon and balance Half QS header
+Subject: [PATCH 22/32] SystemUI: Enlarge Wi-Fi icon and balance Half QS header
  padding
 
 Change-Id: I9c221e5d348d1694885586e7e6b666baeaa1ffeb

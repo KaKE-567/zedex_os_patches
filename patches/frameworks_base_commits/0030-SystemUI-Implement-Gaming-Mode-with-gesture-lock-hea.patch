@@ -1,7 +1,7 @@
 From 9525f974e54fae24b155251927ef1fcfb49bc47f Mon Sep 17 00:00:00 2001
 From: kake <kake@build.local>
 Date: Tue, 25 Aug 2026 12:15:59 +0000
-Subject: [PATCH 30/31] SystemUI: Implement Gaming Mode with gesture lock,
+Subject: [PATCH 30/32] SystemUI: Implement Gaming Mode with gesture lock,
  heads-up blocking and GamingModeTile
 
 Change-Id: Id529f799f471f4e57ebb4a0f64f1609ba5d82b31

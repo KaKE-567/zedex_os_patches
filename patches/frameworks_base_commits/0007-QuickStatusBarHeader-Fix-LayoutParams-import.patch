@@ -1,7 +1,7 @@
 From c84f75f5541da93e46dc56f72fdfdcaa534184f1 Mon Sep 17 00:00:00 2001
 From: kake <kake@build.local>
 Date: Mon, 24 Aug 2026 17:14:12 +0000
-Subject: [PATCH 07/31] QuickStatusBarHeader: Fix LayoutParams import
+Subject: [PATCH 07/32] QuickStatusBarHeader: Fix LayoutParams import
 
 Change-Id: I8f93e8138fe3fb36966d4bb5e0a18cd3de6686ed
 ---

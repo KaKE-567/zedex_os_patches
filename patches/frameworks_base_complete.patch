@@ -1795,6 +1795,27 @@ index 00000000..d816587c
 +        android:fillColor="#FFFFFFFF"
 +        android:pathData="M21,6H3C1.9,6 1,6.9 1,8v8c0,1.1 0.9,2 2,2h18c1.1,0 2,-0.9 2,-2V8C23,6.9 22.1,6 21,6z M11,13H8v3H6v-3H3v-2h3V8h2v3h3V13z M15.5,15.5c-0.83,0 -1.5,-0.67 -1.5,-1.5s0.67,-1.5 1.5,-1.5 1.5,0.67 1.5,1.5 -0.67,1.5 -1.5,1.5z M15.5,11.5c-0.83,0 -1.5,-0.67 -1.5,-1.5s0.67,-1.5 1.5,-1.5 1.5,0.67 1.5,1.5 -0.67,1.5 -1.5,1.5z M18.5,13.5c-0.83,0 -1.5,-0.67 -1.5,-1.5s0.67,-1.5 1.5,-1.5 1.5,0.67 1.5,1.5 -0.67,1.5 -1.5,1.5z M18.5,9.5c-0.83,0 -1.5,-0.67 -1.5,-1.5s0.67,-1.5 1.5,-1.5 1.5,0.67 1.5,1.5 -0.67,1.5 -1.5,1.5z" />
 +</vector>
+diff --git a/packages/SystemUI/res/drawable/ic_qs_perf_profile.xml b/packages/SystemUI/res/drawable/ic_qs_perf_profile.xml
+new file mode 100644
+index 00000000..7805883a
+--- /dev/null
++++ b/packages/SystemUI/res/drawable/ic_qs_perf_profile.xml
+@@ -0,0 +1,15 @@
++<?xml version="1.0" encoding="utf-8"?>
++<!--
++    Copyright (c) 2026 The Zedex OS Project
++-->
++<vector xmlns:android="http://schemas.android.com/apk/res/android"
++        android:width="48dp"
++        android:height="48dp"
++        android:viewportWidth="24"
++        android:viewportHeight="24">
++
++    <!-- Speedometer / Performance Icon -->
++    <path
++        android:fillColor="#FFFFFFFF"
++        android:pathData="M12,2C6.48,2 2,6.48 2,12C2,17.52 6.48,22 12,22C17.52,22 22,17.52 22,12C22,6.48 17.52,2 12,2ZM12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20ZM12.5,7H11V12L15.2,14.5L16,13.2L12.5,11.1V7Z" />
++</vector>
 diff --git a/packages/SystemUI/res/drawable/ic_qs_wifi_0.xml b/packages/SystemUI/res/drawable/ic_qs_wifi_0.xml
 index 7cbc26f1..503598b8 100644
 --- a/packages/SystemUI/res/drawable/ic_qs_wifi_0.xml
@@ -2411,7 +2432,7 @@ index 5192048d..d70e5379 100644
      <string name="quick_settings_reading_mode">Reading mode</string>
      <string name="accessibility_quick_settings_reading_mode_on">Reading mode on.</string>
 diff --git a/packages/SystemUI/res/values/config.xml b/packages/SystemUI/res/values/config.xml
-index f99dc023..9b322f42 100644
+index f99dc023..b1514889 100644
 --- a/packages/SystemUI/res/values/config.xml
 +++ b/packages/SystemUI/res/values/config.xml
 @@ -93,16 +93,17 @@
@@ -2441,7 +2462,7 @@ index f99dc023..9b322f42 100644
      <!-- Tiles native to System UI. Order should match "quick_settings_tiles_default" -->
      <string name="quick_settings_tiles_stock" translatable="false">
 -        wifi,cell,battery,dnd,flashlight,rotation,bt,airplane,nfc,location,hotspot,inversion,saver,dark,work,cast,night,adb_network,ambient_display,caffeine,heads_up,livedisplay,aod,reading_mode,sync,usb_tether,volume_panel,vpn,profiles,powershare
-+        wifi,cell,battery,dnd,flashlight,rotation,bt,airplane,nfc,location,hotspot,inversion,saver,dark,work,cast,night,adb_network,ambient_display,caffeine,heads_up,gaming_mode,livedisplay,aod,reading_mode,sync,usb_tether,volume_panel,vpn,profiles,powershare
++        wifi,cell,battery,dnd,flashlight,rotation,bt,airplane,nfc,location,hotspot,inversion,saver,dark,work,cast,night,adb_network,ambient_display,caffeine,heads_up,gaming_mode,perf_profile,livedisplay,aod,reading_mode,sync,usb_tether,volume_panel,vpn,profiles,powershare
      </string>
  
      <!-- The tiles to display in QuickSettings -->
@@ -3081,23 +3102,27 @@ index 14addb99..526fe033 100644
      protected int mMaxAllowedRows = 3;
  
 diff --git a/packages/SystemUI/src/com/android/systemui/qs/tileimpl/QSFactoryImpl.java b/packages/SystemUI/src/com/android/systemui/qs/tileimpl/QSFactoryImpl.java
-index 756d1fd5..00f55bdd 100644
+index 756d1fd5..56caf440 100644
 --- a/packages/SystemUI/src/com/android/systemui/qs/tileimpl/QSFactoryImpl.java
 +++ b/packages/SystemUI/src/com/android/systemui/qs/tileimpl/QSFactoryImpl.java
-@@ -40,6 +40,7 @@ import com.android.systemui.qs.tiles.ColorInversionTile;
+@@ -40,7 +40,9 @@ import com.android.systemui.qs.tiles.ColorInversionTile;
  import com.android.systemui.qs.tiles.DataSaverTile;
  import com.android.systemui.qs.tiles.DndTile;
  import com.android.systemui.qs.tiles.FlashlightTile;
 +import com.android.systemui.qs.tiles.GamingModeTile;
  import com.android.systemui.qs.tiles.HeadsUpTile;
++import com.android.systemui.qs.tiles.PerfProfileTile;
  import com.android.systemui.qs.tiles.HotspotTile;
  import com.android.systemui.qs.tiles.IntentTile;
-@@ -232,6 +233,8 @@ public class QSFactoryImpl implements QSFactory {
+ import com.android.systemui.qs.tiles.LiveDisplayTile;
+@@ -232,6 +234,10 @@ public class QSFactoryImpl implements QSFactory {
                  return mCaffeineTileProvider.get();
              case "heads_up":
                  return mHeadsUpTileProvider.get();
 +            case "gaming_mode":
 +                return new GamingModeTile(mHost);
++            case "perf_profile":
++                return new PerfProfileTile(mHost);
              case "livedisplay":
                  return mLiveDisplayTileProvider.get();
              case "aod":
@@ -3492,6 +3517,201 @@ index 00000000..c9b6e6a2
 +
 +    @Override
 +    public void handleSetListening(boolean listening) {
++    }
++}
+diff --git a/packages/SystemUI/src/com/android/systemui/qs/tiles/PerfProfileTile.java b/packages/SystemUI/src/com/android/systemui/qs/tiles/PerfProfileTile.java
+new file mode 100644
+index 00000000..aeff8a03
+--- /dev/null
++++ b/packages/SystemUI/src/com/android/systemui/qs/tiles/PerfProfileTile.java
+@@ -0,0 +1,189 @@
++/*
++ * Copyright (C) 2026 The Zedex OS Project
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package com.android.systemui.qs.tiles;
++
++import android.content.Intent;
++import android.provider.Settings;
++import android.service.quicksettings.Tile;
++import android.widget.Toast;
++
++import com.android.systemui.R;
++import com.android.systemui.plugins.qs.QSTile.BooleanState;
++import com.android.systemui.qs.QSHost;
++import com.android.systemui.qs.tileimpl.QSTileImpl;
++
++import java.io.FileOutputStream;
++import java.io.IOException;
++
++import javax.inject.Inject;
++
++public class PerfProfileTile extends QSTileImpl<BooleanState> {
++
++    private final Icon mIcon = ResourceIcon.get(R.drawable.ic_qs_perf_profile);
++
++    @Inject
++    public PerfProfileTile(QSHost host) {
++        super(host);
++    }
++
++    @Override
++    public BooleanState newTileState() {
++        return new BooleanState();
++    }
++
++    @Override
++    protected void handleClick() {
++        String current = Settings.System.getString(mContext.getContentResolver(), "zedex_perf_profile");
++        if (current == null) current = "gaming";
++
++        String next;
++        switch (current) {
++            case "gaming":
++                next = "benchmark";
++                break;
++            case "benchmark":
++                next = "battery";
++                break;
++            case "battery":
++                next = "balanced";
++                break;
++            case "balanced":
++            default:
++                next = "gaming";
++                break;
++        }
++
++        Settings.System.putString(mContext.getContentResolver(), "zedex_perf_profile", next);
++        applyProfile(next);
++        Toast.makeText(mContext, "Profile: " + getProfileLabel(next), Toast.LENGTH_SHORT).show();
++        refreshState();
++    }
++
++    @Override
++    public Intent getLongClickIntent() {
++        return new Intent(Settings.ACTION_BATTERY_SAVER_SETTINGS);
++    }
++
++    @Override
++    protected void handleUpdateState(BooleanState state, Object arg) {
++        String current = Settings.System.getString(mContext.getContentResolver(), "zedex_perf_profile");
++        if (current == null) current = "gaming";
++
++        state.label = getProfileLabel(current);
++        state.icon = mIcon;
++        state.value = !"balanced".equals(current);
++        if ("gaming".equals(current) || "benchmark".equals(current)) {
++            state.state = Tile.STATE_ACTIVE;
++        } else {
++            state.state = Tile.STATE_INACTIVE;
++        }
++    }
++
++    private String getProfileLabel(String profile) {
++        switch (profile) {
++            case "gaming":
++                return "Gaming Mode";
++            case "benchmark":
++                return "Benchmark";
++            case "battery":
++                return "Battery Saver";
++            case "balanced":
++            default:
++                return "Balanced";
++        }
++    }
++
++    @Override
++    public CharSequence getTileLabel() {
++        return "Performance";
++    }
++
++    @Override
++    public int getMetricsCategory() {
++        return 0;
++    }
++
++    @Override
++    public void handleSetListening(boolean listening) {
++    }
++
++    private static void applyProfile(String profile) {
++        switch (profile) {
++            case "gaming":
++                writeSysfs("/sys/devices/system/cpu/cpufreq/policy6/schedutil/hispeed_freq", "2323200");
++                writeSysfs("/sys/devices/system/cpu/cpufreq/policy6/schedutil/hispeed_load", "50");
++                writeSysfs("/sys/devices/system/cpu/cpufreq/policy6/schedutil/up_rate_limit_us", "0");
++                writeSysfs("/sys/devices/system/cpu/cpu6/sched_load_boost", "15");
++                writeSysfs("/sys/devices/system/cpu/cpu7/sched_load_boost", "15");
++                writeSysfs("/sys/devices/system/cpu/cpufreq/policy0/schedutil/hispeed_freq", "1804800");
++                writeSysfs("/sys/devices/system/cpu/cpufreq/policy0/schedutil/hispeed_load", "50");
++                writeSysfs("/sys/devices/system/cpu/cpufreq/policy0/schedutil/up_rate_limit_us", "0");
++                writeSysfs("/dev/stune/top-app/schedtune.boost", "15");
++                writeSysfs("/sys/class/thermal/thermal_message/sconfig", "10");
++                break;
++
++            case "benchmark":
++                writeSysfs("/sys/devices/system/cpu/cpufreq/policy6/schedutil/hispeed_freq", "2323200");
++                writeSysfs("/sys/devices/system/cpu/cpufreq/policy6/schedutil/hispeed_load", "30");
++                writeSysfs("/sys/devices/system/cpu/cpufreq/policy6/schedutil/up_rate_limit_us", "0");
++                writeSysfs("/sys/devices/system/cpu/cpu6/sched_load_boost", "25");
++                writeSysfs("/sys/devices/system/cpu/cpu7/sched_load_boost", "25");
++                writeSysfs("/sys/devices/system/cpu/cpufreq/policy0/schedutil/hispeed_freq", "1804800");
++                writeSysfs("/sys/devices/system/cpu/cpufreq/policy0/schedutil/hispeed_load", "30");
++                writeSysfs("/sys/devices/system/cpu/cpufreq/policy0/schedutil/up_rate_limit_us", "0");
++                writeSysfs("/dev/stune/top-app/schedtune.boost", "25");
++                writeSysfs("/sys/class/thermal/thermal_message/sconfig", "10");
++                break;
++
++            case "battery":
++                writeSysfs("/sys/devices/system/cpu/cpufreq/policy6/schedutil/hispeed_freq", "1401600");
++                writeSysfs("/sys/devices/system/cpu/cpufreq/policy6/schedutil/hispeed_load", "85");
++                writeSysfs("/sys/devices/system/cpu/cpufreq/policy6/schedutil/up_rate_limit_us", "2000");
++                writeSysfs("/sys/devices/system/cpu/cpu6/sched_load_boost", "-10");
++                writeSysfs("/sys/devices/system/cpu/cpu7/sched_load_boost", "-10");
++                writeSysfs("/sys/devices/system/cpu/cpufreq/policy0/schedutil/hispeed_freq", "1248000");
++                writeSysfs("/sys/devices/system/cpu/cpufreq/policy0/schedutil/hispeed_load", "85");
++                writeSysfs("/sys/devices/system/cpu/cpufreq/policy0/schedutil/up_rate_limit_us", "2000");
++                writeSysfs("/dev/stune/top-app/schedtune.boost", "0");
++                writeSysfs("/sys/class/thermal/thermal_message/sconfig", "1");
++                break;
++
++            case "balanced":
++            default:
++                writeSysfs("/sys/devices/system/cpu/cpufreq/policy6/schedutil/hispeed_freq", "1804800");
++                writeSysfs("/sys/devices/system/cpu/cpufreq/policy6/schedutil/hispeed_load", "70");
++                writeSysfs("/sys/devices/system/cpu/cpufreq/policy6/schedutil/up_rate_limit_us", "500");
++                writeSysfs("/sys/devices/system/cpu/cpu6/sched_load_boost", "0");
++                writeSysfs("/sys/devices/system/cpu/cpu7/sched_load_boost", "0");
++                writeSysfs("/sys/devices/system/cpu/cpufreq/policy0/schedutil/hispeed_freq", "1401600");
++                writeSysfs("/sys/devices/system/cpu/cpufreq/policy0/schedutil/hispeed_load", "70");
++                writeSysfs("/sys/devices/system/cpu/cpufreq/policy0/schedutil/up_rate_limit_us", "500");
++                writeSysfs("/dev/stune/top-app/schedtune.boost", "5");
++                writeSysfs("/sys/class/thermal/thermal_message/sconfig", "0");
++                break;
++        }
++    }
++
++    private static void writeSysfs(String path, String value) {
++        try (FileOutputStream fos = new FileOutputStream(path)) {
++            fos.write(value.getBytes());
++            fos.flush();
++        } catch (IOException e) {
++            // Ignore
++        }
 +    }
 +}
 diff --git a/packages/SystemUI/src/com/android/systemui/statusbar/notification/NotificationInterruptionStateProvider.java b/packages/SystemUI/src/com/android/systemui/statusbar/notification/NotificationInterruptionStateProvider.java

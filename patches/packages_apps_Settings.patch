@@ -20,6 +20,30 @@ index 12ad48e..a67a396 100644
      <!-- Hostname setting -->
      <string name="device_hostname">Device hostname</string>
  
+diff --git a/res/values/strings.xml b/res/values/strings.xml
+index 9c2e511..7a4fe5c 100644
+--- a/res/values/strings.xml
++++ b/res/values/strings.xml
+@@ -11478,4 +11478,19 @@
+     <string name="bluetooth_connect_access_dialog_negative">Don\u2019t connect</string>
+     <!-- Strings for Dialog connect button -->
+     <string name="bluetooth_connect_access_dialog_positive">Connect</string>
++
++    <!-- Zedex Performance Profiles -->
++    <string name="zedex_perf_profile_title">Zedex Performance Profile</string>
++    <string-array name="zedex_perf_profile_entries">
++        <item>🎮 Gaming Mode (2.32 GHz Boost, 95°C Ceiling, 0μs Ramp)</item>
++        <item>🚀 Benchmark Overdrive (8 Cores Locked Max, SchedTune Boost 25)</item>
++        <item>⚖️ Balanced (Dynamic Smart Scaling, Smooth 60/90 FPS)</item>
++        <item>🔋 Battery Saver (Capped 1.4 GHz, Max Efficiency)</item>
++    </string-array>
++    <string-array name="zedex_perf_profile_values" translatable="false">
++        <item>gaming</item>
++        <item>benchmark</item>
++        <item>balanced</item>
++        <item>battery</item>
++    </string-array>
+ </resources>
 diff --git a/res/xml/development_settings.xml b/res/xml/development_settings.xml
 index 0262556..f20b2c5 100644
 --- a/res/xml/development_settings.xml
@@ -87,13 +111,25 @@ index 9b5659b..373b5b1 100644
          android:key="gesture_assist_input_summary"
          android:title="@string/assist_gesture_title"
 diff --git a/res/xml/my_device_info.xml b/res/xml/my_device_info.xml
-index 9a6047c..2e19995 100644
+index 9a6047c..567da5d 100644
 --- a/res/xml/my_device_info.xml
 +++ b/res/xml/my_device_info.xml
-@@ -192,4 +192,15 @@
+@@ -192,4 +192,27 @@
          settings:enableCopying="true"
          settings:controller="com.android.settings.deviceinfo.BuildNumberPreferenceController"/>
  
++    <!-- Performance Profile -->
++    <ListPreference
++        android:key="zedex_perf_profile"
++        android:order="53"
++        android:title="@string/zedex_perf_profile_title"
++        android:summary="%s"
++        android:entries="@array/zedex_perf_profile_entries"
++        android:entryValues="@array/zedex_perf_profile_values"
++        android:defaultValue="gaming"
++        settings:allowDividerAbove="true"
++        settings:controller="com.android.settings.fuelgauge.ZedexPerformanceProfilePreferenceController" />
++
 +    <!-- Maintainer -->
 +    <Preference
 +        android:key="zedex_maintainer"
@@ -106,6 +142,26 @@ index 9a6047c..2e19995 100644
 +    </Preference>
 +
  </PreferenceScreen>
+diff --git a/res/xml/power_usage_summary.xml b/res/xml/power_usage_summary.xml
+index 890de16..0a667d0 100644
+--- a/res/xml/power_usage_summary.xml
++++ b/res/xml/power_usage_summary.xml
+@@ -34,6 +34,15 @@
+         android:title="@string/summary_placeholder"
+         settings:controller="com.android.settings.fuelgauge.batterytip.BatteryTipPreferenceController" />
+ 
++    <ListPreference
++        android:key="zedex_perf_profile"
++        android:title="@string/zedex_perf_profile_title"
++        android:summary="%s"
++        android:entries="@array/zedex_perf_profile_entries"
++        android:entryValues="@array/zedex_perf_profile_values"
++        android:defaultValue="gaming"
++        settings:controller="com.android.settings.fuelgauge.ZedexPerformanceProfilePreferenceController" />
++
+     <Preference
+         android:fragment="com.android.settings.fuelgauge.batterysaver.BatterySaverSettings"
+         android:key="battery_saver_summary"
 diff --git a/src/com/android/settings/deviceinfo/firmwareversion/LineageApiVersionPreferenceController.java b/src/com/android/settings/deviceinfo/firmwareversion/LineageApiVersionPreferenceController.java
 index 9650d2b..334c3b7 100644
 --- a/src/com/android/settings/deviceinfo/firmwareversion/LineageApiVersionPreferenceController.java
@@ -156,6 +212,232 @@ index 3cd42a7..aaa2668 100644
          }
          return true;
      }
+diff --git a/src/com/android/settings/fuelgauge/ZedexPerformanceProfilePreferenceController.java b/src/com/android/settings/fuelgauge/ZedexPerformanceProfilePreferenceController.java
+new file mode 100644
+index 0000000..04a668e
+--- /dev/null
++++ b/src/com/android/settings/fuelgauge/ZedexPerformanceProfilePreferenceController.java
+@@ -0,0 +1,220 @@
++/*
++ * Copyright (C) 2026 The Zedex OS Project
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package com.android.settings.fuelgauge;
++
++import android.content.Context;
++import android.provider.Settings;
++import android.util.Log;
++import android.widget.Toast;
++
++import androidx.preference.ListPreference;
++import androidx.preference.Preference;
++
++import com.android.settings.core.BasePreferenceController;
++
++import java.io.FileOutputStream;
++import java.io.IOException;
++
++public class ZedexPerformanceProfilePreferenceController extends BasePreferenceController
++        implements Preference.OnPreferenceChangeListener {
++
++    public static final String KEY_PERF_PROFILE = "zedex_perf_profile";
++    private static final String TAG = "ZedexPerfController";
++
++    public static final String PROFILE_GAMING = "gaming";
++    public static final String PROFILE_BENCHMARK = "benchmark";
++    public static final String PROFILE_BALANCED = "balanced";
++    public static final String PROFILE_BATTERY = "battery";
++
++    public ZedexPerformanceProfilePreferenceController(Context context) {
++        super(context, KEY_PERF_PROFILE);
++    }
++
++    @Override
++    public int getAvailabilityStatus() {
++        return AVAILABLE;
++    }
++
++    @Override
++    public void updateState(Preference preference) {
++        super.updateState(preference);
++        if (preference instanceof ListPreference) {
++            ListPreference listPref = (ListPreference) preference;
++            String currentProfile = Settings.System.getString(
++                    mContext.getContentResolver(), KEY_PERF_PROFILE);
++            if (currentProfile == null) {
++                currentProfile = PROFILE_GAMING;
++            }
++            listPref.setValue(currentProfile);
++            updateSummary(listPref, currentProfile);
++        }
++    }
++
++    @Override
++    public boolean onPreferenceChange(Preference preference, Object newValue) {
++        String profile = (String) newValue;
++        Settings.System.putString(mContext.getContentResolver(), KEY_PERF_PROFILE, profile);
++        applyProfile(profile);
++
++        if (preference instanceof ListPreference) {
++            ListPreference listPref = (ListPreference) preference;
++            listPref.setValue(profile);
++            updateSummary(listPref, profile);
++        }
++
++        String toastMsg = "Profile Switched: " + getProfileName(profile);
++        Toast.makeText(mContext, toastMsg, Toast.LENGTH_SHORT).show();
++        return true;
++    }
++
++    private void updateSummary(ListPreference listPref, String profile) {
++        switch (profile) {
++            case PROFILE_GAMING:
++                listPref.setSummary("🎮 Gaming Mode — 2.32 GHz Max Boost, 95°C Thermal Ceiling, 0μs Ramp");
++                break;
++            case PROFILE_BENCHMARK:
++                listPref.setSummary("🚀 Benchmark Overdrive — 8 Cores Locked Max, SchedTune Boost 25");
++                break;
++            case PROFILE_BATTERY:
++                listPref.setSummary("🔋 Battery Saver — Capped 1.4 GHz, Max Power Efficiency");
++                break;
++            case PROFILE_BALANCED:
++            default:
++                listPref.setSummary("⚖️ Balanced — Smart Dynamic Frequency Scaling & Smooth FPS");
++                break;
++        }
++    }
++
++    private String getProfileName(String profile) {
++        switch (profile) {
++            case PROFILE_GAMING:
++                return "🎮 Gaming Mode";
++            case PROFILE_BENCHMARK:
++                return "🚀 Benchmark Overdrive";
++            case PROFILE_BATTERY:
++                return "🔋 Battery Saver";
++            case PROFILE_BALANCED:
++            default:
++                return "⚖️ Balanced";
++        }
++    }
++
++    public static void applyProfile(String profile) {
++        try {
++            switch (profile) {
++                case PROFILE_GAMING:
++                    // Big cores instant max clock 2.32 GHz
++                    writeSysfs("/sys/devices/system/cpu/cpufreq/policy6/schedutil/hispeed_freq", "2323200");
++                    writeSysfs("/sys/devices/system/cpu/cpufreq/policy6/schedutil/hispeed_load", "50");
++                    writeSysfs("/sys/devices/system/cpu/cpufreq/policy6/schedutil/up_rate_limit_us", "0");
++                    writeSysfs("/sys/devices/system/cpu/cpufreq/policy6/schedutil/down_rate_limit_us", "20000");
++                    writeSysfs("/sys/devices/system/cpu/cpu6/sched_load_boost", "15");
++                    writeSysfs("/sys/devices/system/cpu/cpu7/sched_load_boost", "15");
++
++                    // Little cores 1.8 GHz
++                    writeSysfs("/sys/devices/system/cpu/cpufreq/policy0/schedutil/hispeed_freq", "1804800");
++                    writeSysfs("/sys/devices/system/cpu/cpufreq/policy0/schedutil/hispeed_load", "50");
++                    writeSysfs("/sys/devices/system/cpu/cpufreq/policy0/schedutil/up_rate_limit_us", "0");
++                    writeSysfs("/sys/devices/system/cpu/cpufreq/policy0/schedutil/down_rate_limit_us", "20000");
++
++                    // SchedTune Top-App Boost
++                    writeSysfs("/dev/stune/top-app/schedtune.boost", "15");
++                    writeSysfs("/dev/stune/top-app/schedtune.prefer_idle", "1");
++                    writeSysfs("/dev/stune/top-app/schedtune.colocate", "1");
++
++                    // Gaming Thermal Profile
++                    writeSysfs("/sys/class/thermal/thermal_message/sconfig", "10");
++                    break;
++
++                case PROFILE_BENCHMARK:
++                    // Benchmark Overdrive - Locked maximum frequencies
++                    writeSysfs("/sys/devices/system/cpu/cpufreq/policy6/schedutil/hispeed_freq", "2323200");
++                    writeSysfs("/sys/devices/system/cpu/cpufreq/policy6/schedutil/hispeed_load", "30");
++                    writeSysfs("/sys/devices/system/cpu/cpufreq/policy6/schedutil/up_rate_limit_us", "0");
++                    writeSysfs("/sys/devices/system/cpu/cpufreq/policy6/schedutil/down_rate_limit_us", "50000");
++                    writeSysfs("/sys/devices/system/cpu/cpu6/sched_load_boost", "25");
++                    writeSysfs("/sys/devices/system/cpu/cpu7/sched_load_boost", "25");
++
++                    writeSysfs("/sys/devices/system/cpu/cpufreq/policy0/schedutil/hispeed_freq", "1804800");
++                    writeSysfs("/sys/devices/system/cpu/cpufreq/policy0/schedutil/hispeed_load", "30");
++                    writeSysfs("/sys/devices/system/cpu/cpufreq/policy0/schedutil/up_rate_limit_us", "0");
++                    writeSysfs("/sys/devices/system/cpu/cpufreq/policy0/schedutil/down_rate_limit_us", "50000");
++
++                    writeSysfs("/dev/stune/top-app/schedtune.boost", "25");
++                    writeSysfs("/dev/stune/top-app/schedtune.prefer_idle", "1");
++                    writeSysfs("/dev/stune/top-app/schedtune.colocate", "1");
++
++                    writeSysfs("/sys/class/thermal/thermal_message/sconfig", "10");
++                    break;
++
++                case PROFILE_BATTERY:
++                    // Battery Saver - Capped CPU frequencies
++                    writeSysfs("/sys/devices/system/cpu/cpufreq/policy6/schedutil/hispeed_freq", "1401600");
++                    writeSysfs("/sys/devices/system/cpu/cpufreq/policy6/schedutil/hispeed_load", "85");
++                    writeSysfs("/sys/devices/system/cpu/cpufreq/policy6/schedutil/up_rate_limit_us", "2000");
++                    writeSysfs("/sys/devices/system/cpu/cpufreq/policy6/schedutil/down_rate_limit_us", "5000");
++                    writeSysfs("/sys/devices/system/cpu/cpu6/sched_load_boost", "-10");
++                    writeSysfs("/sys/devices/system/cpu/cpu7/sched_load_boost", "-10");
++
++                    writeSysfs("/sys/devices/system/cpu/cpufreq/policy0/schedutil/hispeed_freq", "1248000");
++                    writeSysfs("/sys/devices/system/cpu/cpufreq/policy0/schedutil/hispeed_load", "85");
++                    writeSysfs("/sys/devices/system/cpu/cpufreq/policy0/schedutil/up_rate_limit_us", "2000");
++                    writeSysfs("/sys/devices/system/cpu/cpufreq/policy0/schedutil/down_rate_limit_us", "5000");
++
++                    writeSysfs("/dev/stune/top-app/schedtune.boost", "0");
++                    writeSysfs("/dev/stune/top-app/schedtune.prefer_idle", "0");
++                    writeSysfs("/dev/stune/top-app/schedtune.colocate", "0");
++
++                    writeSysfs("/sys/class/thermal/thermal_message/sconfig", "1");
++                    break;
++
++                case PROFILE_BALANCED:
++                default:
++                    // Balanced Profile
++                    writeSysfs("/sys/devices/system/cpu/cpufreq/policy6/schedutil/hispeed_freq", "1804800");
++                    writeSysfs("/sys/devices/system/cpu/cpufreq/policy6/schedutil/hispeed_load", "70");
++                    writeSysfs("/sys/devices/system/cpu/cpufreq/policy6/schedutil/up_rate_limit_us", "500");
++                    writeSysfs("/sys/devices/system/cpu/cpufreq/policy6/schedutil/down_rate_limit_us", "20000");
++                    writeSysfs("/sys/devices/system/cpu/cpu6/sched_load_boost", "0");
++                    writeSysfs("/sys/devices/system/cpu/cpu7/sched_load_boost", "0");
++
++                    writeSysfs("/sys/devices/system/cpu/cpufreq/policy0/schedutil/hispeed_freq", "1401600");
++                    writeSysfs("/sys/devices/system/cpu/cpufreq/policy0/schedutil/hispeed_load", "70");
++                    writeSysfs("/sys/devices/system/cpu/cpufreq/policy0/schedutil/up_rate_limit_us", "500");
++                    writeSysfs("/sys/devices/system/cpu/cpufreq/policy0/schedutil/down_rate_limit_us", "20000");
++
++                    writeSysfs("/dev/stune/top-app/schedtune.boost", "5");
++                    writeSysfs("/dev/stune/top-app/schedtune.prefer_idle", "1");
++                    writeSysfs("/dev/stune/top-app/schedtune.colocate", "1");
++
++                    writeSysfs("/sys/class/thermal/thermal_message/sconfig", "0");
++                    break;
++            }
++        } catch (Exception e) {
++            Log.e(TAG, "Failed to apply profile: " + profile, e);
++        }
++    }
++
++    private static void writeSysfs(String path, String value) {
++        try (FileOutputStream fos = new FileOutputStream(path)) {
++            fos.write(value.getBytes());
++            fos.flush();
++        } catch (IOException e) {
++            // Node might not exist or permission denied
++        }
++    }
++}
 diff --git a/src/com/android/settings/gestures/ThreeFingerGesturePreferenceController.java b/src/com/android/settings/gestures/ThreeFingerGesturePreferenceController.java
 new file mode 100644
 index 0000000..cda17e3

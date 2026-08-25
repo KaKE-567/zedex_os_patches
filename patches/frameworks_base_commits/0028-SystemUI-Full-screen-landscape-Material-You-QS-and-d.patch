@@ -1,7 +1,7 @@
 From 15f563661b8fc64d47e46b40c8ae7de46e201504 Mon Sep 17 00:00:00 2001
 From: kake <kake@build.local>
 Date: Tue, 25 Aug 2026 10:44:02 +0000
-Subject: [PATCH 28/31] SystemUI: Full-screen landscape Material You QS and
+Subject: [PATCH 28/32] SystemUI: Full-screen landscape Material You QS and
  dynamic Keyguard QS solid black backdrop
 
 Change-Id: I9c813a3fbb1961565d3d1e1ac6bbdc64cc3b4ba7

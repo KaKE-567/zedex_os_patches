@@ -1,7 +1,7 @@
 From a0b47ae9f2e3aa9de5ca30015b56c114fae9fee0 Mon Sep 17 00:00:00 2001
 From: kake <kake@build.local>
 Date: Mon, 24 Aug 2026 15:57:35 +0000
-Subject: [PATCH 06/31] SystemUI: Move network traffic to right side away from
+Subject: [PATCH 06/32] SystemUI: Move network traffic to right side away from
  punch-hole, refine round Android 13 pill tiles and fix customizer glitch
 
 Change-Id: I0f88d90c2f278bbe4a91fdcdfa29fced09084593
