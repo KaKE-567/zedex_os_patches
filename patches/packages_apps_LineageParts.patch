@@ -49,6 +49,23 @@ index f99f127..05a23bc 100644
  
      <!-- Trust interface -->
      <string name="trust_title" translatable="false">@*lineageos.platform:string/trust_feature_name</string>
+diff --git a/res/xml/power_menu_settings.xml b/res/xml/power_menu_settings.xml
+index e947f31..094f2fe 100644
+--- a/res/xml/power_menu_settings.xml
++++ b/res/xml/power_menu_settings.xml
+@@ -19,6 +19,12 @@
+     android:key="power_menu"
+     android:title="@string/power_menu_title">
+ 
++    <lineageos.preference.LineageSecureSettingSwitchPreference
++        android:key="advanced_reboot"
++        android:title="@string/power_menu_advanced_restart_title"
++        android:summary="@string/power_menu_advanced_restart_summary"
++        android:defaultValue="true" />
++
+     <CheckBoxPreference
+         android:key="screenshot"
+         android:title="@string/power_menu_screenshot_title"
 diff --git a/src/org/lineageos/lineageparts/statusbar/NetworkTrafficSettings.java b/src/org/lineageos/lineageparts/statusbar/NetworkTrafficSettings.java
 index 43aaf3c..7079a46 100644
 --- a/src/org/lineageos/lineageparts/statusbar/NetworkTrafficSettings.java
