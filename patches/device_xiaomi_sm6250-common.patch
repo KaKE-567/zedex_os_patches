@@ -1,5 +1,5 @@
 diff --git a/rootdir/bin/init.qcom.post_boot.sh b/rootdir/bin/init.qcom.post_boot.sh
-index 5e8bdce..83da65e 100644
+index 5e8bdce..a42996d 100644
 --- a/rootdir/bin/init.qcom.post_boot.sh
 +++ b/rootdir/bin/init.qcom.post_boot.sh
 @@ -115,52 +115,50 @@ function configure_memory_parameters() {
@@ -84,7 +84,7 @@ index 5e8bdce..83da65e 100644
      echo 400 > /sys/module/cpu_boost/parameters/powerkey_input_boost_ms
  
      # Set Memory parameters
-@@ -254,8 +252,51 @@ function configure_memory_parameters() {
+@@ -254,8 +252,63 @@ function configure_memory_parameters() {
      # Turn on sleep modes
      echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled
  
@@ -130,6 +130,18 @@ index 5e8bdce..83da65e 100644
 +    chmod 0666 /sys/devices/system/cpu/cpu*/cpufreq/scaling_min_freq 2>/dev/null || true
 +    chmod 0666 /dev/stune/top-app/schedtune.boost 2>/dev/null || true
 +    chmod 0666 /sys/class/thermal/thermal_message/sconfig 2>/dev/null || true
++
++    # 7. Fast Charging Engine (33W QC 4.0+ Unlocked)
++    for fcc in /sys/class/power_supply/battery/constant_charge_current_max /sys/class/power_supply/main/constant_charge_current_max
++    do
++        chmod 0666 $fcc 2>/dev/null || true
++        echo 6000000 > $fcc 2>/dev/null || true
++    done
++    for fastcharge in /sys/class/power_supply/battery/fastcharge_mode /sys/class/power_supply/battery/qc4_mode
++    do
++        chmod 0666 $fastcharge 2>/dev/null || true
++        echo 1 > $fastcharge 2>/dev/null || true
++    done
 +
  # Post-setup services
 -        setprop vendor.post_boot.parsed 1
@@ -228,7 +240,7 @@ index 874b5e7..f813c2e 100644
 +    write /sys/module/cpu_boost/parameters/input_boost_ms 40
 +
 diff --git a/system.prop b/system.prop
-index 3a91df8..4309de7 100644
+index 3a91df8..29ee4e5 100644
 --- a/system.prop
 +++ b/system.prop
 @@ -84,9 +84,11 @@ debug.egl.hw=1
@@ -244,3 +256,23 @@ index 3a91df8..4309de7 100644
  ro.config.hw_quickpoweron=true
  ro.opengles.version=196610
  ro.surface_flinger.force_hwc_copy_for_virtual_displays=true
+@@ -119,9 +121,17 @@ debug.cpurend.vsync=false
+ # DPM
+ persist.dpm.feature=1
+ 
+-# HVDCP
++# HVDCP & 33W Fast Charging Optimization
+ persist.vendor.cp.taper_term_mv=6500
+-persist.vendor.cp.fcc_main_ua=400000
++persist.vendor.cp.fcc_main_ua=6000000
++persist.vendor.cp.fcc_step_ua=500000
++persist.vendor.hvdcp_opti.start=1
++persist.vendor.hvdcp_opti.enable=1
++persist.vendor.cp.qc3_max_power=33
++persist.vendor.cp.qc3_max_voltage=11000
++persist.vendor.cp.qc3_max_current=3000
++persist.vendor.cp.zchg_enable=1
++persist.vendor.cp.enable_hvdcp=1
+ 
+ # IMS
+ persist.dbg.volte_avail_ovr=1
