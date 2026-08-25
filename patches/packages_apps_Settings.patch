@@ -34,7 +34,7 @@ index 0262556..f20b2c5 100644
          <Preference
              android:key="system_server_heap_dump"
 diff --git a/res/xml/firmware_version.xml b/res/xml/firmware_version.xml
-index eb8a82c..00d411b 100644
+index eb8a82c..2c56633 100644
 --- a/res/xml/firmware_version.xml
 +++ b/res/xml/firmware_version.xml
 @@ -38,13 +38,7 @@
@@ -52,6 +52,22 @@ index eb8a82c..00d411b 100644
  
      <!-- Security patch -->
      <Preference
+@@ -100,4 +94,14 @@
+         settings:enableCopying="true"
+         settings:controller="com.android.settings.deviceinfo.firmwareversion.SimpleBuildNumberPreferenceController"/>
+ 
++    <!-- Maintainer -->
++    <Preference
++        android:key="zedex_maintainer"
++        android:title="Maintainer"
++        android:summary="@Xx_KaKe_xX (Tap to contact on Telegram)"
++        settings:allowDividerAbove="true">
++        <intent android:action="android.intent.action.VIEW"
++                android:data="https://t.me/Xx_KaKe_xX" />
++    </Preference>
++
+ </PreferenceScreen>
+\ No newline at end of file
 diff --git a/res/xml/gestures.xml b/res/xml/gestures.xml
 index 9b5659b..373b5b1 100644
 --- a/res/xml/gestures.xml
@@ -70,6 +86,26 @@ index 9b5659b..373b5b1 100644
      <Preference
          android:key="gesture_assist_input_summary"
          android:title="@string/assist_gesture_title"
+diff --git a/res/xml/my_device_info.xml b/res/xml/my_device_info.xml
+index 9a6047c..2e19995 100644
+--- a/res/xml/my_device_info.xml
++++ b/res/xml/my_device_info.xml
+@@ -192,4 +192,15 @@
+         settings:enableCopying="true"
+         settings:controller="com.android.settings.deviceinfo.BuildNumberPreferenceController"/>
+ 
++    <!-- Maintainer -->
++    <Preference
++        android:key="zedex_maintainer"
++        android:order="54"
++        android:title="Maintainer"
++        android:summary="@Xx_KaKe_xX (Tap to contact on Telegram)"
++        settings:allowDividerAbove="true">
++        <intent android:action="android.intent.action.VIEW"
++                android:data="https://t.me/Xx_KaKe_xX" />
++    </Preference>
++
+ </PreferenceScreen>
 diff --git a/src/com/android/settings/deviceinfo/firmwareversion/LineageApiVersionPreferenceController.java b/src/com/android/settings/deviceinfo/firmwareversion/LineageApiVersionPreferenceController.java
 index 9650d2b..334c3b7 100644
 --- a/src/com/android/settings/deviceinfo/firmwareversion/LineageApiVersionPreferenceController.java
