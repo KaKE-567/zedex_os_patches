@@ -1,17 +1,3 @@
-From b283b2b19d54a953474b348162c15276ad6d0bdd Mon Sep 17 00:00:00 2001
-From: kake <kake@build.local>
-Date: Mon, 24 Aug 2026 12:43:50 +0000
-Subject: [PATCH] build: release-keys signing, clean build display ID and Zedex
- OS recovery target
-
-Change-Id: Ia45e4c271b4e30f760281cf51d22111b3ac04051
----
- core/Makefile                               | 23 +++------------------
- target/product/aosp_base_telephony.mk       |  3 ---
- target/product/handheld_product.mk          |  4 ----
- tools/releasetools/ota_from_target_files.py |  4 ++--
- 4 files changed, 5 insertions(+), 29 deletions(-)
-
 diff --git a/core/Makefile b/core/Makefile
 index f6c2463..c6126dc 100644
 --- a/core/Makefile
@@ -112,6 +98,3 @@ index 0cff60f..588bdbf 100755
  
    script.Print("Verifying current system...")
  
--- 
-2.43.0
-

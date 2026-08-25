@@ -1,14 +1,3 @@
-From ee22739111b35d5a483744bff2b1309bfcb5a7fd Mon Sep 17 00:00:00 2001
-From: kake <kake@build.local>
-Date: Mon, 24 Aug 2026 14:42:33 +0000
-Subject: [PATCH] LineageParts: Rename network traffic monitor to 'Show
- internet traffic'
-
-Change-Id: I66aa7c483da1cfe2ccf8103589ce9c13690a1f6b
----
- res/values/strings.xml | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
-
 diff --git a/res/values/strings.xml b/res/values/strings.xml
 index f99f127..05a23bc 100644
 --- a/res/values/strings.xml
@@ -60,6 +49,53 @@ index f99f127..05a23bc 100644
  
      <!-- Trust interface -->
      <string name="trust_title" translatable="false">@*lineageos.platform:string/trust_feature_name</string>
--- 
-2.43.0
-
+diff --git a/src/org/lineageos/lineageparts/statusbar/NetworkTrafficSettings.java b/src/org/lineageos/lineageparts/statusbar/NetworkTrafficSettings.java
+index 43aaf3c..7079a46 100644
+--- a/src/org/lineageos/lineageparts/statusbar/NetworkTrafficSettings.java
++++ b/src/org/lineageos/lineageparts/statusbar/NetworkTrafficSettings.java
+@@ -92,17 +92,6 @@ public class NetworkTrafficSettings extends SettingsPreferenceFragment
+     }
+ 
+     private void updateForClockConflicts() {
+-        int clockPosition = LineageSettings.System.getInt(getActivity().getContentResolver(),
+-                STATUS_BAR_CLOCK_STYLE, 2);
+-
+-        if (clockPosition != 1) {
+-            return;
+-        }
+-
+-        mNetTrafficMode.setEnabled(false);
+-        Toast.makeText(getActivity(),
+-                R.string.network_traffic_disabled_clock,
+-                Toast.LENGTH_LONG).show();
+-        updateEnabledStates(0);
++        // No conflicts on modern status bar layouts
+     }
+ }
+diff --git a/src/org/lineageos/lineageparts/statusbar/StatusBarSettings.java b/src/org/lineageos/lineageparts/statusbar/StatusBarSettings.java
+index 2708618..26e1a74 100644
+--- a/src/org/lineageos/lineageparts/statusbar/StatusBarSettings.java
++++ b/src/org/lineageos/lineageparts/statusbar/StatusBarSettings.java
+@@ -79,11 +79,7 @@ public class StatusBarSettings extends SettingsPreferenceFragment
+         addPreferencesFromResource(R.xml.status_bar_settings);
+ 
+         mNetworkTrafficPref = findPreference(NETWORK_TRAFFIC_SETTINGS);
+-
+         mHasNotch = DeviceUtils.hasNotch(getActivity());
+-        if (mHasNotch) {
+-            getPreferenceScreen().removePreference(mNetworkTrafficPref);
+-        }
+ 
+         mStatusBarAmPm = findPreference(STATUS_BAR_AM_PM);
+         mStatusBarClock = findPreference(STATUS_BAR_CLOCK_STYLE);
+@@ -224,10 +220,6 @@ public class StatusBarSettings extends SettingsPreferenceFragment
+         @Override
+         public Set<String> getNonIndexableKeys(Context context) {
+             final Set<String> result = new ArraySet<String>();
+-
+-            if (DeviceUtils.hasNotch(context)) {
+-                result.add(NETWORK_TRAFFIC_SETTINGS);
+-            }
+             return result;
+         }
+     };

@@ -1,15 +1,3 @@
-From 5c2757d817cdc5a653688f9915419857924b0dc6 Mon Sep 17 00:00:00 2001
-From: kake <kake@build.local>
-Date: Mon, 24 Aug 2026 12:43:50 +0000
-Subject: [PATCH] Trebuchet: App Icon Size Slider (70% - 140%)
-
-Change-Id: I1db11906e9ffe7412d4c0c9a678fc8b4251a2d09
----
- res/values/lineage_strings.xml                     |  4 ++++
- res/xml/launcher_preferences.xml                   | 14 +++++++++++++-
- .../android/launcher3/InvariantDeviceProfile.java  |  8 +++++---
- 3 files changed, 22 insertions(+), 4 deletions(-)
-
 diff --git a/res/values/lineage_strings.xml b/res/values/lineage_strings.xml
 index 40200b4..4fcdf55 100644
 --- a/res/values/lineage_strings.xml
@@ -90,6 +78,3 @@ index f67d868..62367f2 100644
          iconBitmapSize = ResourceUtils.pxFromDp(iconSize, metrics);
          iconTextSize = displayOption.iconTextSize;
          fillResIconDpi = getLauncherIconDensity(iconBitmapSize);
--- 
-2.43.0
-

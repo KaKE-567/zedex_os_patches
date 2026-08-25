@@ -1,0 +1,263 @@
+diff --git a/build/core/main_version.mk b/build/core/main_version.mk
+index dddeee7..953f70a 100644
+--- a/build/core/main_version.mk
++++ b/build/core/main_version.mk
+@@ -8,7 +8,7 @@ endif
+ ADDITIONAL_BUILD_PROPERTIES += \
+     ro.lineage.version=$(LINEAGE_VERSION) \
+     ro.lineage.releasetype=$(LINEAGE_BUILDTYPE) \
+-    ro.lineage.build.version=$(PRODUCT_VERSION_MAJOR).$(PRODUCT_VERSION_MINOR) \
++    ro.lineage.build.version=1.0 \
+     ro.modversion=$(LINEAGE_VERSION) \
+     ro.lineagelegal.url=https://lineageos.org/legal
+ 
+diff --git a/config/common.mk b/config/common.mk
+index 2cab1ea..bb79cb4 100644
+--- a/config/common.mk
++++ b/config/common.mk
+@@ -110,65 +110,27 @@ PRODUCT_RESTRICT_VENDOR_FILES := false
+ PRODUCT_PACKAGES += \
+     bootanimation.zip
+ 
+-# AOSP packages
+-PRODUCT_PACKAGES += \
+-    Terminal
++# AOSP packages - Terminal removed for debloat
+ 
+ # Lineage packages
+ PRODUCT_PACKAGES += \
+     LineageParts \
+-    LineageSettingsProvider \
+-    LineageSetupWizard \
+-    Updater
++    LineageSettingsProvider
+ 
+-# Themes
+-PRODUCT_PACKAGES += \
+-    LineageThemesStub \
+-    ThemePicker
++# Themes - removed for debloat
+ 
+-# Extra tools in Lineage
++# Extra tools - removed for debloat (keeping only essentials)
+ PRODUCT_PACKAGES += \
+-    7z \
+-    awk \
+     bash \
+-    bzip2 \
+     curl \
+-    getcap \
+-    htop \
+-    lib7z \
+-    libsepol \
+-    nano \
+-    pigz \
+-    powertop \
+-    setcap \
+-    unrar \
+     unzip \
+-    vim \
+-    wget \
+     zip
+ 
+-# Filesystems tools
+-PRODUCT_PACKAGES += \
+-    fsck.exfat \
+-    fsck.ntfs \
+-    mke2fs \
+-    mkfs.exfat \
+-    mkfs.ntfs \
+-    mount.ntfs
+-
+-# Openssh
+-PRODUCT_PACKAGES += \
+-    scp \
+-    sftp \
+-    ssh \
+-    sshd \
+-    sshd_config \
+-    ssh-keygen \
+-    start-ssh
+-
+-# rsync
+-PRODUCT_PACKAGES += \
+-    rsync
++# Filesystems tools - removed for debloat
++
++# Openssh - removed for debloat
++
++# rsync - removed for debloat
+ 
+ # Storage manager
+ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
+@@ -243,8 +205,8 @@ ifdef LINEAGE_BUILDTYPE
+         endif
+     endif
+ else
+-    # If LINEAGE_BUILDTYPE is not defined, set to UNOFFICIAL
+-    LINEAGE_BUILDTYPE := UNOFFICIAL
++    # If LINEAGE_BUILDTYPE is not defined, set to OFFICIAL
++    LINEAGE_BUILDTYPE := OFFICIAL
+     LINEAGE_EXTRAVERSION :=
+ endif
+ 
+@@ -271,15 +233,15 @@ ifeq ($(LINEAGE_BUILDTYPE), RELEASE)
+ else
+     ifeq ($(LINEAGE_VERSION_MAINTENANCE),0)
+         ifeq ($(LINEAGE_VERSION_APPEND_TIME_OF_DAY),true)
+-            LINEAGE_VERSION := $(PRODUCT_VERSION_MAJOR).$(PRODUCT_VERSION_MINOR)-$(shell date -u +%Y%m%d_%H%M%S)-$(LINEAGE_BUILDTYPE)$(LINEAGE_EXTRAVERSION)-$(LINEAGE_BUILD)
++            LINEAGE_VERSION := Zedex-1.0-$(shell date -u +%Y%m%d_%H%M%S)-$(LINEAGE_BUILDTYPE)$(LINEAGE_EXTRAVERSION)-$(LINEAGE_BUILD)
+         else
+-            LINEAGE_VERSION := $(PRODUCT_VERSION_MAJOR).$(PRODUCT_VERSION_MINOR)-$(shell date -u +%Y%m%d)-$(LINEAGE_BUILDTYPE)$(LINEAGE_EXTRAVERSION)-$(LINEAGE_BUILD)
++            LINEAGE_VERSION := Zedex-1.0-$(shell date -u +%Y%m%d)-$(LINEAGE_BUILDTYPE)$(LINEAGE_EXTRAVERSION)-$(LINEAGE_BUILD)
+         endif
+     else
+         ifeq ($(LINEAGE_VERSION_APPEND_TIME_OF_DAY),true)
+-            LINEAGE_VERSION := $(PRODUCT_VERSION_MAJOR).$(PRODUCT_VERSION_MINOR).$(LINEAGE_VERSION_MAINTENANCE)-$(shell date -u +%Y%m%d_%H%M%S)-$(LINEAGE_BUILDTYPE)$(LINEAGE_EXTRAVERSION)-$(LINEAGE_BUILD)
++            LINEAGE_VERSION := Zedex-1.0-$(shell date -u +%Y%m%d_%H%M%S)-$(LINEAGE_BUILDTYPE)$(LINEAGE_EXTRAVERSION)-$(LINEAGE_BUILD)
+         else
+-            LINEAGE_VERSION := $(PRODUCT_VERSION_MAJOR).$(PRODUCT_VERSION_MINOR).$(LINEAGE_VERSION_MAINTENANCE)-$(shell date -u +%Y%m%d)-$(LINEAGE_BUILDTYPE)$(LINEAGE_EXTRAVERSION)-$(LINEAGE_BUILD)
++            LINEAGE_VERSION := Zedex-1.0-$(shell date -u +%Y%m%d)-$(LINEAGE_BUILDTYPE)$(LINEAGE_EXTRAVERSION)-$(LINEAGE_BUILD)
+         endif
+     endif
+ endif
+@@ -289,7 +251,7 @@ PRODUCT_EXTRA_RECOVERY_KEYS += \
+ 
+ -include vendor/lineage-priv/keys/keys.mk
+ 
+-LINEAGE_DISPLAY_VERSION := $(LINEAGE_VERSION)
++LINEAGE_DISPLAY_VERSION := Zedex OS 1.0
+ 
+ ifneq ($(PRODUCT_DEFAULT_DEV_CERTIFICATE),)
+ ifneq ($(PRODUCT_DEFAULT_DEV_CERTIFICATE),build/target/product/security/testkey)
+diff --git a/config/common_full.mk b/config/common_full.mk
+index 91bf198..516f035 100644
+--- a/config/common_full.mk
++++ b/config/common_full.mk
+@@ -12,7 +12,3 @@ PRODUCT_PACKAGES += \
+     fonts_customization.xml \
+     LineageLatoFont \
+     LineageRubikFont
+-
+-# Recorder
+-PRODUCT_PACKAGES += \
+-    Recorder
+diff --git a/config/common_full_phone.mk b/config/common_full_phone.mk
+index 224e454..1085d33 100644
+--- a/config/common_full_phone.mk
++++ b/config/common_full_phone.mk
+@@ -2,10 +2,6 @@
+ $(call inherit-product, vendor/lineage/config/common_full.mk)
+ 
+ # Required packages
+-PRODUCT_PACKAGES += \
+-    LatinIME
+-
+-# Include Lineage LatinIME dictionaries
+-PRODUCT_PACKAGE_OVERLAYS += vendor/lineage/overlay/dictionaries
++# LatinIME replaced by Gboard
+ 
+ $(call inherit-product, vendor/lineage/config/telephony.mk)
+diff --git a/config/common_mini_phone.mk b/config/common_mini_phone.mk
+index 6b2c57a..1646328 100644
+--- a/config/common_mini_phone.mk
++++ b/config/common_mini_phone.mk
+@@ -2,7 +2,6 @@
+ $(call inherit-product, vendor/lineage/config/common_mini.mk)
+ 
+ # Required packages
+-PRODUCT_PACKAGES += \
+-    LatinIME
++# LatinIME replaced by Gboard
+ 
+ $(call inherit-product, vendor/lineage/config/telephony.mk)
+diff --git a/config/common_mobile.mk b/config/common_mobile.mk
+index e15120e..4d5a1a8 100644
+--- a/config/common_mobile.mk
++++ b/config/common_mobile.mk
+@@ -11,44 +11,20 @@ ifneq ($(TARGET_BUILD_VARIANT),user)
+ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += persist.sys.dun.override=0
+ endif
+ 
+-# Optional packages
+-PRODUCT_PACKAGES += \
+-    LiveWallpapersPicker \
+-    PhotoTable
++# Optional packages removed for debloat
+ 
+ # AOSP packages
+-PRODUCT_PACKAGES += \
+-    Email \
+-    ExactCalculator \
+-    Exchange2
++# Exchange2 removed
+ 
+ # Lineage packages
+ PRODUCT_PACKAGES += \
+-    AudioFX \
+-    Backgrounds \
+-    Eleven \
+-    Etar \
+-    Jelly \
+-    LockClock \
+-    Profiles \
+-    Seedvault \
+     TrebuchetQuickStep \
+-    WeatherProvider
++    ScreenRecorder
+ 
+-# Accents
++# Accents - removed for debloat, keeping dark theme only
+ PRODUCT_PACKAGES += \
+     LineageBlackTheme \
+-    LineageDarkTheme \
+-    LineageBlackAccent \
+-    LineageBlueAccent \
+-    LineageBrownAccent \
+-    LineageCyanAccent \
+-    LineageGreenAccent \
+-    LineageOrangeAccent \
+-    LineagePinkAccent \
+-    LineagePurpleAccent \
+-    LineageRedAccent \
+-    LineageYellowAccent
++    LineageDarkTheme
+ 
+ # Charger
+ PRODUCT_PACKAGES += \
+diff --git a/config/telephony.mk b/config/telephony.mk
+index 43bbaa9..6865ec5 100644
+--- a/config/telephony.mk
++++ b/config/telephony.mk
+@@ -8,7 +8,6 @@ PRODUCT_PACKAGES += \
+ 
+ # Telephony packages
+ PRODUCT_PACKAGES += \
+-    messaging \
+     Stk \
+     CellBroadcastReceiver
+ 
+diff --git a/overlay/common/frameworks/base/core/res/res/drawable-hdpi/default_wallpaper.png b/overlay/common/frameworks/base/core/res/res/drawable-hdpi/default_wallpaper.png
+index 7d03478..caed126 100644
+Binary files a/overlay/common/frameworks/base/core/res/res/drawable-hdpi/default_wallpaper.png and b/overlay/common/frameworks/base/core/res/res/drawable-hdpi/default_wallpaper.png differ
+diff --git a/overlay/common/frameworks/base/core/res/res/drawable-large-notouch/default_wallpaper.png b/overlay/common/frameworks/base/core/res/res/drawable-large-notouch/default_wallpaper.png
+index 21b7d76..caed126 100644
+Binary files a/overlay/common/frameworks/base/core/res/res/drawable-large-notouch/default_wallpaper.png and b/overlay/common/frameworks/base/core/res/res/drawable-large-notouch/default_wallpaper.png differ
+diff --git a/overlay/common/frameworks/base/core/res/res/drawable-nodpi/default_wallpaper.png b/overlay/common/frameworks/base/core/res/res/drawable-nodpi/default_wallpaper.png
+index 7259cc4..caed126 100644
+Binary files a/overlay/common/frameworks/base/core/res/res/drawable-nodpi/default_wallpaper.png and b/overlay/common/frameworks/base/core/res/res/drawable-nodpi/default_wallpaper.png differ
+diff --git a/overlay/common/frameworks/base/core/res/res/drawable-sw600dp-nodpi/default_wallpaper.png b/overlay/common/frameworks/base/core/res/res/drawable-sw600dp-nodpi/default_wallpaper.png
+index b37f437..caed126 100644
+Binary files a/overlay/common/frameworks/base/core/res/res/drawable-sw600dp-nodpi/default_wallpaper.png and b/overlay/common/frameworks/base/core/res/res/drawable-sw600dp-nodpi/default_wallpaper.png differ
+diff --git a/overlay/common/frameworks/base/core/res/res/drawable-sw720dp-nodpi/default_wallpaper.png b/overlay/common/frameworks/base/core/res/res/drawable-sw720dp-nodpi/default_wallpaper.png
+index b37f437..caed126 100644
+Binary files a/overlay/common/frameworks/base/core/res/res/drawable-sw720dp-nodpi/default_wallpaper.png and b/overlay/common/frameworks/base/core/res/res/drawable-sw720dp-nodpi/default_wallpaper.png differ
+diff --git a/overlay/common/frameworks/base/core/res/res/drawable-xhdpi/default_wallpaper.png b/overlay/common/frameworks/base/core/res/res/drawable-xhdpi/default_wallpaper.png
+index e09990d..caed126 100644
+Binary files a/overlay/common/frameworks/base/core/res/res/drawable-xhdpi/default_wallpaper.png and b/overlay/common/frameworks/base/core/res/res/drawable-xhdpi/default_wallpaper.png differ
+diff --git a/overlay/common/frameworks/base/core/res/res/drawable-xxhdpi/default_wallpaper.png b/overlay/common/frameworks/base/core/res/res/drawable-xxhdpi/default_wallpaper.png
+index b37f437..caed126 100644
+Binary files a/overlay/common/frameworks/base/core/res/res/drawable-xxhdpi/default_wallpaper.png and b/overlay/common/frameworks/base/core/res/res/drawable-xxhdpi/default_wallpaper.png differ
+diff --git a/overlay/common/frameworks/base/core/res/res/drawable-xxxhdpi/default_wallpaper.png b/overlay/common/frameworks/base/core/res/res/drawable-xxxhdpi/default_wallpaper.png
+index 734bfa6..caed126 100644
+Binary files a/overlay/common/frameworks/base/core/res/res/drawable-xxxhdpi/default_wallpaper.png and b/overlay/common/frameworks/base/core/res/res/drawable-xxxhdpi/default_wallpaper.png differ

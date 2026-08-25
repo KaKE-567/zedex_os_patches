@@ -1,21 +1,3 @@
-From b93e38cfd71978a4dd545379445ec3c224f34628 Mon Sep 17 00:00:00 2001
-From: kake <kake@build.local>
-Date: Mon, 24 Aug 2026 12:43:50 +0000
-Subject: [PATCH] Settings: Native ThreeFingerGesture controller and Telegram
- discussion integration
-
-Change-Id: I8beb3d7c5da9ecbb7420fda8916d37108da9d866
----
- res/values/cm_strings.xml                     |  6 ++-
- res/xml/development_settings.xml              |  2 +-
- res/xml/firmware_version.xml                  |  8 +---
- res/xml/gestures.xml                          |  7 +++
- ...LineageApiVersionPreferenceController.java |  2 +-
- ...eageVersionDetailPreferenceController.java | 26 +++-------
- ...hreeFingerGesturePreferenceController.java | 48 +++++++++++++++++++
- 7 files changed, 70 insertions(+), 29 deletions(-)
- create mode 100644 src/com/android/settings/gestures/ThreeFingerGesturePreferenceController.java
-
 diff --git a/res/values/cm_strings.xml b/res/values/cm_strings.xml
 index 12ad48e..a67a396 100644
 --- a/res/values/cm_strings.xml
@@ -192,6 +174,3 @@ index 0000000..cda17e3
 +                KEY_THREE_FINGER_GESTURE, isChecked ? 1 : 0);
 +    }
 +}
--- 
-2.43.0
-
