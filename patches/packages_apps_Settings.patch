@@ -349,10 +349,10 @@ index 9b5659b..373b5b1 100644
          android:title="@string/assist_gesture_title"
 diff --git a/res/xml/kake_elements_settings.xml b/res/xml/kake_elements_settings.xml
 new file mode 100644
-index 0000000..be6764b
+index 0000000..283044a
 --- /dev/null
 +++ b/res/xml/kake_elements_settings.xml
-@@ -0,0 +1,99 @@
+@@ -0,0 +1,53 @@
 +<?xml version="1.0" encoding="utf-8"?>
 +<!--
 +  Copyright (C) 2026 The Zedex OS Project - KaKe Elements
@@ -364,10 +364,68 @@ index 0000000..be6764b
 +    android:key="kake_elements_settings_screen"
 +    android:title="KaKe Elements">
 +
-+    <!-- Gaming Space Category -->
++    <!-- Elements Folders -->
 +    <PreferenceCategory
-+        android:key="kake_gaming_category"
-+        android:title="🎮 Gaming Space">
++        android:key="kake_folders_category"
++        android:title="👑 Customization Folders">
++
++        <Preference
++            android:key="kake_perf_folder"
++            android:title="⚡ Performance Profiles"
++            android:summary="Gaming Boost, Benchmark Overdrive, Balanced &amp; Battery Saver"
++            android:fragment="com.android.settings.kake.KaKePerfSettings" />
++
++        <Preference
++            android:key="kake_gaming_folder"
++            android:title="🎮 Game Space"
++            android:summary="Game Mode, Danmaku notifications, claw grip lock &amp; app selector"
++            android:fragment="com.android.settings.kake.KaKeGamingSettings" />
++
++        <Preference
++            android:key="kake_statusbar_folder"
++            android:title="📱 Status Bar"
++            android:summary="Network traffic, icons tuner, battery style &amp; clock"
++            android:fragment="com.android.settings.kake.KaKeStatusBarSettings" />
++
++    </PreferenceCategory>
++
++    <!-- Maintainer Hub -->
++    <PreferenceCategory
++        android:key="kake_developer_category"
++        android:title="👑 Maintainer">
++
++        <Preference
++            android:key="kake_telegram_maintainer"
++            android:title="Maintainer"
++            android:summary="@Xx_KaKe_xX (Tap to message on Telegram)"
++            settings:allowDividerAbove="true">
++            <intent android:action="android.intent.action.VIEW"
++                    android:data="https://t.me/Xx_KaKe_xX" />
++        </Preference>
++
++    </PreferenceCategory>
++
++</PreferenceScreen>
+diff --git a/res/xml/kake_gaming_settings.xml b/res/xml/kake_gaming_settings.xml
+new file mode 100644
+index 0000000..604dc4c
+--- /dev/null
++++ b/res/xml/kake_gaming_settings.xml
+@@ -0,0 +1,78 @@
++<?xml version="1.0" encoding="utf-8"?>
++<!--
++  Copyright (C) 2026 The Zedex OS Project - KaKe Elements
++  -->
++
++<PreferenceScreen
++    xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:settings="http://schemas.android.com/apk/res-auto"
++    android:key="kake_gaming_settings_screen"
++    android:title="Game Space">
++
++    <!-- Game Mode Master Category -->
++    <PreferenceCategory
++        android:title="🎮 Game Mode Master Controls">
 +
 +        <SwitchPreference
 +            android:key="gaming_mode_toggle"
@@ -381,6 +439,12 @@ index 0000000..be6764b
 +            android:title="Add Games"
 +            android:dialogTitle="Select Games &amp; Apps"
 +            android:summary="Choose installed games to automatically launch Game Mode" />
++
++    </PreferenceCategory>
++
++    <!-- In-Game Notifications Category -->
++    <PreferenceCategory
++        android:title="🔔 In-Game Notifications">
 +
 +        <SwitchPreference
 +            android:key="gaming_mode_danmaku"
@@ -403,6 +467,12 @@ index 0000000..be6764b
 +            android:defaultValue="false"
 +            settings:controller="com.android.settings.gaming.GamingModeGenericSwitchController" />
 +
++    </PreferenceCategory>
++
++    <!-- Gameplay Protection Category -->
++    <PreferenceCategory
++        android:title="🛡️ Gameplay Protection">
++
 +        <SwitchPreference
 +            android:key="gaming_mode_lock_gestures"
 +            android:title="Lock Back Gestures &amp; Navigation Bar"
@@ -419,10 +489,26 @@ index 0000000..be6764b
 +
 +    </PreferenceCategory>
 +
-+    <!-- Performance Category -->
++</PreferenceScreen>
+diff --git a/res/xml/kake_perf_settings.xml b/res/xml/kake_perf_settings.xml
+new file mode 100644
+index 0000000..d5d836d
+--- /dev/null
++++ b/res/xml/kake_perf_settings.xml
+@@ -0,0 +1,26 @@
++<?xml version="1.0" encoding="utf-8"?>
++<!--
++  Copyright (C) 2026 The Zedex OS Project - KaKe Elements
++  -->
++
++<PreferenceScreen
++    xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:settings="http://schemas.android.com/apk/res-auto"
++    android:key="kake_perf_settings_screen"
++    android:title="Performance Profiles">
++
 +    <PreferenceCategory
-+        android:key="kake_perf_category"
-+        android:title="⚡ Performance Profiles">
++        android:title="⚡ CPU &amp; Thermal Engine Tuning">
 +
 +        <ListPreference
 +            android:key="zedex_perf_profile"
@@ -435,18 +521,38 @@ index 0000000..be6764b
 +
 +    </PreferenceCategory>
 +
-+    <!-- Maintainer Hub -->
++</PreferenceScreen>
+diff --git a/res/xml/kake_statusbar_settings.xml b/res/xml/kake_statusbar_settings.xml
+new file mode 100644
+index 0000000..13a9468
+--- /dev/null
++++ b/res/xml/kake_statusbar_settings.xml
+@@ -0,0 +1,30 @@
++<?xml version="1.0" encoding="utf-8"?>
++<!--
++  Copyright (C) 2026 The Zedex OS Project - KaKe Elements
++  -->
++
++<PreferenceScreen
++    xmlns:android="http://schemas.android.com/apk/res/android"
++    android:key="kake_statusbar_settings_screen"
++    android:title="Status Bar">
++
 +    <PreferenceCategory
-+        android:key="kake_developer_category"
-+        android:title="👑 Maintainer">
++        android:title="📱 Status Bar Elements">
 +
 +        <Preference
-+            android:key="kake_telegram_maintainer"
-+            android:title="Maintainer"
-+            android:summary="@Xx_KaKe_xX (Tap to message on Telegram)"
-+            settings:allowDividerAbove="true">
-+            <intent android:action="android.intent.action.VIEW"
-+                    android:data="https://t.me/Xx_KaKe_xX" />
++            android:key="kake_network_traffic"
++            android:title="Network Traffic Monitor"
++            android:summary="Configure live upload and download speed meters">
++            <intent android:action="org.lineageos.lineageparts.STATUS_BAR_SETTINGS" />
++        </Preference>
++
++        <Preference
++            android:key="kake_system_icons"
++            android:title="System Icons Tuner"
++            android:summary="Choose which icons are displayed in the status bar">
++            <intent android:action="com.android.settings.action.STATUS_BAR_TUNER" />
 +        </Preference>
 +
 +    </PreferenceCategory>
@@ -576,10 +682,10 @@ index 3cd42a7..aaa2668 100644
      }
 diff --git a/src/com/android/settings/fuelgauge/ZedexPerformanceProfilePreferenceController.java b/src/com/android/settings/fuelgauge/ZedexPerformanceProfilePreferenceController.java
 new file mode 100644
-index 0000000..60a2ec6
+index 0000000..01ada4c
 --- /dev/null
 +++ b/src/com/android/settings/fuelgauge/ZedexPerformanceProfilePreferenceController.java
-@@ -0,0 +1,220 @@
+@@ -0,0 +1,225 @@
 +/*
 + * Copyright (C) 2026 The Zedex OS Project
 + *
@@ -696,6 +802,11 @@ index 0000000..60a2ec6
 +    }
 +
 +    public static void applyProfile(String profile) {
++        try {
++            android.os.SystemProperties.set("persist.sys.perf_profile", profile);
++        } catch (Exception e) {
++            Log.e(TAG, "Failed to set persist.sys.perf_profile property: " + profile, e);
++        }
 +        try {
 +            switch (profile) {
 +                case PROFILE_GAMING:
@@ -1256,6 +1367,210 @@ index 0000000..cc493d9
 +                    final ArrayList<SearchIndexableResource> result = new ArrayList<>();
 +                    final SearchIndexableResource sir = new SearchIndexableResource(context);
 +                    sir.xmlResId = R.xml.kake_elements_settings;
++                    result.add(sir);
++                    return result;
++                }
++            };
++}
+diff --git a/src/com/android/settings/kake/KaKeGamingSettings.java b/src/com/android/settings/kake/KaKeGamingSettings.java
+new file mode 100644
+index 0000000..61f94bc
+--- /dev/null
++++ b/src/com/android/settings/kake/KaKeGamingSettings.java
+@@ -0,0 +1,62 @@
++/*
++ * Copyright (C) 2026 The Zedex OS Project - KaKe Elements
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package com.android.settings.kake;
++
++import android.app.settings.SettingsEnums;
++import android.content.Context;
++import android.provider.SearchIndexableResource;
++
++import com.android.settings.R;
++import com.android.settings.dashboard.DashboardFragment;
++import com.android.settings.search.BaseSearchIndexProvider;
++import com.android.settingslib.search.SearchIndexable;
++
++import java.util.ArrayList;
++import java.util.List;
++
++@SearchIndexable(forTarget = SearchIndexable.ALL & ~SearchIndexable.ARC)
++public class KaKeGamingSettings extends DashboardFragment {
++    private static final String TAG = "KaKeGamingSettings";
++
++    @Override
++    public int getMetricsCategory() {
++        return SettingsEnums.PAGE_UNKNOWN;
++    }
++
++    @Override
++    protected String getLogTag() {
++        return TAG;
++    }
++
++    @Override
++    protected int getPreferenceScreenResId() {
++        return R.xml.kake_gaming_settings;
++    }
++
++    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER =
++            new BaseSearchIndexProvider() {
++                @Override
++                public List<SearchIndexableResource> getXmlResourcesToIndex(Context context,
++                        boolean enabled) {
++                    final ArrayList<SearchIndexableResource> result = new ArrayList<>();
++                    final SearchIndexableResource sir = new SearchIndexableResource(context);
++                    sir.xmlResId = R.xml.kake_gaming_settings;
++                    result.add(sir);
++                    return result;
++                }
++            };
++}
+diff --git a/src/com/android/settings/kake/KaKePerfSettings.java b/src/com/android/settings/kake/KaKePerfSettings.java
+new file mode 100644
+index 0000000..2b796fe
+--- /dev/null
++++ b/src/com/android/settings/kake/KaKePerfSettings.java
+@@ -0,0 +1,62 @@
++/*
++ * Copyright (C) 2026 The Zedex OS Project - KaKe Elements
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package com.android.settings.kake;
++
++import android.app.settings.SettingsEnums;
++import android.content.Context;
++import android.provider.SearchIndexableResource;
++
++import com.android.settings.R;
++import com.android.settings.dashboard.DashboardFragment;
++import com.android.settings.search.BaseSearchIndexProvider;
++import com.android.settingslib.search.SearchIndexable;
++
++import java.util.ArrayList;
++import java.util.List;
++
++@SearchIndexable(forTarget = SearchIndexable.ALL & ~SearchIndexable.ARC)
++public class KaKePerfSettings extends DashboardFragment {
++    private static final String TAG = "KaKePerfSettings";
++
++    @Override
++    public int getMetricsCategory() {
++        return SettingsEnums.PAGE_UNKNOWN;
++    }
++
++    @Override
++    protected String getLogTag() {
++        return TAG;
++    }
++
++    @Override
++    protected int getPreferenceScreenResId() {
++        return R.xml.kake_perf_settings;
++    }
++
++    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER =
++            new BaseSearchIndexProvider() {
++                @Override
++                public List<SearchIndexableResource> getXmlResourcesToIndex(Context context,
++                        boolean enabled) {
++                    final ArrayList<SearchIndexableResource> result = new ArrayList<>();
++                    final SearchIndexableResource sir = new SearchIndexableResource(context);
++                    sir.xmlResId = R.xml.kake_perf_settings;
++                    result.add(sir);
++                    return result;
++                }
++            };
++}
+diff --git a/src/com/android/settings/kake/KaKeStatusBarSettings.java b/src/com/android/settings/kake/KaKeStatusBarSettings.java
+new file mode 100644
+index 0000000..ebc0bce
+--- /dev/null
++++ b/src/com/android/settings/kake/KaKeStatusBarSettings.java
+@@ -0,0 +1,62 @@
++/*
++ * Copyright (C) 2026 The Zedex OS Project - KaKe Elements
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package com.android.settings.kake;
++
++import android.app.settings.SettingsEnums;
++import android.content.Context;
++import android.provider.SearchIndexableResource;
++
++import com.android.settings.R;
++import com.android.settings.dashboard.DashboardFragment;
++import com.android.settings.search.BaseSearchIndexProvider;
++import com.android.settingslib.search.SearchIndexable;
++
++import java.util.ArrayList;
++import java.util.List;
++
++@SearchIndexable(forTarget = SearchIndexable.ALL & ~SearchIndexable.ARC)
++public class KaKeStatusBarSettings extends DashboardFragment {
++    private static final String TAG = "KaKeStatusBarSettings";
++
++    @Override
++    public int getMetricsCategory() {
++        return SettingsEnums.PAGE_UNKNOWN;
++    }
++
++    @Override
++    protected String getLogTag() {
++        return TAG;
++    }
++
++    @Override
++    protected int getPreferenceScreenResId() {
++        return R.xml.kake_statusbar_settings;
++    }
++
++    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER =
++            new BaseSearchIndexProvider() {
++                @Override
++                public List<SearchIndexableResource> getXmlResourcesToIndex(Context context,
++                        boolean enabled) {
++                    final ArrayList<SearchIndexableResource> result = new ArrayList<>();
++                    final SearchIndexableResource sir = new SearchIndexableResource(context);
++                    sir.xmlResId = R.xml.kake_statusbar_settings;
 +                    result.add(sir);
 +                    return result;
 +                }

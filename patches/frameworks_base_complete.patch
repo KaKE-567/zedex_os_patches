@@ -3555,10 +3555,10 @@ index 00000000..c9b6e6a2
 +}
 diff --git a/packages/SystemUI/src/com/android/systemui/qs/tiles/PerfProfileTile.java b/packages/SystemUI/src/com/android/systemui/qs/tiles/PerfProfileTile.java
 new file mode 100644
-index 00000000..aeff8a03
+index 00000000..d50f2ed8
 --- /dev/null
 +++ b/packages/SystemUI/src/com/android/systemui/qs/tiles/PerfProfileTile.java
-@@ -0,0 +1,189 @@
+@@ -0,0 +1,194 @@
 +/*
 + * Copyright (C) 2026 The Zedex OS Project
 + *
@@ -3682,7 +3682,12 @@ index 00000000..aeff8a03
 +    public void handleSetListening(boolean listening) {
 +    }
 +
-+    private static void applyProfile(String profile) {
++    public static void applyProfile(String profile) {
++        try {
++            android.os.SystemProperties.set("persist.sys.perf_profile", profile);
++        } catch (Exception e) {
++            // Ignore
++        }
 +        switch (profile) {
 +            case "gaming":
 +                writeSysfs("/sys/devices/system/cpu/cpufreq/policy6/schedutil/hispeed_freq", "2323200");

@@ -84,3 +84,93 @@ index 5e8bdce..66fafc9 100644
      echo 400 > /sys/module/cpu_boost/parameters/powerkey_input_boost_ms
  
      # Set Memory parameters
+diff --git a/rootdir/etc/init.qcom.rc b/rootdir/etc/init.qcom.rc
+index 874b5e7..f813c2e 100644
+--- a/rootdir/etc/init.qcom.rc
++++ b/rootdir/etc/init.qcom.rc
+@@ -1134,3 +1134,85 @@ on late-init
+     start vendor.hwcomposer-2-4
+     start vendor.configstore-hal
+     start vendor.qti.hardware.display.allocator
++
++# Zedex Performance Profiles Engine
++on property:persist.sys.perf_profile=battery
++    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 300000
++    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 1209600
++    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq 300000
++    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq 1209600
++    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq 300000
++    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq 1209600
++    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq 300000
++    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq 1209600
++    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq 300000
++    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq 1209600
++    write /sys/devices/system/cpu/cpu5/cpufreq/scaling_min_freq 300000
++    write /sys/devices/system/cpu/cpu5/cpufreq/scaling_max_freq 1209600
++    write /sys/devices/system/cpu/cpu6/cpufreq/scaling_min_freq 652800
++    write /sys/devices/system/cpu/cpu6/cpufreq/scaling_max_freq 1324800
++    write /sys/devices/system/cpu/cpu7/cpufreq/scaling_min_freq 652800
++    write /sys/devices/system/cpu/cpu7/cpufreq/scaling_max_freq 1324800
++    write /dev/stune/top-app/schedtune.boost 0
++    write /sys/module/cpu_boost/parameters/input_boost_ms 0
++
++on property:persist.sys.perf_profile=gaming
++    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 576000
++    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 1804800
++    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq 576000
++    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq 1804800
++    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq 576000
++    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq 1804800
++    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq 576000
++    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq 1804800
++    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq 576000
++    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq 1804800
++    write /sys/devices/system/cpu/cpu5/cpufreq/scaling_min_freq 576000
++    write /sys/devices/system/cpu/cpu5/cpufreq/scaling_max_freq 1804800
++    write /sys/devices/system/cpu/cpu6/cpufreq/scaling_min_freq 652800
++    write /sys/devices/system/cpu/cpu6/cpufreq/scaling_max_freq 2323200
++    write /sys/devices/system/cpu/cpu7/cpufreq/scaling_min_freq 652800
++    write /sys/devices/system/cpu/cpu7/cpufreq/scaling_max_freq 2323200
++    write /dev/stune/top-app/schedtune.boost 15
++    write /sys/module/cpu_boost/parameters/input_boost_ms 40
++
++on property:persist.sys.perf_profile=benchmark
++    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 1804800
++    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 1804800
++    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq 1804800
++    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq 1804800
++    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq 1804800
++    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq 1804800
++    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq 1804800
++    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq 1804800
++    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq 1804800
++    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq 1804800
++    write /sys/devices/system/cpu/cpu5/cpufreq/scaling_min_freq 1804800
++    write /sys/devices/system/cpu/cpu5/cpufreq/scaling_max_freq 1804800
++    write /sys/devices/system/cpu/cpu6/cpufreq/scaling_min_freq 2323200
++    write /sys/devices/system/cpu/cpu6/cpufreq/scaling_max_freq 2323200
++    write /sys/devices/system/cpu/cpu7/cpufreq/scaling_min_freq 2323200
++    write /sys/devices/system/cpu/cpu7/cpufreq/scaling_max_freq 2323200
++    write /dev/stune/top-app/schedtune.boost 25
++    write /sys/module/cpu_boost/parameters/input_boost_ms 60
++
++on property:persist.sys.perf_profile=balanced
++    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 576000
++    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 1804800
++    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq 576000
++    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq 1804800
++    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq 576000
++    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq 1804800
++    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq 576000
++    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq 1804800
++    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq 576000
++    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq 1804800
++    write /sys/devices/system/cpu/cpu5/cpufreq/scaling_min_freq 576000
++    write /sys/devices/system/cpu/cpu5/cpufreq/scaling_max_freq 1804800
++    write /sys/devices/system/cpu/cpu6/cpufreq/scaling_min_freq 652800
++    write /sys/devices/system/cpu/cpu6/cpufreq/scaling_max_freq 2323200
++    write /sys/devices/system/cpu/cpu7/cpufreq/scaling_min_freq 652800
++    write /sys/devices/system/cpu/cpu7/cpufreq/scaling_max_freq 2323200
++    write /dev/stune/top-app/schedtune.boost 5
++    write /sys/module/cpu_boost/parameters/input_boost_ms 40
++
