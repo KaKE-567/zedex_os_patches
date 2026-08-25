@@ -1,7 +1,7 @@
 From 0e11cac371cef315af037be4e7f925a9774464ac Mon Sep 17 00:00:00 2001
 From: kake <kake@build.local>
 Date: Tue, 25 Aug 2026 10:14:03 +0000
-Subject: [PATCH 26/29] SystemUI: Fix lockscreen wallpaper blackout, widen
+Subject: [PATCH 26/30] SystemUI: Fix lockscreen wallpaper blackout, widen
  capsule pills and support landscape 4x1 layout
 
 Change-Id: Ia165d51c0abecbeaf96856902143d638b3ae84b4

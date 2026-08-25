@@ -1,12 +1,19 @@
 diff --git a/core/java/android/app/Application.java b/core/java/android/app/Application.java
-index e12942f2..7a8a5fb5 100644
+index e12942f2..e0875a74 100644
 --- a/core/java/android/app/Application.java
 +++ b/core/java/android/app/Application.java
-@@ -350,6 +350,7 @@ public class Application extends ContextWrapper implements ComponentCallbacks2 {
+@@ -350,6 +350,14 @@ public class Application extends ContextWrapper implements ComponentCallbacks2 {
      /* package */ final void attach(Context context) {
          attachBaseContext(context);
          mLoadedApk = ContextImpl.getImpl(context).mPackageInfo;
 +        com.android.internal.util.GamePropsUtils.setProps(context.getPackageName());
++        if (com.android.internal.util.GamePropsUtils.isGamePackage(context.getPackageName())) {
++            try {
++                android.provider.Settings.System.putInt(context.getContentResolver(), "gaming_mode_active", 1);
++            } catch (Exception e) {
++                // Ignore
++            }
++        }
      }
  
      @UnsupportedAppUsage
@@ -40,10 +47,10 @@ index 9720e9f4..74155531 100644
          return app;
 diff --git a/core/java/com/android/internal/util/GamePropsUtils.java b/core/java/com/android/internal/util/GamePropsUtils.java
 new file mode 100644
-index 00000000..2a0be32b
+index 00000000..2b2c48f9
 --- /dev/null
 +++ b/core/java/com/android/internal/util/GamePropsUtils.java
-@@ -0,0 +1,81 @@
+@@ -0,0 +1,85 @@
 +/*
 + * Copyright (C) 2020 The Android Open Source Project
 + *
@@ -98,6 +105,10 @@ index 00000000..2a0be32b
 +        propsToChangeK30Ultra.put("DEVICE", "cezanne");
 +        propsToChangeK30Ultra.put("PRODUCT", "cezanne");
 +        propsToChangeK30Ultra.put("MODEL", "M2006J10C");
++    }
++
++    public static boolean isGamePackage(String packageName) {
++        return packageName != null && packagesToSpoofPUBG.contains(packageName);
 +    }
 +
 +    public static void setProps(String packageName) {
@@ -1115,6 +1126,26 @@ index 85a9fec8..d41801e6 100644
  
      default void setHasNotifications(boolean hasNotifications) {
      }
+diff --git a/packages/SystemUI/res/drawable/ic_qs_gaming_mode.xml b/packages/SystemUI/res/drawable/ic_qs_gaming_mode.xml
+new file mode 100644
+index 00000000..d816587c
+--- /dev/null
++++ b/packages/SystemUI/res/drawable/ic_qs_gaming_mode.xml
+@@ -0,0 +1,14 @@
++<?xml version="1.0" encoding="utf-8"?>
++<!--
++    Copyright (c) 2026 The Zedex OS Project
++-->
++<vector xmlns:android="http://schemas.android.com/apk/res/android"
++        android:width="48dp"
++        android:height="48dp"
++        android:viewportWidth="24"
++        android:viewportHeight="24">
++
++    <path
++        android:fillColor="#FFFFFFFF"
++        android:pathData="M21,6H3C1.9,6 1,6.9 1,8v8c0,1.1 0.9,2 2,2h18c1.1,0 2,-0.9 2,-2V8C23,6.9 22.1,6 21,6z M11,13H8v3H6v-3H3v-2h3V8h2v3h3V13z M15.5,15.5c-0.83,0 -1.5,-0.67 -1.5,-1.5s0.67,-1.5 1.5,-1.5 1.5,0.67 1.5,1.5 -0.67,1.5 -1.5,1.5z M15.5,11.5c-0.83,0 -1.5,-0.67 -1.5,-1.5s0.67,-1.5 1.5,-1.5 1.5,0.67 1.5,1.5 -0.67,1.5 -1.5,1.5z M18.5,13.5c-0.83,0 -1.5,-0.67 -1.5,-1.5s0.67,-1.5 1.5,-1.5 1.5,0.67 1.5,1.5 -0.67,1.5 -1.5,1.5z M18.5,9.5c-0.83,0 -1.5,-0.67 -1.5,-1.5s0.67,-1.5 1.5,-1.5 1.5,0.67 1.5,1.5 -0.67,1.5 -1.5,1.5z" />
++</vector>
 diff --git a/packages/SystemUI/res/drawable/ic_qs_wifi_0.xml b/packages/SystemUI/res/drawable/ic_qs_wifi_0.xml
 index 7cbc26f1..503598b8 100644
 --- a/packages/SystemUI/res/drawable/ic_qs_wifi_0.xml
@@ -1696,8 +1727,26 @@ index 017ca698..88271465 100644
 +    <dimen name="notification_panel_width">@dimen/match_parent</dimen>
  
  </resources>
+diff --git a/packages/SystemUI/res/values/cm_strings.xml b/packages/SystemUI/res/values/cm_strings.xml
+index 5192048d..d70e5379 100644
+--- a/packages/SystemUI/res/values/cm_strings.xml
++++ b/packages/SystemUI/res/values/cm_strings.xml
+@@ -72,6 +72,13 @@
+     <string name="accessibility_quick_settings_heads_up_changed_off">Heads up turned off.</string>
+     <string name="accessibility_quick_settings_heads_up_changed_on">Heads up turned on.</string>
+ 
++    <!-- Gaming mode QS tile -->
++    <string name="quick_settings_gaming_mode_label">Gaming mode</string>
++    <string name="accessibility_quick_settings_gaming_mode_off">Gaming mode off.</string>
++    <string name="accessibility_quick_settings_gaming_mode_on">Gaming mode on.</string>
++    <string name="accessibility_quick_settings_gaming_mode_changed_off">Gaming mode turned off.</string>
++    <string name="accessibility_quick_settings_gaming_mode_changed_on">Gaming mode turned on.</string>
++
+     <!-- Reader mode QS tile -->
+     <string name="quick_settings_reading_mode">Reading mode</string>
+     <string name="accessibility_quick_settings_reading_mode_on">Reading mode on.</string>
 diff --git a/packages/SystemUI/res/values/config.xml b/packages/SystemUI/res/values/config.xml
-index f99dc023..725b0d2a 100644
+index f99dc023..9b322f42 100644
 --- a/packages/SystemUI/res/values/config.xml
 +++ b/packages/SystemUI/res/values/config.xml
 @@ -93,16 +93,17 @@
@@ -1722,6 +1771,15 @@ index f99dc023..725b0d2a 100644
  
      <!-- The number of columns that the top level tiles span in the QuickSettings -->
      <integer name="quick_settings_user_time_settings_tile_span">1</integer>
+@@ -117,7 +118,7 @@
+ 
+     <!-- Tiles native to System UI. Order should match "quick_settings_tiles_default" -->
+     <string name="quick_settings_tiles_stock" translatable="false">
+-        wifi,cell,battery,dnd,flashlight,rotation,bt,airplane,nfc,location,hotspot,inversion,saver,dark,work,cast,night,adb_network,ambient_display,caffeine,heads_up,livedisplay,aod,reading_mode,sync,usb_tether,volume_panel,vpn,profiles,powershare
++        wifi,cell,battery,dnd,flashlight,rotation,bt,airplane,nfc,location,hotspot,inversion,saver,dark,work,cast,night,adb_network,ambient_display,caffeine,heads_up,gaming_mode,livedisplay,aod,reading_mode,sync,usb_tether,volume_panel,vpn,profiles,powershare
+     </string>
+ 
+     <!-- The tiles to display in QuickSettings -->
 diff --git a/packages/SystemUI/res/values/dimens.xml b/packages/SystemUI/res/values/dimens.xml
 index caa910e8..bbfa6357 100644
 --- a/packages/SystemUI/res/values/dimens.xml
@@ -2357,6 +2415,27 @@ index 14addb99..526fe033 100644
      private boolean mListening;
      protected int mMaxAllowedRows = 3;
  
+diff --git a/packages/SystemUI/src/com/android/systemui/qs/tileimpl/QSFactoryImpl.java b/packages/SystemUI/src/com/android/systemui/qs/tileimpl/QSFactoryImpl.java
+index 756d1fd5..00f55bdd 100644
+--- a/packages/SystemUI/src/com/android/systemui/qs/tileimpl/QSFactoryImpl.java
++++ b/packages/SystemUI/src/com/android/systemui/qs/tileimpl/QSFactoryImpl.java
+@@ -40,6 +40,7 @@ import com.android.systemui.qs.tiles.ColorInversionTile;
+ import com.android.systemui.qs.tiles.DataSaverTile;
+ import com.android.systemui.qs.tiles.DndTile;
+ import com.android.systemui.qs.tiles.FlashlightTile;
++import com.android.systemui.qs.tiles.GamingModeTile;
+ import com.android.systemui.qs.tiles.HeadsUpTile;
+ import com.android.systemui.qs.tiles.HotspotTile;
+ import com.android.systemui.qs.tiles.IntentTile;
+@@ -232,6 +233,8 @@ public class QSFactoryImpl implements QSFactory {
+                 return mCaffeineTileProvider.get();
+             case "heads_up":
+                 return mHeadsUpTileProvider.get();
++            case "gaming_mode":
++                return new GamingModeTile(mHost);
+             case "livedisplay":
+                 return mLiveDisplayTileProvider.get();
+             case "aod":
 diff --git a/packages/SystemUI/src/com/android/systemui/qs/tileimpl/QSTileBaseView.java b/packages/SystemUI/src/com/android/systemui/qs/tileimpl/QSTileBaseView.java
 index c186e590..27a346d0 100644
 --- a/packages/SystemUI/src/com/android/systemui/qs/tileimpl/QSTileBaseView.java
@@ -2654,6 +2733,159 @@ index 972d6f18..22fc7954 100644
 +        }
      }
  }
+diff --git a/packages/SystemUI/src/com/android/systemui/qs/tiles/GamingModeTile.java b/packages/SystemUI/src/com/android/systemui/qs/tiles/GamingModeTile.java
+new file mode 100644
+index 00000000..c9b6e6a2
+--- /dev/null
++++ b/packages/SystemUI/src/com/android/systemui/qs/tiles/GamingModeTile.java
+@@ -0,0 +1,90 @@
++/*
++ * Copyright (C) 2026 The Zedex OS Project
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package com.android.systemui.qs.tiles;
++
++import android.content.Intent;
++import android.provider.Settings;
++import android.service.quicksettings.Tile;
++import android.widget.Toast;
++
++import com.android.systemui.R;
++import com.android.systemui.plugins.qs.QSTile.BooleanState;
++import com.android.systemui.qs.QSHost;
++import com.android.systemui.qs.tileimpl.QSTileImpl;
++
++import javax.inject.Inject;
++
++public class GamingModeTile extends QSTileImpl<BooleanState> {
++
++    private final Icon mIcon = ResourceIcon.get(R.drawable.ic_qs_gaming_mode);
++
++    @Inject
++    public GamingModeTile(QSHost host) {
++        super(host);
++    }
++
++    @Override
++    public BooleanState newTileState() {
++        return new BooleanState();
++    }
++
++    @Override
++    protected void handleClick() {
++        boolean newState = !isGamingModeEnabled();
++        Settings.System.putInt(mContext.getContentResolver(), "gaming_mode_active", newState ? 1 : 0);
++        Toast.makeText(mContext, newState ? "Gaming Mode ON (Nav & Notifications Locked)" : "Gaming Mode OFF", Toast.LENGTH_SHORT).show();
++        refreshState();
++    }
++
++    @Override
++    public Intent getLongClickIntent() {
++        return null;
++    }
++
++    private boolean isGamingModeEnabled() {
++        return Settings.System.getInt(mContext.getContentResolver(), "gaming_mode_active", 0) == 1;
++    }
++
++    @Override
++    protected void handleUpdateState(BooleanState state, Object arg) {
++        final boolean gamingMode = isGamingModeEnabled();
++        state.value = gamingMode;
++        state.label = mContext.getString(R.string.quick_settings_gaming_mode_label);
++        state.icon = mIcon;
++        if (gamingMode) {
++            state.contentDescription = "Gaming Mode ON";
++            state.state = Tile.STATE_ACTIVE;
++        } else {
++            state.contentDescription = "Gaming Mode OFF";
++            state.state = Tile.STATE_INACTIVE;
++        }
++    }
++
++    @Override
++    public CharSequence getTileLabel() {
++        return mContext.getString(R.string.quick_settings_gaming_mode_label);
++    }
++
++    @Override
++    public int getMetricsCategory() {
++        return 0;
++    }
++
++    @Override
++    public void handleSetListening(boolean listening) {
++    }
++}
+diff --git a/packages/SystemUI/src/com/android/systemui/statusbar/notification/NotificationInterruptionStateProvider.java b/packages/SystemUI/src/com/android/systemui/statusbar/notification/NotificationInterruptionStateProvider.java
+index 579c2023..30142bba 100644
+--- a/packages/SystemUI/src/com/android/systemui/statusbar/notification/NotificationInterruptionStateProvider.java
++++ b/packages/SystemUI/src/com/android/systemui/statusbar/notification/NotificationInterruptionStateProvider.java
+@@ -259,6 +259,14 @@ public class NotificationInterruptionStateProvider {
+             return false;
+         }
+ 
++        // Suppress heads up banners when Gaming Mode is active
++        if (android.provider.Settings.System.getInt(mContext.getContentResolver(), "gaming_mode_active", 0) == 1) {
++            if (DEBUG_HEADS_UP) {
++                Log.d(TAG, "No heads up: suppressed by Gaming Mode: " + sbn.getKey());
++            }
++            return false;
++        }
++
+         if (entry.importance < NotificationManager.IMPORTANCE_HIGH) {
+             if (DEBUG_HEADS_UP) {
+                 Log.d(TAG, "No heads up: unimportant notification: " + sbn.getKey());
+diff --git a/packages/SystemUI/src/com/android/systemui/statusbar/phone/EdgeBackGestureHandler.java b/packages/SystemUI/src/com/android/systemui/statusbar/phone/EdgeBackGestureHandler.java
+index f85f2db6..b61ed5b6 100644
+--- a/packages/SystemUI/src/com/android/systemui/statusbar/phone/EdgeBackGestureHandler.java
++++ b/packages/SystemUI/src/com/android/systemui/statusbar/phone/EdgeBackGestureHandler.java
+@@ -359,6 +359,11 @@ public class EdgeBackGestureHandler implements DisplayListener, TunerService.Tun
+     private void onMotionEvent(MotionEvent ev) {
+         int action = ev.getActionMasked();
+         if (action == MotionEvent.ACTION_DOWN) {
++            // Disable edge back gestures if Gaming Mode is active
++            if (android.provider.Settings.System.getInt(mContext.getContentResolver(), "gaming_mode_active", 0) == 1) {
++                mAllowGesture = false;
++                return;
++            }
+             // Verify if this is in within the touch region and we aren't in immersive mode, and
+             // either the bouncer is showing or the notification panel is hidden
+             int stateFlags = mOverviewProxyService.getSystemUiStateFlags();
+diff --git a/packages/SystemUI/src/com/android/systemui/statusbar/phone/NavigationBarView.java b/packages/SystemUI/src/com/android/systemui/statusbar/phone/NavigationBarView.java
+index 3036d99e..7845181e 100644
+--- a/packages/SystemUI/src/com/android/systemui/statusbar/phone/NavigationBarView.java
++++ b/packages/SystemUI/src/com/android/systemui/statusbar/phone/NavigationBarView.java
+@@ -357,11 +357,17 @@ public class NavigationBarView extends FrameLayout implements
+ 
+     @Override
+     public boolean onInterceptTouchEvent(MotionEvent event) {
++        if (android.provider.Settings.System.getInt(mContext.getContentResolver(), "gaming_mode_active", 0) == 1) {
++            return true;
++        }
+         return shouldDeadZoneConsumeTouchEvents(event) || super.onInterceptTouchEvent(event);
+     }
+ 
+     @Override
+     public boolean onTouchEvent(MotionEvent event) {
++        if (android.provider.Settings.System.getInt(mContext.getContentResolver(), "gaming_mode_active", 0) == 1) {
++            return true;
++        }
+         shouldDeadZoneConsumeTouchEvents(event);
+         return super.onTouchEvent(event);
+     }
 diff --git a/packages/SystemUI/src/com/android/systemui/statusbar/phone/NotificationPanelView.java b/packages/SystemUI/src/com/android/systemui/statusbar/phone/NotificationPanelView.java
 index 00d4c3c6..31751b78 100644
 --- a/packages/SystemUI/src/com/android/systemui/statusbar/phone/NotificationPanelView.java

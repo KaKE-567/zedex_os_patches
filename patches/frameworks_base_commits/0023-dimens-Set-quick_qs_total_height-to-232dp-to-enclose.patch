@@ -1,7 +1,7 @@
 From e8419b97945926e092febb3ae2f38b3a8c2c9c96 Mon Sep 17 00:00:00 2001
 From: kake <kake@build.local>
 Date: Tue, 25 Aug 2026 08:42:29 +0000
-Subject: [PATCH 23/29] dimens: Set quick_qs_total_height to 232dp to enclose
+Subject: [PATCH 23/30] dimens: Set quick_qs_total_height to 232dp to enclose
  2x2 capsule pills cleanly
 
 Change-Id: I0701b62dfde158d28fc7cb7d973ea7218614f13e

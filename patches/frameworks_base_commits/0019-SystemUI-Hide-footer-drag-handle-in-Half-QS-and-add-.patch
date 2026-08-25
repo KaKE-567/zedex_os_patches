@@ -1,7 +1,7 @@
 From 3667029c1869b2453952407115f1e26a43fdd205 Mon Sep 17 00:00:00 2001
 From: kake <kake@build.local>
 Date: Tue, 25 Aug 2026 07:19:45 +0000
-Subject: [PATCH 19/29] SystemUI: Hide footer drag handle in Half QS and add
+Subject: [PATCH 19/30] SystemUI: Hide footer drag handle in Half QS and add
  24dp notification clearance
 
 Change-Id: I5e9006880d4f0fdfbe00e0cb0ecae91dc2af173c
