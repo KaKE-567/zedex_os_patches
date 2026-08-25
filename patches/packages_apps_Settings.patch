@@ -993,10 +993,10 @@ index 0000000..8ad7f9e
 +}
 diff --git a/src/com/android/settings/gaming/GamingModeSettings.java b/src/com/android/settings/gaming/GamingModeSettings.java
 new file mode 100644
-index 0000000..42694b7
+index 0000000..9b23abd
 --- /dev/null
 +++ b/src/com/android/settings/gaming/GamingModeSettings.java
-@@ -0,0 +1,49 @@
+@@ -0,0 +1,62 @@
 +/*
 + * Copyright (C) 2026 The Zedex OS Project
 + *
@@ -1017,12 +1017,15 @@ index 0000000..42694b7
 +
 +import android.app.settings.SettingsEnums;
 +import android.content.Context;
-+import android.os.Bundle;
++import android.provider.SearchIndexableResource;
 +
 +import com.android.settings.R;
 +import com.android.settings.dashboard.DashboardFragment;
 +import com.android.settings.search.BaseSearchIndexProvider;
 +import com.android.settingslib.search.SearchIndexable;
++
++import java.util.ArrayList;
++import java.util.List;
 +
 +@SearchIndexable(forTarget = SearchIndexable.ALL & ~SearchIndexable.ARC)
 +public class GamingModeSettings extends DashboardFragment {
@@ -1030,7 +1033,7 @@ index 0000000..42694b7
 +
 +    @Override
 +    public int getMetricsCategory() {
-+        return SettingsEnums.UNKNOWN;
++        return SettingsEnums.PAGE_UNKNOWN;
 +    }
 +
 +    @Override
@@ -1044,7 +1047,17 @@ index 0000000..42694b7
 +    }
 +
 +    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER =
-+            new BaseSearchIndexProvider(R.xml.gaming_mode_settings);
++            new BaseSearchIndexProvider() {
++                @Override
++                public List<SearchIndexableResource> getXmlResourcesToIndex(Context context,
++                        boolean enabled) {
++                    final ArrayList<SearchIndexableResource> result = new ArrayList<>();
++                    final SearchIndexableResource sir = new SearchIndexableResource(context);
++                    sir.xmlResId = R.xml.gaming_mode_settings;
++                    result.add(sir);
++                    return result;
++                }
++            };
 +}
 diff --git a/src/com/android/settings/gaming/GamingModeTogglePreferenceController.java b/src/com/android/settings/gaming/GamingModeTogglePreferenceController.java
 new file mode 100644
@@ -1182,10 +1195,10 @@ index 0000000..cda17e3
 +}
 diff --git a/src/com/android/settings/kake/KaKeElementsSettings.java b/src/com/android/settings/kake/KaKeElementsSettings.java
 new file mode 100644
-index 0000000..dd31655
+index 0000000..cc493d9
 --- /dev/null
 +++ b/src/com/android/settings/kake/KaKeElementsSettings.java
-@@ -0,0 +1,49 @@
+@@ -0,0 +1,62 @@
 +/*
 + * Copyright (C) 2026 The Zedex OS Project - KaKe Elements
 + *
@@ -1206,12 +1219,15 @@ index 0000000..dd31655
 +
 +import android.app.settings.SettingsEnums;
 +import android.content.Context;
-+import android.os.Bundle;
++import android.provider.SearchIndexableResource;
 +
 +import com.android.settings.R;
 +import com.android.settings.dashboard.DashboardFragment;
 +import com.android.settings.search.BaseSearchIndexProvider;
 +import com.android.settingslib.search.SearchIndexable;
++
++import java.util.ArrayList;
++import java.util.List;
 +
 +@SearchIndexable(forTarget = SearchIndexable.ALL & ~SearchIndexable.ARC)
 +public class KaKeElementsSettings extends DashboardFragment {
@@ -1219,7 +1235,7 @@ index 0000000..dd31655
 +
 +    @Override
 +    public int getMetricsCategory() {
-+        return SettingsEnums.UNKNOWN;
++        return SettingsEnums.PAGE_UNKNOWN;
 +    }
 +
 +    @Override
@@ -1233,5 +1249,15 @@ index 0000000..dd31655
 +    }
 +
 +    public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER =
-+            new BaseSearchIndexProvider(R.xml.kake_elements_settings);
++            new BaseSearchIndexProvider() {
++                @Override
++                public List<SearchIndexableResource> getXmlResourcesToIndex(Context context,
++                        boolean enabled) {
++                    final ArrayList<SearchIndexableResource> result = new ArrayList<>();
++                    final SearchIndexableResource sir = new SearchIndexableResource(context);
++                    sir.xmlResId = R.xml.kake_elements_settings;
++                    result.add(sir);
++                    return result;
++                }
++            };
 +}
