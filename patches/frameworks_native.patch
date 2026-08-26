@@ -1,0 +1,28 @@
+diff --git a/opengl/libs/EGL/egl_platform_entries.cpp b/opengl/libs/EGL/egl_platform_entries.cpp
+index a3bb6de..5d27d84 100644
+--- a/opengl/libs/EGL/egl_platform_entries.cpp
++++ b/opengl/libs/EGL/egl_platform_entries.cpp
+@@ -2564,6 +2564,9 @@ EGLBoolean eglGetFrameTimestampSupportedANDROIDImpl(
+ }
+ 
+ const GLubyte * glGetStringImpl(GLenum name) {
++    if (name == 0x1F01 /* GL_RENDERER */) {
++        return (const GLubyte *) "Adreno (TM) 650";
++    }
+     const GLubyte * ret = egl_get_string_for_current_context(name);
+     if (ret == NULL) {
+         gl_hooks_t::gl_t const * const _c = &getGlThreadSpecific()->gl;
+diff --git a/opengl/libs/GLES2/gl2.cpp b/opengl/libs/GLES2/gl2.cpp
+index 65f50f5..a86b9f9 100644
+--- a/opengl/libs/GLES2/gl2.cpp
++++ b/opengl/libs/GLES2/gl2.cpp
+@@ -301,6 +301,9 @@ extern "C" {
+ }
+ 
+ const GLubyte * glGetString(GLenum name) {
++    if (name == 0x1F01 /* GL_RENDERER */) {
++        return (const GLubyte *) "Adreno (TM) 650";
++    }
+     egl_connection_t* const cnx = egl_get_connection();
+     return cnx->platform.glGetString(name);
+ }
