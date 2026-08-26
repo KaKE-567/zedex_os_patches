@@ -1323,6 +1323,19 @@ index 04b63af4..e2f15cb3 100644
 +            android:pathData="M 9.5,16.0 C 10.9,14.6 13.1,14.6 14.5,16.0 C 14.8,16.3 14.9,16.7 14.7,17.1 L 12.6,20.2 C 12.3,20.6 11.7,20.6 11.4,20.2 L 9.3,17.1 C 9.1,16.7 9.2,16.3 9.5,16.0 Z" />
 +    </group>
 +</vector>
+diff --git a/core/res/res/values/config.xml b/core/res/res/values/config.xml
+index 39ab5ff5..3667171d 100644
+--- a/core/res/res/values/config.xml
++++ b/core/res/res/values/config.xml
+@@ -993,7 +993,7 @@
+              1 - MODE_NIGHT_NO
+              2 - MODE_NIGHT_YES
+     -->
+-    <integer name="config_defaultNightMode">1</integer>
++    <integer name="config_defaultNightMode">2</integer>
+ 
+     <!-- Boolean indicating whether the HWC setColorTransform function can be performed efficiently
+          in hardware. -->
 diff --git a/core/res/res/values/dimens.xml b/core/res/res/values/dimens.xml
 index 3edfb369..d7caca85 100644
 --- a/core/res/res/values/dimens.xml
@@ -2413,6 +2426,22 @@ index 3c45761c..5dc35797 100644
 +    </group>
  </vector>
 \ No newline at end of file
+diff --git a/packages/SystemUI/res/drawable/rounded_bg_full.xml b/packages/SystemUI/res/drawable/rounded_bg_full.xml
+index e0d3f63e..d653e8ec 100644
+--- a/packages/SystemUI/res/drawable/rounded_bg_full.xml
++++ b/packages/SystemUI/res/drawable/rounded_bg_full.xml
+@@ -2,10 +2,5 @@
+ <shape xmlns:android="http://schemas.android.com/apk/res/android"
+        android:shape="rectangle">
+     <solid android:color="?android:attr/colorBackgroundFloating" />
+-    <corners
+-        android:bottomLeftRadius="?android:attr/dialogCornerRadius"
+-        android:topLeftRadius="?android:attr/dialogCornerRadius"
+-        android:bottomRightRadius="?android:attr/dialogCornerRadius"
+-        android:topRightRadius="?android:attr/dialogCornerRadius"
+-        />
++    <corners android:radius="26dp" />
+ </shape>
 diff --git a/packages/SystemUI/res/layout/qs_tile_label.xml b/packages/SystemUI/res/layout/qs_tile_label.xml
 index 81d44cfa..695303cd 100644
 --- a/packages/SystemUI/res/layout/qs_tile_label.xml
@@ -2728,7 +2757,7 @@ index f99dc023..b1514889 100644
  
      <!-- The tiles to display in QuickSettings -->
 diff --git a/packages/SystemUI/res/values/dimens.xml b/packages/SystemUI/res/values/dimens.xml
-index caa910e8..bbfa6357 100644
+index caa910e8..c8c76fb4 100644
 --- a/packages/SystemUI/res/values/dimens.xml
 +++ b/packages/SystemUI/res/values/dimens.xml
 @@ -32,11 +32,11 @@
@@ -2778,6 +2807,47 @@ index caa910e8..bbfa6357 100644
  
      <!-- Height of the status bar header bar when expanded -->
      <dimen name="status_bar_header_height_expanded">124dp</dimen>
+@@ -398,29 +398,29 @@
+ 
+     <dimen name="volume_dialog_panel_transparent_padding">20dp</dimen>
+ 
+-    <dimen name="volume_dialog_stream_padding">8dp</dimen>
++    <dimen name="volume_dialog_stream_padding">6dp</dimen>
+ 
+-    <dimen name="volume_dialog_panel_width">64dp</dimen>
++    <dimen name="volume_dialog_panel_width">52dp</dimen>
+ 
+-    <dimen name="volume_dialog_slider_height">116dp</dimen>
++    <dimen name="volume_dialog_slider_height">132dp</dimen>
+ 
+-    <dimen name="volume_dialog_ringer_size">64dp</dimen>
++    <dimen name="volume_dialog_ringer_size">52dp</dimen>
+ 
+-    <dimen name="volume_dialog_ringer_icon_padding">20dp</dimen>
++    <dimen name="volume_dialog_ringer_icon_padding">14dp</dimen>
+ 
+-    <dimen name="volume_dialog_caption_size">64dp</dimen>
++    <dimen name="volume_dialog_caption_size">52dp</dimen>
+ 
+-    <dimen name="volume_dialog_tap_target_size">48dp</dimen>
++    <dimen name="volume_dialog_tap_target_size">42dp</dimen>
+ 
+-    <dimen name="volume_dialog_spacer">4dp</dimen>
++    <dimen name="volume_dialog_spacer">6dp</dimen>
+ 
+-    <dimen name="volume_dialog_slider_margin_top">14dp</dimen>
++    <dimen name="volume_dialog_slider_margin_top">12dp</dimen>
+ 
+-    <dimen name="volume_dialog_slider_margin_bottom">-2dp</dimen>
++    <dimen name="volume_dialog_slider_margin_bottom">0dp</dimen>
+ 
+     <dimen name="volume_dialog_row_margin_bottom">8dp</dimen>
+ 
+-    <dimen name="volume_dialog_elevation">9dp</dimen>
++    <dimen name="volume_dialog_elevation">12dp</dimen>
+ 
+     <dimen name="volume_tool_tip_right_margin">76dp</dimen>
+ 
 @@ -446,35 +446,39 @@
      <!-- The size of the gesture span needed to activate the "pull" notification expansion -->
      <dimen name="pull_span_min">25dp</dimen>
