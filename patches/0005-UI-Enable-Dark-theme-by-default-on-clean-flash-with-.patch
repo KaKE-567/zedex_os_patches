@@ -1,0 +1,90 @@
+From 3b14e7d6b1012101201be8a668eb41b2ff9f71ba Mon Sep 17 00:00:00 2001
+From: kake <kake@build.local>
+Date: Wed, 26 Aug 2026 05:37:54 +0000
+Subject: [PATCH 05/10] UI: Enable Dark theme by default on clean flash with
+ iOS capsule volume panel
+
+Change-Id: I0fb6716d182fe4fd508435e579dfd55cda3a17e4
+---
+ core/res/res/values/config.xml                |  2 +-
+ .../SystemUI/res/drawable/rounded_bg_full.xml |  7 +-----
+ packages/SystemUI/res/values/dimens.xml       | 22 +++++++++----------
+ 3 files changed, 13 insertions(+), 18 deletions(-)
+
+diff --git a/core/res/res/values/config.xml b/core/res/res/values/config.xml
+index 39ab5ff5..3667171d 100644
+--- a/core/res/res/values/config.xml
++++ b/core/res/res/values/config.xml
+@@ -993,7 +993,7 @@
+              1 - MODE_NIGHT_NO
+              2 - MODE_NIGHT_YES
+     -->
+-    <integer name="config_defaultNightMode">1</integer>
++    <integer name="config_defaultNightMode">2</integer>
+ 
+     <!-- Boolean indicating whether the HWC setColorTransform function can be performed efficiently
+          in hardware. -->
+diff --git a/packages/SystemUI/res/drawable/rounded_bg_full.xml b/packages/SystemUI/res/drawable/rounded_bg_full.xml
+index e0d3f63e..d653e8ec 100644
+--- a/packages/SystemUI/res/drawable/rounded_bg_full.xml
++++ b/packages/SystemUI/res/drawable/rounded_bg_full.xml
+@@ -2,10 +2,5 @@
+ <shape xmlns:android="http://schemas.android.com/apk/res/android"
+        android:shape="rectangle">
+     <solid android:color="?android:attr/colorBackgroundFloating" />
+-    <corners
+-        android:bottomLeftRadius="?android:attr/dialogCornerRadius"
+-        android:topLeftRadius="?android:attr/dialogCornerRadius"
+-        android:bottomRightRadius="?android:attr/dialogCornerRadius"
+-        android:topRightRadius="?android:attr/dialogCornerRadius"
+-        />
++    <corners android:radius="26dp" />
+ </shape>
+diff --git a/packages/SystemUI/res/values/dimens.xml b/packages/SystemUI/res/values/dimens.xml
+index bbfa6357..c8c76fb4 100644
+--- a/packages/SystemUI/res/values/dimens.xml
++++ b/packages/SystemUI/res/values/dimens.xml
+@@ -398,29 +398,29 @@
+ 
+     <dimen name="volume_dialog_panel_transparent_padding">20dp</dimen>
+ 
+-    <dimen name="volume_dialog_stream_padding">8dp</dimen>
++    <dimen name="volume_dialog_stream_padding">6dp</dimen>
+ 
+-    <dimen name="volume_dialog_panel_width">64dp</dimen>
++    <dimen name="volume_dialog_panel_width">52dp</dimen>
+ 
+-    <dimen name="volume_dialog_slider_height">116dp</dimen>
++    <dimen name="volume_dialog_slider_height">132dp</dimen>
+ 
+-    <dimen name="volume_dialog_ringer_size">64dp</dimen>
++    <dimen name="volume_dialog_ringer_size">52dp</dimen>
+ 
+-    <dimen name="volume_dialog_ringer_icon_padding">20dp</dimen>
++    <dimen name="volume_dialog_ringer_icon_padding">14dp</dimen>
+ 
+-    <dimen name="volume_dialog_caption_size">64dp</dimen>
++    <dimen name="volume_dialog_caption_size">52dp</dimen>
+ 
+-    <dimen name="volume_dialog_tap_target_size">48dp</dimen>
++    <dimen name="volume_dialog_tap_target_size">42dp</dimen>
+ 
+-    <dimen name="volume_dialog_spacer">4dp</dimen>
++    <dimen name="volume_dialog_spacer">6dp</dimen>
+ 
+-    <dimen name="volume_dialog_slider_margin_top">14dp</dimen>
++    <dimen name="volume_dialog_slider_margin_top">12dp</dimen>
+ 
+-    <dimen name="volume_dialog_slider_margin_bottom">-2dp</dimen>
++    <dimen name="volume_dialog_slider_margin_bottom">0dp</dimen>
+ 
+     <dimen name="volume_dialog_row_margin_bottom">8dp</dimen>
+ 
+-    <dimen name="volume_dialog_elevation">9dp</dimen>
++    <dimen name="volume_dialog_elevation">12dp</dimen>
+ 
+     <dimen name="volume_tool_tip_right_margin">76dp</dimen>
+ 
+-- 
+2.43.0
+

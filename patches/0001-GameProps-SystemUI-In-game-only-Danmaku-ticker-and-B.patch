@@ -1,0 +1,27 @@
+From 9b81d312a1c3b03a3f9f0eed59102e0d7ae65ad3 Mon Sep 17 00:00:00 2001
+From: kake <kake@build.local>
+Date: Tue, 25 Aug 2026 18:06:10 +0000
+Subject: [PATCH 01/10] GameProps & SystemUI: In-game only Danmaku ticker and
+ Board=alioth spoofing
+
+Change-Id: I131f6068c76eb87d109e8474d8afb15fd29042c3
+---
+ core/jni/android_os_SELinux.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/core/jni/android_os_SELinux.cpp b/core/jni/android_os_SELinux.cpp
+index ffea70f8..236ee612 100644
+--- a/core/jni/android_os_SELinux.cpp
++++ b/core/jni/android_os_SELinux.cpp
+@@ -77,7 +77,7 @@ static jboolean isSELinuxEnabled(JNIEnv *env, jobject) {
+  * Exceptions: none
+  */
+ static jboolean isSELinuxEnforced(JNIEnv *env, jobject) {
+-    return true;
++    return (security_getenforce() == 1) ? true : false;
+ }
+ 
+ static jstring fileSelabelLookup(JNIEnv* env, jobject, jstring pathStr) {
+-- 
+2.43.0
+

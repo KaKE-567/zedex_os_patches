@@ -1,8 +1,8 @@
 From 66abd84e5540b337f3a0bcba4ea7e109d73a8048 Mon Sep 17 00:00:00 2001
 From: kake <kake@build.local>
 Date: Wed, 26 Aug 2026 08:30:17 +0000
-Subject: [PATCH] SystemUI: Fix QS footer pencil and settings icon glitch by
- removing horizontal translation jump
+Subject: [PATCH 09/10] SystemUI: Fix QS footer pencil and settings icon glitch
+ by removing horizontal translation jump
 
 Change-Id: I1cc7375276a91bb31922bc74f97294946aa96b1b
 ---

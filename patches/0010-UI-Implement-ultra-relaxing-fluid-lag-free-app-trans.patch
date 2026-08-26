@@ -1,8 +1,8 @@
 From 6798ae07fbf65743794b7321e5ce752b0e1d2038 Mon Sep 17 00:00:00 2001
 From: kake <kake@build.local>
 Date: Wed, 26 Aug 2026 08:36:26 +0000
-Subject: [PATCH] UI: Implement ultra-relaxing, fluid, lag-free app transition
- animations
+Subject: [PATCH 10/10] UI: Implement ultra-relaxing, fluid, lag-free app
+ transition animations
 
 Change-Id: Ibd24bcf6a0c68a179ab1eb3717d5fb5f8313ff28
 ---
