@@ -1,0 +1,191 @@
+From 6798ae07fbf65743794b7321e5ce752b0e1d2038 Mon Sep 17 00:00:00 2001
+From: kake <kake@build.local>
+Date: Wed, 26 Aug 2026 08:36:26 +0000
+Subject: [PATCH] UI: Implement ultra-relaxing, fluid, lag-free app transition
+ animations
+
+Change-Id: Ibd24bcf6a0c68a179ab1eb3717d5fb5f8313ff28
+---
+ core/res/res/anim/activity_close_enter.xml | 22 ++++++------------
+ core/res/res/anim/activity_close_exit.xml  | 24 ++++++++++++++-----
+ core/res/res/anim/activity_open_enter.xml  | 27 ++++++++++++++++------
+ core/res/res/anim/activity_open_exit.xml   | 23 +++++++-----------
+ 4 files changed, 53 insertions(+), 43 deletions(-)
+
+diff --git a/core/res/res/anim/activity_close_enter.xml b/core/res/res/anim/activity_close_enter.xml
+index 47a2aed0..db49f6bc 100644
+--- a/core/res/res/anim/activity_close_enter.xml
++++ b/core/res/res/anim/activity_close_enter.xml
+@@ -20,31 +20,23 @@
+ <set xmlns:android="http://schemas.android.com/apk/res/android"
+     android:shareInterpolator="false">
+     <alpha
+-        android:fromAlpha="0.7"
++        android:fromAlpha="0.8"
+         android:toAlpha="1.0"
+         android:fillEnabled="true"
+         android:fillBefore="true"
+         android:fillAfter="true"
+-        android:interpolator="@interpolator/linear"
+-        android:duration="240"/>
+-    <translate
+-        android:fromXDelta="-8%"
+-        android:toXDelta="0"
+-        android:fillEnabled="true"
+-        android:fillBefore="true"
+-        android:fillAfter="true"
+-        android:interpolator="@interpolator/aggressive_ease"
+-        android:duration="300"/>
++        android:interpolator="@interpolator/decelerate_cubic"
++        android:duration="280"/>
+     <scale
+-        android:fromXScale="0.96"
++        android:fromXScale="0.97"
+         android:toXScale="1.0"
+-        android:fromYScale="0.96"
++        android:fromYScale="0.97"
+         android:toYScale="1.0"
+         android:pivotX="50%"
+         android:pivotY="50%"
+         android:fillEnabled="true"
+         android:fillBefore="true"
+         android:fillAfter="true"
+-        android:interpolator="@interpolator/aggressive_ease"
+-        android:duration="300"/>
++        android:interpolator="@interpolator/fast_out_extra_slow_in"
++        android:duration="320"/>
+ </set>
+\ No newline at end of file
+diff --git a/core/res/res/anim/activity_close_exit.xml b/core/res/res/anim/activity_close_exit.xml
+index 5b282cfd..8c4eebe9 100644
+--- a/core/res/res/anim/activity_close_exit.xml
++++ b/core/res/res/anim/activity_close_exit.xml
+@@ -26,14 +26,26 @@
+         android:fillEnabled="true"
+         android:fillBefore="true"
+         android:fillAfter="true"
+-        android:interpolator="@interpolator/linear"
+-        android:duration="240"/>
++        android:interpolator="@interpolator/decelerate_cubic"
++        android:duration="280"/>
+     <translate
+-        android:fromXDelta="0"
+-        android:toXDelta="20%"
++        android:fromYDelta="0"
++        android:toYDelta="5%"
+         android:fillEnabled="true"
+         android:fillBefore="true"
+         android:fillAfter="true"
+-        android:interpolator="@interpolator/aggressive_ease"
+-        android:duration="300"/>
++        android:interpolator="@interpolator/fast_out_extra_slow_in"
++        android:duration="320"/>
++    <scale
++        android:fromXScale="1.0"
++        android:toXScale="0.95"
++        android:fromYScale="1.0"
++        android:toYScale="0.95"
++        android:pivotX="50%"
++        android:pivotY="50%"
++        android:fillEnabled="true"
++        android:fillBefore="true"
++        android:fillAfter="true"
++        android:interpolator="@interpolator/fast_out_extra_slow_in"
++        android:duration="320"/>
+ </set>
+diff --git a/core/res/res/anim/activity_open_enter.xml b/core/res/res/anim/activity_open_enter.xml
+index d7881011..4f58b05a 100644
+--- a/core/res/res/anim/activity_open_enter.xml
++++ b/core/res/res/anim/activity_open_enter.xml
+@@ -1,4 +1,5 @@
+-<?xml version="1.0" encoding="utf-8"?><!--
++<?xml version="1.0" encoding="utf-8"?>
++<!--
+ /*
+ ** Copyright 2009, The Android Open Source Project
+ **
+@@ -25,14 +26,26 @@
+         android:fillEnabled="true"
+         android:fillBefore="true"
+         android:fillAfter="true"
+-        android:interpolator="@interpolator/linear"
+-        android:duration="240"/>
++        android:interpolator="@interpolator/decelerate_cubic"
++        android:duration="320"/>
+     <translate
+-        android:fromXDelta="20%"
+-        android:toXDelta="0"
++        android:fromYDelta="5%"
++        android:toYDelta="0"
+         android:fillEnabled="true"
+         android:fillBefore="true"
+         android:fillAfter="true"
+-        android:interpolator="@interpolator/aggressive_ease"
+-        android:duration="320"/>
++        android:interpolator="@interpolator/fast_out_extra_slow_in"
++        android:duration="380"/>
++    <scale
++        android:fromXScale="0.95"
++        android:toXScale="1.0"
++        android:fromYScale="0.95"
++        android:toYScale="1.0"
++        android:pivotX="50%"
++        android:pivotY="50%"
++        android:fillEnabled="true"
++        android:fillBefore="true"
++        android:fillAfter="true"
++        android:interpolator="@interpolator/fast_out_extra_slow_in"
++        android:duration="380"/>
+ </set>
+diff --git a/core/res/res/anim/activity_open_exit.xml b/core/res/res/anim/activity_open_exit.xml
+index b93733dc..c6167148 100644
+--- a/core/res/res/anim/activity_open_exit.xml
++++ b/core/res/res/anim/activity_open_exit.xml
+@@ -1,4 +1,5 @@
+-<?xml version="1.0" encoding="utf-8"?><!--
++<?xml version="1.0" encoding="utf-8"?>
++<!--
+ /*
+ ** Copyright 2009, The Android Open Source Project
+ **
+@@ -20,30 +21,22 @@
+     android:shareInterpolator="false">
+     <alpha
+         android:fromAlpha="1.0"
+-        android:toAlpha="0.7"
++        android:toAlpha="0.8"
+         android:fillEnabled="true"
+         android:fillBefore="true"
+         android:fillAfter="true"
+-        android:interpolator="@interpolator/linear"
+-        android:duration="240"/>
+-    <translate
+-        android:fromXDelta="0"
+-        android:toXDelta="-8%"
+-        android:fillEnabled="true"
+-        android:fillBefore="true"
+-        android:fillAfter="true"
+-        android:interpolator="@interpolator/aggressive_ease"
++        android:interpolator="@interpolator/decelerate_cubic"
+         android:duration="320"/>
+     <scale
+         android:fromXScale="1.0"
+-        android:toXScale="0.96"
++        android:toXScale="0.97"
+         android:fromYScale="1.0"
+-        android:toYScale="0.96"
++        android:toYScale="0.97"
+         android:pivotX="50%"
+         android:pivotY="50%"
+         android:fillEnabled="true"
+         android:fillBefore="true"
+         android:fillAfter="true"
+-        android:interpolator="@interpolator/aggressive_ease"
+-        android:duration="320"/>
++        android:interpolator="@interpolator/fast_out_extra_slow_in"
++        android:duration="380"/>
+ </set>
+\ No newline at end of file
+-- 
+2.43.0
+
