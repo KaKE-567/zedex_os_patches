@@ -226,48 +226,6 @@ index 00000000..3d38c16f
 +        }
 +    }
 +}
-diff --git a/core/jni/android_opengl_GLES10.cpp b/core/jni/android_opengl_GLES10.cpp
-index 3d9a3b66..e1ede022 100644
---- a/core/jni/android_opengl_GLES10.cpp
-+++ b/core/jni/android_opengl_GLES10.cpp
-@@ -1371,6 +1371,9 @@ android_glGetIntegerv__ILjava_nio_IntBuffer_2
- }
- /* const GLubyte * glGetString ( GLenum name ) */
- static jstring android_glGetString(JNIEnv* _env, jobject, jint name) {
-+    if (name == 0x1F01 /* GL_RENDERER */) {
-+        return _env->NewStringUTF("Adreno (TM) 650");
-+    }
-     const char* chars = (const char*) glGetString((GLenum) name);
-     return _env->NewStringUTF(chars);
- }
-diff --git a/core/jni/android_opengl_GLES20.cpp b/core/jni/android_opengl_GLES20.cpp
-index 2add72d1..d8dcb0f5 100644
---- a/core/jni/android_opengl_GLES20.cpp
-+++ b/core/jni/android_opengl_GLES20.cpp
-@@ -3467,6 +3467,9 @@ static jstring android_glGetShaderSource(JNIEnv *_env, jobject, jint shader) {
- }
- /* const GLubyte * glGetString ( GLenum name ) */
- static jstring android_glGetString(JNIEnv* _env, jobject, jint name) {
-+    if (name == 0x1F01 /* GL_RENDERER */) {
-+        return _env->NewStringUTF("Adreno (TM) 650");
-+    }
-     const char* chars = (const char*) glGetString((GLenum) name);
-     return _env->NewStringUTF(chars);
- }
-diff --git a/core/jni/com_google_android_gles_jni_GLImpl.cpp b/core/jni/com_google_android_gles_jni_GLImpl.cpp
-index 6b893cb9..1b9d16cb 100644
---- a/core/jni/com_google_android_gles_jni_GLImpl.cpp
-+++ b/core/jni/com_google_android_gles_jni_GLImpl.cpp
-@@ -1950,6 +1950,9 @@ exit:
- 
- /* const GLubyte * glGetString ( GLenum name ) */
- static jstring android_glGetString(JNIEnv *_env, jobject, jint name) {
-+    if (name == 0x1F01 /* GL_RENDERER */) {
-+        return _env->NewStringUTF("Adreno (TM) 650");
-+    }
-     const char* chars = (const char*) glGetString((GLenum) name);
-     return _env->NewStringUTF(chars);
- }
 diff --git a/core/res/res/anim/activity_close_enter.xml b/core/res/res/anim/activity_close_enter.xml
 index 9fa7c549..47a2aed0 100644
 --- a/core/res/res/anim/activity_close_enter.xml
