@@ -1,0 +1,224 @@
+From 63d38c170c6ed032f46dc0abf2a5431e80c0a6f0 Mon Sep 17 00:00:00 2001
+From: kake <kake@build.local>
+Date: Wed, 26 Aug 2026 06:51:17 +0000
+Subject: [PATCH] SystemUI: Redesign Volume Dialog with authentic iOS unified
+ pill capsule
+
+Change-Id: I9de8eb290aba5779be54ac985fcf2486ab20d20c
+---
+ .../drawable/ios_volume_slider_progress.xml   | 19 +++++
+ .../SystemUI/res/layout/volume_dialog.xml     |  6 +-
+ .../SystemUI/res/layout/volume_dialog_row.xml | 70 +++++++++----------
+ packages/SystemUI/res/values/dimens.xml       | 22 +++---
+ .../systemui/volume/VolumeDialogImpl.java     | 12 ++--
+ 5 files changed, 71 insertions(+), 58 deletions(-)
+ create mode 100644 packages/SystemUI/res/drawable/ios_volume_slider_progress.xml
+
+diff --git a/packages/SystemUI/res/drawable/ios_volume_slider_progress.xml b/packages/SystemUI/res/drawable/ios_volume_slider_progress.xml
+new file mode 100644
+index 00000000..6597b64f
+--- /dev/null
++++ b/packages/SystemUI/res/drawable/ios_volume_slider_progress.xml
+@@ -0,0 +1,19 @@
++<?xml version="1.0" encoding="utf-8"?>
++<!-- Copyright (C) 2026 The LineageOS Project
++     SPDX-License-Identifier: Apache-2.0 -->
++<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
++    <item android:id="@android:id/background">
++        <shape android:shape="rectangle">
++            <corners android:radius="24dp" />
++            <solid android:color="#4D555555" />
++        </shape>
++    </item>
++    <item android:id="@android:id/progress">
++        <clip>
++            <shape android:shape="rectangle">
++                <corners android:radius="24dp" />
++                <solid android:color="#FFFFFFFF" />
++            </shape>
++        </clip>
++    </item>
++</layer-list>
+diff --git a/packages/SystemUI/res/layout/volume_dialog.xml b/packages/SystemUI/res/layout/volume_dialog.xml
+index 6ecb8545..1f0b33a4 100644
+--- a/packages/SystemUI/res/layout/volume_dialog.xml
++++ b/packages/SystemUI/res/layout/volume_dialog.xml
+@@ -76,7 +76,7 @@
+             android:translationZ="@dimen/volume_dialog_elevation"
+             android:clipChildren="false"
+             android:clipToPadding="false"
+-            android:background="@drawable/rounded_bg_full" >
++            android:background="@android:color/transparent" >
+             <LinearLayout
+                 android:id="@+id/volume_dialog_rows"
+                 android:layout_width="wrap_content"
+@@ -88,10 +88,6 @@
+                 android:paddingLeft="@dimen/volume_dialog_stream_padding">
+                     <!-- volume rows added and removed here! :-) -->
+             </LinearLayout>
+-            <View
+-                android:layout_width="match_parent"
+-                android:layout_height="1dp"
+-                android:background="?android:attr/listDivider"/>
+             <LinearLayout
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+diff --git a/packages/SystemUI/res/layout/volume_dialog_row.xml b/packages/SystemUI/res/layout/volume_dialog_row.xml
+index 6128da86..b54cce4e 100644
+--- a/packages/SystemUI/res/layout/volume_dialog_row.xml
++++ b/packages/SystemUI/res/layout/volume_dialog_row.xml
+@@ -22,49 +22,47 @@
+     android:clipToPadding="false"
+     android:theme="@style/qs_theme">
+ 
+-    <LinearLayout
+-        android:layout_height="wrap_content"
+-        android:layout_width="match_parent"
+-        android:gravity="center"
++    <FrameLayout
++        android:id="@+id/volume_row_slider_frame"
++        android:layout_width="@dimen/volume_dialog_panel_width"
++        android:layout_height="@dimen/volume_dialog_slider_height"
+         android:layout_gravity="center"
+-        android:orientation="vertical" >
+-        <TextView
+-            android:id="@+id/volume_row_header"
+-            android:layout_width="wrap_content"
+-            android:layout_height="wrap_content"
+-            android:ellipsize="end"
+-            android:maxLength="10"
+-            android:maxLines="1"
+-            android:visibility="gone"
+-            android:textColor="?android:attr/colorControlNormal"
+-            android:textAppearance="@style/TextAppearance.Volume.Header" />
+-        <FrameLayout
+-            android:id="@+id/volume_row_slider_frame"
+-            android:layout_width="match_parent"
+-            android:layout_marginTop="@dimen/volume_dialog_slider_margin_top"
+-            android:layout_marginBottom="@dimen/volume_dialog_slider_margin_bottom"
++        android:clipChildren="false"
++        android:clipToPadding="false">
++
++        <SeekBar
++            android:id="@+id/volume_row_slider"
++            android:clickable="true"
++            android:layout_width="@dimen/volume_dialog_slider_height"
++            android:layout_height="@dimen/volume_dialog_panel_width"
+             android:layoutDirection="rtl"
+-            android:layout_height="@dimen/volume_dialog_slider_height">
+-            <SeekBar
+-                android:id="@+id/volume_row_slider"
+-                android:clickable="true"
+-                android:layout_width="@dimen/volume_dialog_slider_height"
+-                android:layout_height="match_parent"
+-                android:layoutDirection="rtl"
+-                android:layout_gravity="center"
+-                android:rotation="90" />
+-        </FrameLayout>
++            android:layout_gravity="center"
++            android:progressDrawable="@drawable/ios_volume_slider_progress"
++            android:thumb="@null"
++            android:splitTrack="false"
++            android:background="@null"
++            android:rotation="90" />
+ 
+         <com.android.keyguard.AlphaOptimizedImageButton
+             android:id="@+id/volume_row_icon"
+             style="@style/VolumeButtons"
+-            android:layout_width="@dimen/volume_dialog_tap_target_size"
+-            android:layout_height="@dimen/volume_dialog_tap_target_size"
+-            android:background="@drawable/ripple_drawable_20dp"
+-            android:layout_marginBottom="@dimen/volume_dialog_row_margin_bottom"
+-            android:tint="@color/accent_tint_color_selector"
++            android:layout_width="24dp"
++            android:layout_height="24dp"
++            android:layout_gravity="bottom|center_horizontal"
++            android:layout_marginBottom="12dp"
++            android:background="@null"
++            android:clickable="false"
++            android:elevation="6dp"
++            android:tint="#FFFFFFFF"
+             android:soundEffectsEnabled="false" />
+-    </LinearLayout>
++
++    </FrameLayout>
++
++    <TextView
++        android:id="@+id/volume_row_header"
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:visibility="gone" />
+ 
+     <include layout="@layout/volume_dnd_icon"/>
+ 
+diff --git a/packages/SystemUI/res/values/dimens.xml b/packages/SystemUI/res/values/dimens.xml
+index c8c76fb4..a572119d 100644
+--- a/packages/SystemUI/res/values/dimens.xml
++++ b/packages/SystemUI/res/values/dimens.xml
+@@ -396,29 +396,29 @@
+ 
+     <dimen name="volume_dialog_panel_transparent_padding_horizontal">4dp</dimen>
+ 
+-    <dimen name="volume_dialog_panel_transparent_padding">20dp</dimen>
++    <dimen name="volume_dialog_panel_transparent_padding">16dp</dimen>
+ 
+-    <dimen name="volume_dialog_stream_padding">6dp</dimen>
++    <dimen name="volume_dialog_stream_padding">0dp</dimen>
+ 
+-    <dimen name="volume_dialog_panel_width">52dp</dimen>
++    <dimen name="volume_dialog_panel_width">46dp</dimen>
+ 
+-    <dimen name="volume_dialog_slider_height">132dp</dimen>
++    <dimen name="volume_dialog_slider_height">140dp</dimen>
+ 
+-    <dimen name="volume_dialog_ringer_size">52dp</dimen>
++    <dimen name="volume_dialog_ringer_size">46dp</dimen>
+ 
+-    <dimen name="volume_dialog_ringer_icon_padding">14dp</dimen>
++    <dimen name="volume_dialog_ringer_icon_padding">10dp</dimen>
+ 
+-    <dimen name="volume_dialog_caption_size">52dp</dimen>
++    <dimen name="volume_dialog_caption_size">46dp</dimen>
+ 
+-    <dimen name="volume_dialog_tap_target_size">42dp</dimen>
++    <dimen name="volume_dialog_tap_target_size">36dp</dimen>
+ 
+-    <dimen name="volume_dialog_spacer">6dp</dimen>
++    <dimen name="volume_dialog_spacer">8dp</dimen>
+ 
+-    <dimen name="volume_dialog_slider_margin_top">12dp</dimen>
++    <dimen name="volume_dialog_slider_margin_top">0dp</dimen>
+ 
+     <dimen name="volume_dialog_slider_margin_bottom">0dp</dimen>
+ 
+-    <dimen name="volume_dialog_row_margin_bottom">8dp</dimen>
++    <dimen name="volume_dialog_row_margin_bottom">0dp</dimen>
+ 
+     <dimen name="volume_dialog_elevation">12dp</dimen>
+ 
+diff --git a/packages/SystemUI/src/com/android/systemui/volume/VolumeDialogImpl.java b/packages/SystemUI/src/com/android/systemui/volume/VolumeDialogImpl.java
+index 629e4812..65a178bf 100644
+--- a/packages/SystemUI/src/com/android/systemui/volume/VolumeDialogImpl.java
++++ b/packages/SystemUI/src/com/android/systemui/volume/VolumeDialogImpl.java
+@@ -1347,12 +1347,12 @@ public class VolumeDialogImpl implements VolumeDialog,
+                 ? Color.alpha(tint.getDefaultColor())
+                 : getAlphaAttr(android.R.attr.secondaryContentAlpha);
+         if (tint == row.cachedTint && mExpanded) return;
+-        row.slider.setProgressTintList(tint);
+-        row.slider.setThumbTintList(tint);
+-        row.slider.setProgressBackgroundTintList(tint);
+-        row.slider.setAlpha(((float) alpha) / 255);
+-        row.icon.setImageTintList(tint);
+-        row.icon.setImageAlpha(alpha);
++        row.slider.setProgressTintList(null);
++        row.slider.setThumbTintList(null);
++        row.slider.setProgressBackgroundTintList(null);
++        row.slider.setAlpha(1.0f);
++        row.icon.setImageTintList(ColorStateList.valueOf(Color.WHITE));
++        row.icon.setImageAlpha(255);
+         row.cachedTint = tint;
+     }
+ 
+-- 
+2.43.0
+
